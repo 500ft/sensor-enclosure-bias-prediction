@@ -17,3 +17,5 @@ updates:
     groups:
       pip:
         patterns: ["*"]
+    # Keep ">=" ranges as written; only bump pins, or a range the new release falls outside.
+    versioning-strategy: increase-if-necessary
