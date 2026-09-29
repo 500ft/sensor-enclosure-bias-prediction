@@ -4,7 +4,7 @@
 
 Ten new synthetic intake tests cover full-day versus partial exposure, duplicate slots, missing paired data, invalid timestamps/weather/uncertainty/provenance and the actual CLI raw-hash boundary. 48 analysis tests pass. A sufficient synthetic CSV exits 3; tampered raw bytes exit 2. No physical pilot or model validation occurred. A further non-object JSON metadata counterexample reproduced a traceback; the CLI now returns diagnostic exit 2 for null/list/string metadata.
 
-Review [DAY3_PLAN.md](DAY3_PLAN.md), [deliverable](COLOCATION_PROTOCOL.md), and [commands/evidence](../evidence/task-day3-2026-09-09/README.md). Base: `c121f2bb3f247220df39dffd552468678254bbc8`; new PR branch: `task/day-three-20260909`. No original Owner/External gate is closed. Final source identity is the PR head, reported in its delivery record rather than embedded circularly here.
+Review [DAY3_PLAN.md](https://github.com/500ft/sensor-enclosure-thermal-design/blob/ddf0a23098964ecfd036e32105dfa9564adc4ea7/docs/DAY3_PLAN.md), [deliverable](COLOCATION_PROTOCOL.md), and [commands/evidence](../evidence/task-day3-2026-09-09/README.md). Base: `c121f2bb3f247220df39dffd552468678254bbc8`; new PR branch: `task/day-three-20260909`. No original Owner/External gate is closed. Final source identity is the PR head, reported in its delivery record rather than embedded circularly here.
 
 Actual site/equipment identification, PI/data permission and measurements cannot be supplied by web research.
 

@@ -1,7 +1,7 @@
 # Pilot readiness — adaptive scope
 
 Reviewed 2026-09-14–15 for the 2026-09-15 workday. The
-[day plan](../../DAY_PLAN_2026-09-15.md) owns task detail and acceptance criteria;
+[day plan](https://github.com/500ft/sensor-enclosure-thermal-design/blob/ddf0a23098964ecfd036e32105dfa9564adc4ea7/docs/DAY_PLAN_2026-09-15.md) owns task detail and acceptance criteria;
 existing sprint/CAD ledgers own actual execution status. This scope does not
 promote deferred tasks or duplicate those ledgers.
 
