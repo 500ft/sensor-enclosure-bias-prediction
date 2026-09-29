@@ -1,6 +1,11 @@
 # Day/night co-location pilot — proposed 2026-09-09
 
-Status: reviewer-ready **draft**, not a frozen or approved physical campaign. No site, sensor inventory, PI permission or calibration is invented. Existing historical deployment claims remain unverified. Review [required provenance](DEPLOYMENT_PROVENANCE_REQUEST.md) before scheduling equipment.
+Status: reviewer-ready **draft**, not a prospectively frozen campaign protocol.
+Permission, available facilities and the next evidence step are recorded in the
+[current owner decision and blocker](COLOCATION_OWNER_SESSION.md#current-blocker).
+Existing historical deployment claims remain unverified. Review
+[required provenance](DEPLOYMENT_PROVENANCE_REQUEST.md) for those historical
+claims; it is not a prerequisite for reviewing a separately documented campaign.
 
 ## Decisions and why
 
@@ -54,4 +59,4 @@ Metadata requires `window_start,window_end,sensor_id,reference_id,site_id,firmwa
 
 Exit 2 means malformed or incomplete evidence; 3 means structurally sufficient **synthetic-only** data; 0 means a physical-labeled pilot is eligible for **human review**, never model agreement or authenticated provenance. Metadata strings and a checksum cannot prove permission, calibration, truth or pre-acquisition timing. A reviewer must inspect the referenced records and protocol commit.
 
-Runnable synthetic checks: `PYTHONPATH=. python -m unittest discover -s analysis/tests -p test_colocation_intake.py -v`. They exercise duplicate slots, missing edges/channels, malformed weather/time, bad uncertainty and synthetic non-promotion. No real CSV has been acquired.
+Runnable synthetic checks: `PYTHONPATH=. python -m unittest discover -s analysis/tests -p test_colocation_intake.py -v`. They exercise duplicate slots, missing edges/channels, malformed weather/time, bad uncertainty and synthetic non-promotion. For the current physical-data disposition, see the [owner session record](COLOCATION_OWNER_SESSION.md#current-blocker).

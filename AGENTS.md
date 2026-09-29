@@ -25,4 +25,27 @@ critical path below, or record an owner decision. If it does none, don't open it
 - Dependency updates arrive as Dependabot's grouped monthly PRs; don't hand-edit
   pins to chase them.
 
-**Critical path (2026-09-29):** PI permission for the co-location pilot (owner) -> 24 h pilot -> compare the measurements with the model. If permission is refused, close the repo as an analytical study.
+**Critical path:** review available co-location evidence -> complete any missing
+pilot acquisition -> compare the measurements with the model. Read the
+[current blocker and owner decisions](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
+at the start of every session; that record supersedes dated permission/blocker
+statements elsewhere. Do not reopen a resolved gate without new evidence.
+
+## Blocker update at every PR push — owner rule, 2026-09-29
+
+- Before every PR push, reconcile the current blocker in
+  `docs/COLOCATION_OWNER_SESSION.md` against owner statements and work actually
+  completed. Record a changed disposition, its date/source, the next action and
+  who supplies it in the same implementation or owner-decision commit.
+- Keep that file the canonical home for the current blocker. Other documents,
+  task rows and PR descriptions link to it instead of keeping competing lists.
+- After every push, verify the remote commit and PR state, then update the PR
+  description with a link to the record and whether the blocker changed or was
+  reviewed and remains unchanged. A PR push does not itself close a gate.
+- If nothing changed, report that review in the PR; do not create an empty
+  commit or a separate status-only PR. If new information arrives after a push,
+  amend the same PR with the changed record and verify its next push.
+- Record owner-confirmed approval as such. Do not treat it as calibration,
+  protocol freeze, acquired data, permission for a specific intervention, or
+  physical validation. When the next input is owner-held, name it in one line
+  and stop after finishing the authorized PR work.

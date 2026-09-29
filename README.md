@@ -114,10 +114,13 @@ evidence/      retained checks and diagnostic reproductions
 
 ## Next gate and limitations
 
-The next measurement step is a **prospectively approved day/night co-location
-pilot** with identified hardware, calibrated reference, site permission, and an
-as-built uncertainty treatment. The [protocol](docs/COLOCATION_PROTOCOL.md) is a
-draft. Its data-quality targets are proposed; the model's −4 °C night and
+The next step and owner-confirmed permissions are maintained in the
+[current blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker).
+Review existing co-location evidence before scheduling additional acquisition.
+Any new pilot needs identified hardware, a calibrated reference, a prospectively
+frozen protocol, and an as-built uncertainty treatment. The
+[protocol](docs/COLOCATION_PROTOCOL.md) is a draft. Its data-quality targets are
+proposed; the model's −4 °C night and
 +8–23 °C day scenarios are **not acceptance limits**.
 
 The intake checker distinguishes malformed data, sufficient synthetic fixtures,
