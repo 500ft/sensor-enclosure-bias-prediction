@@ -11,9 +11,9 @@ analytical models, traceable literature, and a testable day/night pilot.**
 [Quick start](#quick-start) · [Documentation](#documentation) ·
 [Pilot protocol](docs/COLOCATION_PROTOCOL.md)
 
-![Conceptual overview of enclosure comparison, thermal analysis, and validation requirements](docs/media/project-overview.svg)
+![Illustration comparing a closed sensor box, a passive shield, and an aspirated shield](docs/media/hero.jpg)
 
-*Conceptual study map. Thermal outputs are analytical predictions; the physical
+*AI-generated concept illustration. Thermal outputs are analytical predictions; the physical
 pilot is a draft, not an approved or completed experiment.*
 
 ## About
