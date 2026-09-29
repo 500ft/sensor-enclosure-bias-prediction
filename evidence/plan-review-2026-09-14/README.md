@@ -4,7 +4,7 @@ Review began 2026-09-14; plan finalized 2026-09-15 (America/New_York).
 Base: `2e8da8abb70e8fc36d5e3cacee18872bdffbe651`. Reviewed original:
 [PR #16](https://github.com/500ft/sensor-enclosure-thermal-design/pull/16),
 head `4e87c84bd068a4c1b09212541ae19b65532ee6e1`, one added 59-line day plan.
-The replacement [day plan](../../docs/DAY_PLAN_2026-09-15.md) and
+The replacement [day plan](https://github.com/500ft/sensor-enclosure-thermal-design/blob/ddf0a23098964ecfd036e32105dfa9564adc4ea7/docs/DAY_PLAN_2026-09-15.md) and
 [scope](../../docs/specs/pilot-readiness/scope.md) are proposals. The examples
 below are review reproductions using synthetic data and the existing solver;
 no application code, task status, physical input or committed model output was
