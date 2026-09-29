@@ -11,6 +11,8 @@ Three tickets from the critique are **already done** and are recorded here for t
 | `eps` input consistency in `doe_samples` | PR #34 — `theta_full` ignored the `eps` argument |
 | Exact nonlinear dimensionless diagnostic | PR #34 — `nondimensional.balance_residual` |
 | Non-singular normalisation | PR #34 — `balance_residual_nonsingular`, valid when `T_sky >= T_air` |
+| **T2** uncertainty computation | PR #38 — `analysis/uncertainty.py`, 25 known-answer tests |
+| **T1** campaign manifest and pairing | `analysis/campaign_manifest.py` — all seven failure cases exercised; see the T1 status note below |
 
 ---
 
@@ -43,6 +45,22 @@ complete cases, and a missingness summary keyed by temperature and power state.
 
 **Evidence to close:** the report on a synthetic three-arm campaign; the seven failures above
 demonstrated; the existing intake regression suite unchanged and passing.
+
+**Status (2026-09-29): implemented** in `analysis/campaign_manifest.py`
+(`python -m analysis.campaign_manifest MANIFEST --out REPORT`). Choices the ticket left open:
+- Failure 5: `campaign_id` uniqueness is scoped to **within one manifest**, stated in every report; no
+  registry exists, so cross-manifest reuse is not detectable.
+- Failure 6: a git SHA needs `protocol_repo` and must resolve there; the admissible offline route is
+  `protocol_archive_sha256` (64 hex characters).
+- Failure 4: an arm is optional only if the manifest says `optional: true`; optional permits an absent
+  file, never a corrupt one.
+- Per-arm `cadence_s` / window declarations are accepted only when they equal the campaign's.
+- Off-grid, out-of-window, naive-clock and duplicate timestamps refuse; nothing is rounded or filled.
+
+**Not delivered, and why:** the ticket's missingness summary "keyed by temperature and power state".
+Power state comes from the auxiliary channels (T3), which do not exist, so missingness is keyed by
+channel (absent row / empty sensor / empty reference). Add the power-state key when T3 lands. Coverage is
+reported, not judged: no pass/fail against the protocol's readiness criteria is applied here.
 
 ---
 
