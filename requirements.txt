@@ -4,7 +4,7 @@
 # was verified identical under these pins AND under the range floor (numpy 1.26.4, pandas 2.2.0,
 # matplotlib 3.8.0), so pinning changes attribution, not today's result.
 matplotlib==3.11.2
-numpy==2.4.6
+numpy==2.5.3
 pandas==3.0.6
 python-docx==1.2.0
 reportlab==5.0.1
