@@ -1,10 +1,14 @@
 # Exact pins for CI and reproduction. Loose ranges live in requirements.in;
 # regenerate with: python -m venv v && v/bin/pip install -r requirements.in && v/bin/pip freeze | grep -E '^(numpy|pandas|matplotlib|python-docx|reportlab)==' > requirements.txt
-# Resolved 2026-09-11 on Python 3.11 (the CI interpreter). The byte-exact thermal-table gate
-# was verified identical under these pins AND under the range floor (numpy 1.26.4, pandas 2.2.0,
-# matplotlib 3.8.0), so pinning changes attribution, not today's result.
+# Resolved 2026-09-11 on Python 3.11, re-resolved 2026-09-29 on Python 3.12 (the CI interpreter).
+# The byte-exact thermal-table gate was verified identical under these pins AND under the range
+# floor (numpy 1.26.4, pandas 2.2.0, matplotlib 3.8.0), so pinning changes attribution, not
+# today's result. It was re-verified byte-identical on 2026-09-29 under Python 3.12 + numpy 2.5.3
+# (both committed tables reproduced exactly; 132 tests pass).
+# NOTE: numpy 2.5.x declares Requires-Python >=3.12, so this file no longer installs on 3.11.
+# Python >=3.12 is now the floor for reproducing the published numbers.
 matplotlib==3.11.2
-numpy==2.4.6
+numpy==2.5.3
 pandas==3.0.6
 python-docx==1.2.0
 reportlab==5.0.1
