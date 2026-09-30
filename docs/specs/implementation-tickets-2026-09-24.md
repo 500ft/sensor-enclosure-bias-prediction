@@ -20,7 +20,7 @@ Three tickets from the critique are **already done** and are recorded here for t
 **Must not touch:** `analysis/colocation_intake.py` (the validated single-pair intake stays
 byte-compatible; a compatibility test proves it).
 
-**Input:** a manifest file (fields fixed in `pilot-design-2026-09-24.md` R2.2) plus the per-variant
+**Input:** a manifest file (fields fixed in `docs/COLOCATION_PROTOCOL.md` R2.2) plus the per-variant
 CSV and metadata paths it names.
 **Output:** a pairing report — per-arm coverage, **per-contrast** valid-timestamp sets, all-arm
 complete cases, and a missingness summary keyed by temperature and power state.

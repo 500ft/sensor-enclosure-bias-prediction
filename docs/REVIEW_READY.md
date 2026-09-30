@@ -11,9 +11,8 @@ Nothing here has had an independent review, and nothing has been measured.
 
 ## Review now
 
-1. **The pilot protocol** ([protocol](COLOCATION_PROTOCOL.md),
-   [design](specs/pilot-readiness/pilot-design-2026-09-24.md),
-   [experiment contract](specs/pilot-readiness/experiment-contract-2026-09-24.md)).
+1. **The pilot protocol** ([protocol](COLOCATION_PROTOCOL.md)), one document
+   covering design, experiments, data rules, uncertainty and analysis.
    This is what the PI's test will follow once it is frozen. Worth checking:
    whether 120 sunny and 120 dark minutes and a paired U95 of 0.5 °C are the
    right bar, and whether the reference-thermometer setup is realistic.
