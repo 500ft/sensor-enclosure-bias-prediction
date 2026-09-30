@@ -2,7 +2,7 @@
 
 ## Recruiter or prospective supervisor
 
-Read the [evidence snapshot](../README.md#evidence-snapshot), compare the
+Read the [results](../README.md#results), compare the
 [dark, painted and shielded variants](../analysis/thermal_bias_results.md), then
 inspect the [co-location protocol draft](COLOCATION_PROTOCOL.md).
 

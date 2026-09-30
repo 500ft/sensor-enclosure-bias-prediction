@@ -46,7 +46,7 @@ This is source-distributed CLI work, not a published package or deployment.
 
 ## Plan and evidence
 
-- [Six-day / 30-hour roadmap](SPRINT_ROADMAP.md)
+- [Six-day / 30-hour roadmap](https://github.com/500ft/sensor-enclosure-thermal-design/blob/1ed27b40395122bf3b2e63fa3981b73d851e6d31/docs/SPRINT_ROADMAP.md)
 - [Authoritative task ledger](SPRINT_TASKS.csv)
 - [Progress and exact next command](SPRINT_PROGRESS.md)
 - [Baseline, runtime, and complete 150% reproduction](../evidence/sprint-2026-09-05/baseline.md)
