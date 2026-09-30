@@ -2,22 +2,21 @@
 
 ## Current blocker
 
-**Next action:** owner supplies the location of the existing test data and the
-sensor/reference setup details, or identifies the logger/lab custodian who can
-locate them; agent reviews those records before proposing another acquisition.
-The owner reports an existing co-location-like setup, but its logs,
-reference identity, calibration and overlapping day/night coverage have not yet
-been inspected. This is an access/identification gap, not a finding that no data
-exists. `EN-R03` remains incomplete until actual evidence is reviewed.
+**Next action:** the owner sets up the co-location rig at the PI's test site:
+the enclosure variants, the reference thermometer in its shield, and the
+loggers. No pilot data is collected until the rig exists and the
+[protocol](COLOCATION_PROTOCOL.md) is frozen.
 
-**Latest location update, 2026-09-29:** the owner replied "i dont know wxactly
-where." A bounded check of the repository checkout and its dedicated local CAD
-project directory found no physical co-location export. The
-[data guide](data-and-figures.md#deployment-log-plots) names historical device
-exports but provides only a placeholder directory; those exports are not
-established as reference-paired pilot data. Cloud storage, lab systems and other
-locations have not been ruled out. The next input is the logger/storage system
-or the person holding its exports, not renewed PI approval.
+**Owner statement, 2026-09-30:** "for enclosure there are currently no
+co-location logs at all. but they will be setup in the future, thus the data
+collected today is not worthwhile." There is no existing co-location evidence
+to review, so the retrospective-review route recorded on 2026-09-29 is closed,
+and the pilot will be a new acquisition under a frozen protocol. Don't ask for
+existing logs again. `EN-R03` stays blocked until that acquisition has happened
+and passed intake.
+
+This supersedes the 2026-09-29 notes that the owner had "something like this"
+and didn't know where its logs were.
 
 **Owner decision recorded 2026-09-29:** the owner stated in this project session,
 "my PI has given me the go ahead with this project. so we have a place to test,
@@ -27,12 +26,6 @@ confirmation; test-site availability and manufacturing support are also
 owner-confirmed. The PI's name, approval conditions, site details and specific
 data-use terms were not supplied. Do not request the same in-principle decision
 again, or infer approval of a particular load intervention or protocol version.
-
-The owner also stated, after the pilot explanation, "i definatly have something
-like this." Review those existing records first. If acquisition predates a
-registered protocol, label that analysis retrospective/exploratory; do not
-backdate approval or protocol freeze. A new campaign is needed only for gaps
-the evidence review actually identifies.
 
 This is the canonical current blocker record. The dispositions below separate
 resolved permission from still-unverified equipment, data and analysis readiness.
@@ -55,16 +48,15 @@ source for each answer; leave missing answers explicitly unknown.
 | --- | --- | --- |
 | PI permission in principle | Owner confirmation of PI go-ahead | Resolved; source and scope recorded above |
 | Site, manufacturing and data terms | Site/mounting details, manufacturing contact/capability, data-use and retention terms | Site and manufacturing support confirmed above; details and data terms not yet supplied |
-| Actual equipment and controls | Box/reference IDs, finish/geometry, sensor placement, firmware and heat load | Existing setup reported; inventory not yet inspected |
+| Actual equipment and controls | Box/reference IDs, finish/geometry, sensor placement, firmware and heat load | Rig not built yet (owner, 2026-09-30); inventory is recorded when it is |
 | Reference quality | Current calibration, aspiration/shield characterization, uncertainty budget and pre/post check method | Blocked; no calibration verified |
 | Prospective protocol freeze | Approved version/commit, positions and pairing, intended UTC start/end, cadence, interventions and uncertainty method recorded before acquisition | Draft only; not frozen |
-| Acquisition and custody | Authorized operator, raw export location, raw-byte SHA-256, omissions and separate sky/intervention records | Await existing data location; acquisition history and coverage not yet reviewed |
+| Acquisition and custody | Authorized operator, raw export location, raw-byte SHA-256, omissions and separate sky/intervention records | No acquisition yet, and none before the rig exists and the protocol is frozen |
 | Physical interpretation | Authenticated provenance review, as-built prediction and propagated uncertainty, application tolerance registered before comparison | Blocked; no model-agreement band exists |
 
-First inspect the existing equipment records and raw exports without altering
-their bytes. Establish what was measured simultaneously and which conditions
-were covered. For any new acquisition, accept or amend the draft prospectively
-and identify its operator. Record remaining decisions with date and source.
+When the rig is built, record its inventory (enclosure IDs, sensors, the
+reference and its calibration certificate), then accept or amend the draft
+protocol, freeze it before the first acquisition, and name the operator. Record remaining decisions with date and source.
 General project approval does not establish a prospectively frozen protocol.
 
 After authorized acquisition, run from the repository root:

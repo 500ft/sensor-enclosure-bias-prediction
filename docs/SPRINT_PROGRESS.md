@@ -8,6 +8,10 @@ earlier, longer version of this log is kept at
 
 ## Week of 2026-09-28
 
+- **09-30** Owner: there are no co-location logs yet; the rig will be set up
+  at the PI's test site, and data collected before then isn't usable. The
+  retrospective-review route is closed. The current step is setting up the
+  rig, then freezing the protocol before the first run.
 - **09-30** The pilot now has one protocol. The draft protocol, the pilot
   design (R1–R3) and the experiment contract (C1–C9) were merged into
   [COLOCATION_PROTOCOL.md](COLOCATION_PROTOCOL.md), keeping every requirement
