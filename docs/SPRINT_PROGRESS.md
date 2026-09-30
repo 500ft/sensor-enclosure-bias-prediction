@@ -8,6 +8,12 @@ earlier, longer version of this log is kept at
 
 ## Week of 2026-09-28
 
+- **09-30** The pilot now has one protocol. The draft protocol, the pilot
+  design (R1–R3) and the experiment contract (C1–C9) were merged into
+  [COLOCATION_PROTOCOL.md](COLOCATION_PROTOCOL.md), keeping every requirement
+  and section number. One conflict was settled in favour of the later rule:
+  pairing is per comparison, so a missing optional arm never discards a valid
+  V0/V0P pair.
 - **09-30** One roadmap: the finish line is Direction B, the measured
   day-and-night bias of the built enclosures beside a reference, compared with
   the model. README rewritten
