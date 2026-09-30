@@ -1,125 +1,48 @@
-# Enclosure software review packet — partial field-validation handoff
+# Review index
 
-## Day-3 preparation — 2026-09-09
+What to review, and where each piece of evidence lives. The plan is in the
+[roadmap](../ROADMAP.md), the history in the [progress log](SPRINT_PROGRESS.md)
+and the current blocker in the
+[owner session record](COLOCATION_OWNER_SESSION.md#current-blocker). The
+earlier, longer version of this index is kept at
+[commit 4d1134e](https://github.com/500ft/sensor-enclosure-thermal-design/blob/4d1134ecf598f0abd53161d3339fb0fd5576eadf/docs/REVIEW_READY.md).
 
-Ten new synthetic intake tests cover full-day versus partial exposure, duplicate slots, missing paired data, invalid timestamps/weather/uncertainty/provenance and the actual CLI raw-hash boundary. 48 analysis tests pass. A sufficient synthetic CSV exits 3; tampered raw bytes exit 2. No physical pilot or model validation occurred. A further non-object JSON metadata counterexample reproduced a traceback; the CLI now returns diagnostic exit 2 for null/list/string metadata.
+Nothing here has had an independent review, and nothing has been measured.
 
-Review [DAY3_PLAN.md](https://github.com/500ft/sensor-enclosure-thermal-design/blob/ddf0a23098964ecfd036e32105dfa9564adc4ea7/docs/DAY3_PLAN.md), [deliverable](COLOCATION_PROTOCOL.md), and [commands/evidence](../evidence/task-day3-2026-09-09/README.md). Base: `c121f2bb3f247220df39dffd552468678254bbc8`; new PR branch: `task/day-three-20260909`. No original Owner/External gate is closed. Final source identity is the PR head, reported in its delivery record rather than embedded circularly here.
+## Review now
 
-Actual site/equipment identification, PI/data permission and measurements cannot be supplied by web research.
-
-## Review amendment — 2026-09-09
-
-Read [the reproduced findings, corrections and current checks](../evidence/review-2026-09-09/README.md)
-before the historical day-2 counts below. Review branch `review/day-two-20260909`;
-amendment targets the existing day-2 PR, not main. No owner/measurement gate closes.
-
-
-## 2026-09-09 addendum — night clear-sky case (EN-D02)
-
-The existing solver at G = 0 with unchanged assumptions predicts a **-4.0 °C cold bias** for the
-baseline box in calm clear-sky night, against the midday warm bias above: the enclosure error is
-sign-changing over the diurnal cycle, so a field co-location needs 24 h coverage. Daytime table and
-figure are byte-unchanged; six new tests assert sign and ordering only. Still SIMULATION / pending lab
-data. [Verification](../evidence/task-2026-09-09/README.md).
-
-## 2026-09-08 addendum — matched-finish thermal control
-
-New task EN-D01 uses base `199cb5d38bc70af271b4e064d79d4d8415ff4630` and
-branch `task/priority-one-20260908`. Source identity is the addendum's containing
-commit / PR head, not the older candidate manifest below. See
-[task verification](../evidence/task-2026-09-08/verification.md) for five red/green
-regressions, all 29 tests, consumer CLI/figure checks and artifact hashes.
-`V0P` is a new variant ID and adds ten CSV rows; all thirty legacy rows remain
-unchanged. These are analytical controls, not new field measurements. The
-historical review packet below remains the record of the earlier integrity sprint.
-
-
-Prepared 2026-09-06; sprint began 2026-09-05. Repository:
-`/Users/redhose/Developer/research-sprints/2026-09-05/Enclosure-Research`, remote
-`https://github.com/500ft/Enclosure-Research.git`.
-Base `c8c941dabd02541b3f3bfd67dc0edbc0517e6be9`; branch
-`sprint/evidence-integrity-20260905`. Final commit: this packet's containing
-commit (reported in the PR; not self-embedded).
-Source identity: [candidate SHA-256 manifest](../evidence/sprint-2026-09-05/candidate.json).
-This is source-distributed CLI work, not a published package or deployment.
-
-## Plan and evidence
-
-- [Six-day / 30-hour roadmap](https://github.com/500ft/sensor-enclosure-thermal-design/blob/1ed27b40395122bf3b2e63fa3981b73d851e6d31/docs/SPRINT_ROADMAP.md)
-- [Authoritative task ledger](SPRINT_TASKS.csv)
-- [Progress and exact next command](SPRINT_PROGRESS.md)
-- [Baseline, runtime, and complete 150% reproduction](../evidence/sprint-2026-09-05/baseline.md)
-- [Test-first red/green evidence](../evidence/sprint-2026-09-05/regressions.md)
-- [Final commands, statuses, and retained outputs](../evidence/sprint-2026-09-05/final-checks.md)
-- [Actual external-working-directory consumer CLI proof](../evidence/sprint-2026-09-05/consumer-output.md)
-
-## Must-have acceptance evidence
-
-| Deliverable | Evidence | Boundary |
-|---|---|---|
-| Unique schedule accounting; explicit edges/cadence; duplicate/off-grid diagnostics | [metric tests](../analysis/tests/test_compute_metrics.py), [contract](RELIABILITY_METRICS.md) | Software checks do not confirm deployment intent |
-| Separate delivery/sensor/pair availability and unchanged paired-row residual meaning | [consumer output](../evidence/sprint-2026-09-05/consumer-output.md) | Availability is unique slots; accuracy is paired observations; neither is uptime |
-| Unavailable completeness without provenance; empty selected windows; clear missing-source errors | [deployment tests](../analysis/tests/test_deployment_metrics.py), [CLI tests](../analysis/tests/test_metrics_cli.py) | Whole empty plot-source logs explicitly rejected; no private replay |
-| Painted control and corrected evidence narrative | [results](results.md), [sensitivity](../analysis/thermal_bias_results.md), [manuscript](../paper/manuscript_v1.md) | 19.4/4.5/3.0°C analytical; legacy rendered reports not regenerated |
-| Behavioral tests in actual workflow | [CI](../.github/workflows/ci.yml), [local results](../evidence/sprint-2026-09-05/final-checks.md) | No remote Actions run claimed |
-
-Intentional API changes: cadence-only compute_metrics calls now require intended
-start/end or raise ValueError; CLI invalid/incomplete schedules exit 2. read_rows
-retains timestamped records missing a channel. Generic completeness aliases
-paired availability; exporter completeness_pct means delivery availability.
-Definitions, missing-data states, and timestamp matching are in
-[RELIABILITY_METRICS.md](RELIABILITY_METRICS.md).
+1. **The pilot protocol** ([protocol](COLOCATION_PROTOCOL.md),
+   [design](specs/pilot-readiness/pilot-design-2026-09-24.md),
+   [experiment contract](specs/pilot-readiness/experiment-contract-2026-09-24.md)).
+   This is what the PI's test will follow once it is frozen. Worth checking:
+   whether 120 sunny and 120 dark minutes and a paired U95 of 0.5 °C are the
+   right bar, and whether the reference-thermometer setup is realistic.
+2. **The model comparison** ([results](results.md),
+   [assumptions](../analysis/thermal_bias_results.md)). Dark box 19.4 °C,
+   painted 4.5 °C, shield 3.0 °C at 1000 W/m² and 0.5 m/s. The night case can
+   change sign.
+3. **The 09-24 corrections**
+   ([critique response in the progress log](SPRINT_PROGRESS.md#week-of-2026-09-21)).
+   Three claims were withdrawn; check that none survives in a live document.
 
 ## Reproduce
 
-The primary agent independently reran the delegated software checks on2026-09-06:
-[actual rerun record](../evidence/sprint-2026-09-05/parent-verification.json).
-This is additional software verification, not independent human or physical validation.
+Run the [README quick start](../README.md#quick-start) and the table
+comparison under it. The [reading guide](START_HERE.md#reviewer-reproduce-the-contained-analysis)
+has the full sequence.
 
-From checkout root with Python 3.11 and requirements installed:
+## Evidence records
 
-```bash
-python -m compileall -q analysis
-python -m unittest discover -s analysis/tests -v
-python analysis/check_literature_coverage.py
-python analysis/thermal_bias.py --no-figure
-python evidence/sprint-2026-09-05/evaluate_candidate.py
-git diff --check
-```
-
-Observed: 24 tests pass; bibliography 26/26; thermal runs; four candidate hashes
-match; 12/12 additional developer cases pass. No configured type/lint command.
-Complete historical field reproduction is not possible from this clone alone.
-
-## Evaluation and pending feedback
-
-[Selection/original expectations](../evidence/sprint-2026-09-05/evaluation-procedure.md)
-preceded [additional outputs](../evidence/sprint-2026-09-05/evaluation.md). No
-disagreements occurred. Same-developer deterministic cases are not an independent
-scientific evaluation; hashes establish identity only. Human feedback is pending.
-No physical experiment, private import, or corrected publication package occurred.
-
-## Incomplete work / three remaining priorities
-
-1. EN-S02/09B: confirmed window, cadence, timezone, device/reset semantics, and
-   authorized logs; reconcile historical 91.4% in a new versioned campaign.
-   [Prepared, unsent owner request](DEPLOYMENT_PROVENANCE_REQUEST.md).
-2. Physical baseline/reference co-location: measure matched-finish controls and
-   uncertainty before claiming a hardware shielding advantage.
-3. EN-S11: independent human/source review, then deliberately regenerate any
-   corrected rendered publication package and decide commit/PR disposition.
-
-Evidence-supported project bullet: “Built and regression-tested schedule-aware
-sensor-log analysis that separates delivery, valid sensing, and reference-paired
-availability while preventing duplicate-row inflation.” This states engineering
-quality, not adoption or measured field performance.
-
-Review Enclosure-Research against docs/SPRINT_ROADMAP.md. Repository:
-/Users/redhose/Developer/research-sprints/2026-09-05/Enclosure-Research. Base commit:
-c8c941dabd02541b3f3bfd67dc0edbc0517e6be9. Final commit: PR head (see GitHub PR). Review index:
-docs/REVIEW_READY.md. Incomplete work: confirmed deployment metadata and authorized
-field rerun, physical reference comparison, independent human review, publication
-package regeneration. Reproduce the changed behaviors and counterexamples, rerun
-appropriate checks, and assess the code and evidence independently. Review first;
-make further changes only if requested.
+| Folder | What it holds |
+| --- | --- |
+| [task-week-2026-09-21](../evidence/task-week-2026-09-21/README.md) | Week of 2026-09-21 packet: consistency review, gate set, evidence (F1–F4) |
+| [week-2026-09-21](../evidence/week-2026-09-21/baseline.md) | Day-by-day notes for that week ([day 2](../evidence/week-2026-09-21/day2.md), [day 3](../evidence/week-2026-09-21/day3.md)) |
+| [task-2026-09-16](../evidence/task-2026-09-16/README.md) | Evidence-preservation fix, ledger reconciliation, sensitivity screen |
+| [plan-review-2026-09-14](../evidence/plan-review-2026-09-14/README.md) | Review of the replacement 09-15 plan |
+| [task-2026-09-12](../evidence/task-2026-09-12/README.md) | Synthetic CSV-to-analysis rehearsal |
+| [presentation-2026-09-10](../evidence/presentation-2026-09-10/README.md) | README presentation checks |
+| [review-2026-09-09](../evidence/review-2026-09-09/README.md) | Review of the night-case interpretation |
+| [task-2026-09-09](../evidence/task-2026-09-09/README.md) | Night clear-sky case: a −4.0 °C bias for the baseline box |
+| [task-day3-2026-09-09](../evidence/task-day3-2026-09-09/README.md) | Intake checker tests |
+| [task-2026-09-08](../evidence/task-2026-09-08/verification.md) | Painted closed-box control |
+| [sprint-2026-09-05](../evidence/sprint-2026-09-05/) | First integrity sprint baseline |

@@ -12,9 +12,10 @@ and a planned side-by-side test against a reference thermometer.
 [Results](#results) · [Roadmap](ROADMAP.md) · [Quick start](#quick-start) ·
 [Pilot protocol](docs/COLOCATION_PROTOCOL.md)
 
-![Illustration comparing a closed sensor box, a passive shield, and an aspirated shield](docs/media/hero.jpg)
+![Modelled temperature and relative-humidity bias for the dark box, painted box and passive shield under solar loading](analysis/figures/thermal_bias.png)
 
-*Concept illustration (AI-generated). All results below are model predictions.*
+*Model output, not a field measurement.
+[Figure inputs](docs/data-and-figures.md#thermal-bias-plot).*
 
 ## About
 
@@ -46,10 +47,6 @@ two designs also differ in geometry and airflow, so this compares systems, not
 shielding alone. At night the modelled bias can change sign, which is why the
 pilot has to cover both.
 [Source and interpretation](docs/results.md#thermal-bias-model).
-
-![Analytical enclosure temperature and relative-humidity bias under solar loading](analysis/figures/thermal_bias.png)
-
-*Model output, not a field measurement. [Figure inputs](docs/data-and-figures.md#thermal-bias-plot).*
 
 Other work in the repository:
 

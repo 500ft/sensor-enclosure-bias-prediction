@@ -1,19 +1,21 @@
 # Start here — Sensor Enclosure Thermal Design
 
-## Recruiter or prospective supervisor
+The [README](../README.md) is the overview and the [roadmap](../ROADMAP.md) is
+the plan. This guide is for reading the work quickly or rerunning it.
 
-Read the [results](../README.md#results), compare the
+## Two-minute read
+
+Read the [README results](../README.md#results), compare the
 [dark, painted and shielded variants](../analysis/thermal_bias_results.md), then
-inspect the [co-location protocol draft](COLOCATION_PROTOCOL.md).
-
-The present contribution is source-linked design comparison and tested
-reliability/intake tooling—not an experimentally validated enclosure.
+look at the [pilot protocol](COLOCATION_PROTOCOL.md). So far the project has a
+model comparison, a literature check of its constants, and tested intake and
+reliability code. Nothing has been measured yet; the PI has approved a pilot.
 
 ## Reviewer: reproduce the contained analysis
 
-Follow the [README environment setup](../README.md#quick-start), from the root.
-Use Python 3.11 and record the installed dependency versions; requirements are
-not a complete transitive environment lock.
+Set up as in the [README](../README.md#quick-start), using Python 3.12 (the CI
+version). Record the dependency versions you get, because the requirements
+pin direct packages only.
 
 ```sh
 git rev-parse HEAD
@@ -23,66 +25,55 @@ PYTHONPATH=. python -m unittest discover -s analysis/tests -v
 python analysis/check_literature_coverage.py
 ```
 
-The tests use synthetic fixtures and repository-contained model inputs.
-Bibliography coverage checks consistency across the 26 entries; it does not
-prove that a literature review is exhaustive.
+The tests use synthetic fixtures and the model inputs in the repository. The
+coverage check confirms the bibliography, matrix and assessments agree; it
+doesn't show the review is complete.
 
-The [README table comparison](../README.md#quick-start) regenerates both day and
-night CSVs into a temporary directory. No diff means the current model output
-reproduced—not that the physical model is correct. The [CI workflow](../.github/workflows/ci.yml)
-runs the same comparison. [Figure provenance](data-and-figures.md) records the
-existing plot's generator and inputs.
+The [table comparison in the README](../README.md#quick-start) regenerates the
+day and night tables into a temporary folder. No diff means the model output
+reproduced, not that the model is right. CI runs the same comparison, and the
+[figure guide](data-and-figures.md) lists each plot's generator and inputs.
 
-## Understand the pilot intake
+## The pilot intake
 
-The [protocol](COLOCATION_PROTOCOL.md) is a **draft**, not an approved experiment.
-No real co-location CSV exists in this repository.
+The [protocol](COLOCATION_PROTOCOL.md) is still a draft, and no real
+co-location data is in the repository yet.
 
 ```sh
 PYTHONPATH=. python -m unittest discover -s analysis/tests -p test_colocation_intake.py -v
 ```
 
-| Intake outcome | Exit | Meaning |
+| Result | Exit code | Meaning |
 | --- | --- | --- |
-| Malformed or incomplete input | 2 | Does not meet the registered intake structure/quality rules |
-| Sufficient synthetic data | 3 | Developer fixture only; cannot become physical evidence |
-| Physical-labeled pilot | 0 | Eligible for human provenance review, not authenticated or validated |
+| Malformed or incomplete | 2 | Fails the intake structure or quality rules |
+| Enough synthetic data | 3 | A test fixture; it can never count as physical evidence |
+| A physical pilot | 0 | Ready for a person to check its provenance; not authenticated and not a validation |
 
-The checks bind CSV bytes to metadata and cover the planned schedule, duplicates,
-missing channels, exposure coverage, timestamp validity and uncertainty fields.
-A string claiming permission or calibration does not prove either occurred.
-See the [implementation](../analysis/colocation_intake.py) and
+The checker ties the CSV bytes to the metadata and checks the schedule,
+duplicates, missing channels, sun and dark coverage, timestamps and the
+uncertainty field. A metadata string saying permission or calibration exists
+doesn't prove it does. See the [code](../analysis/colocation_intake.py) and
 [tests](../analysis/tests/test_colocation_intake.py).
 
-The model's example night/day biases are not acceptance bands. Actual model
-agreement needs an as-built prediction, propagated uncertainty and an
-application tolerance fixed before observations.
+## Historical deployment logs
 
-## External deployment-log analysis
+The raw exports and deployment history behind the historical reliability
+percentages are outside this repository. Use the
+[provenance request](DEPLOYMENT_PROVENANCE_REQUEST.md) before trying to
+reproduce them. The [reliability definitions](RELIABILITY_METRICS.md) keep
+scheduled completeness, continuity and channel availability apart; they
+measure data delivery, not sensor accuracy.
 
-The historical raw exports and deployment history are outside this repository.
-Use the [provenance request](DEPLOYMENT_PROVENANCE_REQUEST.md) before attempting
-to reproduce historical percentages. A source unavailable to a reviewer is
-not treated as a successful reproduction.
+## Contributing
 
-[Reliability definitions](RELIABILITY_METRICS.md) separate scheduled
-completeness, continuity and channel availability. These are delivery metrics,
-not sensor accuracy. Do not fabricate acquisition windows or silently replace
-historical percentages with a different denominator.
+Read [CONTRIBUTING.md](../CONTRIBUTING.md). Keep the
+[bibliography](../paper/references.bib), the
+[literature matrix](../literature/literature_matrix.csv), the source
+assessments and the synthesis in sync, and keep units and uncertainty in any
+model change. The [review index](REVIEW_READY.md) lists the evidence; the
+[CAD/FEA plan](cad_fea_plan.md) describes future work. There is no open-source
+license, and this guide grants no reuse permission.
 
-## Contributor route
-
-Read [Contributing](../CONTRIBUTING.md). Keep [bibliography](../paper/references.bib),
-[literature matrix](../literature/literature_matrix.csv), source assessments
-and synthesis synchronized. Preserve units and uncertainty in model changes.
-
-The [review index](REVIEW_READY.md) is the evidence entry point. The
-[CAD/FEA plan](cad_fea_plan.md) and [pilot draft](COLOCATION_PROTOCOL.md) describe
-future work without claiming it exists. No open-source license is included;
-this guide grants no new reuse or disclosure permission.
-
-See [repository identity](REPOSITORY_IDENTITY.md) for the rename and formatting references.
-
-## September 11 completion correction
-
-Read the [item-by-item correction](specs/evidence-gap-correction/test-report.md) before interpreting a prepared protocol, software check, or search export as a completed research gate. It identifies actual deliverables and the remaining measurement, review, or source-reading work separately.
+The [repository identity note](REPOSITORY_IDENTITY.md) explains the rename.
+The September 11 [correction](specs/evidence-gap-correction/test-report.md)
+explains which early deliverables were preparation rather than finished work.
