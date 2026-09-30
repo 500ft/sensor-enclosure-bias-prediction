@@ -35,22 +35,19 @@ uncertainty.
 - The pilot protocol, intake checker and campaign validation exist as drafts.
 - The PI has given the go-ahead, with a test site and manufacturing help
   (owner statement, 2026-09-29).
-- The owner reports an existing co-location setup with logged data. Where
-  those logs are is not known yet.
+- No co-location data exists yet (owner, 2026-09-30). The rig will be set up
+  at the PI's test site, and data collected before then isn't usable for the
+  pilot.
 
 ## What's left
 
 | # | Step | Who | Done when |
 |---|---|---|---|
-| 1 | Find the existing co-location logs: the logger or storage system, or the person in the lab who has them | Owner | Location recorded in the blocker record. **Current step.** |
-| 2 | List what physically exists: which enclosure variants are built, which sensor sits in each, and which reference thermometer is used, with any calibration certificates | Owner | Inventory recorded (decision rows 3 and 4) |
-| 3 | Review the existing logs against the protocol: day and night coverage, reference pairing, gaps | Agent | Review merged; states whether a new run is needed |
-| 4 | If needed, freeze the protocol and run 24 h or more with all variants and the reference side by side | Owner runs it; agent prepares and freezes the protocol | Raw files committed with the campaign manifest |
-| 5 | Compute bias and uncertainty per variant, day and night, and compare with the model | Agent | Results and comparison merged |
-| 6 | Update the manuscript, README and portfolio | Agent | Merged |
-
-Analysis of logs collected before the protocol was frozen is labelled
-retrospective. It still counts toward the finish line.
+| 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Current step.** |
+| 2 | Freeze the protocol: fill the R1.3 register for the actual hardware, choose positions, state the window and uncertainty method, commit it with the approver and date | Agent drafts; owner and PI approve | Frozen protocol committed before any data |
+| 3 | Run at least 24 h with all arms and the reference side by side, with the I1 power intervention as the first mechanism experiment if permitted | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
+| 4 | Compute bias and uncertainty per variant, day and night, and compare with the model | Agent | Results and comparison merged |
+| 5 | Update the manuscript, README and portfolio | Agent | Merged |
 
 ## Not in this version
 

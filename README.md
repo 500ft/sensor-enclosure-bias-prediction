@@ -93,9 +93,9 @@ covers external-data prerequisites and the intake checker.
 
 ## What's next
 
-The owner reports an existing co-location setup with logged data. The next
-step is finding those logs and reviewing them against the protocol; a new
-24-hour run is only needed for whatever they don't cover. The
+No co-location data exists yet. The next step is the owner's: set up the rig
+at the PI's test site (the enclosures, a reference thermometer in its shield,
+and loggers). The protocol is then frozen before the first 24-hour run. The
 [roadmap](ROADMAP.md) has the steps, and the
 [blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) has the
 current status.
