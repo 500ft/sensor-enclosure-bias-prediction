@@ -1,8 +1,11 @@
 # Owner / PI decision packet — 2026-09-24
 
 **What this is.** A single answer sheet for the decisions only the owner, the PI, or the data
-custodian can make. **The agent prepared it and marked the unknowns; it cannot supply, approve or
-close any row.** Nothing here is evidence that a decision has been taken. Base: `main` `5b5ec24`.
+custodian can make. **The agent may record an explicit owner decision with its
+source; it cannot invent approval or missing facts.** Original base: `main`
+`5b5ec24`. Current permission and remaining blockers live in the
+[owner session record](COLOCATION_OWNER_SESSION.md#current-blocker); dated
+triage below is historical except where a decision row links to that record.
 
 **Reuses the existing forms — no third intake form is created.** Send
 [`DEPLOYMENT_PROVENANCE_REQUEST.md`](DEPLOYMENT_PROVENANCE_REQUEST.md) for route O1 and work
@@ -51,10 +54,10 @@ Physical progress depends on **receipts**, not on unanswered defaults.
 | # | Decision | Required evidence | Decision owner | Source / reference | Date | Status | Consequence if left unknown |
 |---|---|---|---|---|---|---|---|
 | 1 | May the historical-log provenance request be sent? | Identified data custodian + authorised channel | Owner | `DEPLOYMENT_PROVENANCE_REQUEST.md` | — | **open** | `EN-S02` stays blocked; `EN-S09B` cannot start; historical rates stay unverified |
-| 2 | Is a new physical pilot permitted **in principle**? | PI agreement to a co-location campaign | PI | `COLOCATION_PROTOCOL.md` (draft) | — | **open** | `EN-R03` stays blocked; Studies C/D cannot be scheduled; the project stays simulation-only |
+| 2 | Is a new physical pilot permitted **in principle**? | Owner confirmation of PI go-ahead | PI, as reported by owner | [Canonical decision and source](COLOCATION_OWNER_SESSION.md#current-blocker) | 2026-09-29 | **accepted — owner-confirmed, in principle** | In-principle permission no longer blocks progress; campaign readiness follows the linked record |
 | 3 | Actual hardware and reference availability | Enclosure units on hand (V0, V0P, V1) + a reference instrument | Owner | pilot spec R1.2 | — | **open** | Number of arms unknown; simultaneity (row 7) undecidable |
 | 4 | Calibration records and uncertainty budget | Certificates for every sensor **and** the reference, with stated uncertainties | Owner / PI | pilot spec R3.1 | — | **open** | `U95 ≤ 0.5 °C` cannot be demonstrated; no admissible comparison |
-| 5 | Site and data permissions | Site access, mounting permission, data-use and retention terms | Owner / PI | pilot spec R1.3 (Siting) | — | **open** | No acquisition; no custody plan |
+| 5 | Site and data permissions | Site access, mounting permission, data-use and retention terms | Owner / PI | [Canonical disposition](COLOCATION_OWNER_SESSION.md#current-blocker) | 2026-09-29 | **open — partially resolved; see linked record** | Resolve the remaining site-specific and data-use details before new acquisition or disclosure |
 | 6 | Which protocol version is frozen? | Git SHA of the protocol at freeze, recorded **before** acquisition | PI | `COLOCATION_PROTOCOL.md` | — | **open** | No preregistration; post-hoc threshold drift becomes possible |
 | 7 | Simultaneous, or paired-successive? | Count of instrumentable units from row 3 | Owner | pilot spec R1.2 | — | **open** | Default is **simultaneous**. Paired-successive requires explicit approval **and** labelling of weather/time confounding |
 | 8 | Is the optional **unpowered arm (V0-U)** authorised? | One spare enclosure + external logging | Owner | pilot spec R1.1 (D2) | — | **open** | The decisive solar-vs-self-heating separation is not measured; the project's `N_Q` axis stays inferential |

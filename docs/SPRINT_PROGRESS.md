@@ -1,5 +1,9 @@
 # Sprint progress
 
+For the live permission decision and next action, read the
+[current blocker](COLOCATION_OWNER_SESSION.md#current-blocker). Entries below
+are dated historical snapshots, including their approval/blocker statements.
+
 ## 2026-09-11 — evidence-gap correction
 
 The [current correction](specs/evidence-gap-correction/test-report.md) supersedes any interpretation that earlier preparation closed a physical, approval, or source-review gate. Work is on `fix/evidence-gaps-20260911` from current renamed main; historical entries below retain their original dates and PR snapshots. The original day-3 and presentation PRs are now merged, but this correction is a new reviewable change, not an asserted merge or publication.
