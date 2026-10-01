@@ -8,6 +8,10 @@ earlier, longer version of this log is kept at
 
 ## Week of 2026-09-28
 
+- **09-30** Pilot policy decided before any data: estimation-only (no
+  pass/fail), I1 load test permitted with a resistive load, 14-day maximum
+  campaign window, historical-log request deferred. The rig is still the next
+  step.
 - **09-30** Owner: there are no co-location logs yet; the rig will be set up
   at the PI's test site, and data collected before then isn't usable. The
   retrospective-review route is closed. The current step is setting up the

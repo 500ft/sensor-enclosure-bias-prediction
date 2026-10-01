@@ -442,7 +442,8 @@ an explicit independent input, rather than estimating pairwise covariances.
 Never use the simulated 1.4771 °C nominal advantage, or any other model output,
 as an acceptance threshold. Both thresholds are frozen before comparative
 results are looked at. If no application tolerance is stated, the study reports
-bias and uncertainty only, with no pass or fail.
+bias and uncertainty only, with no pass or fail. The pilot is registered this way
+(decided 2026-09-30, [decision](OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30)).
 
 ---
 
@@ -505,6 +506,8 @@ replication and a genuinely withheld geometry family (C7).
    coverage: completed, counterbalanced I1 load blocks. The sunny and dark
    minute counts alone are not enough.
 3. Declare the maximum extension window before looking at comparative results.
+   Declared 2026-09-30: 14 calendar days from the first valid interval
+   ([decision](OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30)).
 4. If coverage is still incomplete at the end of that window, keep the result
    as incomplete and record the stop decision. Never relax a threshold after
    seeing outcomes.

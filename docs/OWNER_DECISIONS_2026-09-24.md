@@ -14,8 +14,40 @@ rows 3–8 is in
 the [pilot protocol](COLOCATION_PROTOCOL.md).
 
 **Status values:** `open` (no decision) · `pending` (requested, awaiting reply) · `accepted`
-(evidence received *and* accepted) · `declined` · `deferred`. A request that has been *sent* is
+(evidence received *and* accepted) · `declined` · `deferred` · `selected` (a planning choice made under the owner's delegation,
+revisable until the protocol freeze). A request that has been *sent* is
 `pending`, never `accepted` — transmission is not receipt.
+
+## A00. Decisions recorded 2026-09-30
+
+Made under the owner's delegation in this project session, before any pilot
+data exists. Each one is revisable until the protocol is frozen (row 6), and
+not after.
+
+- **#16 Purpose: estimation-only.** No intended use with a maximum tolerable
+  error has been stated, so the pilot is registered as an estimation study. It
+  reports signed bias, absolute error and their uncertainty per variant, by day
+  and night, and gives no fit-for-purpose verdict. If the owner states a use
+  and tolerance before the freeze, it replaces this.
+- **#17 Load changes: permitted, with a resistive load.** The I1 dissipation
+  test may change power state on project-owned hardware. It uses a controlled
+  resistive load at the heat source rather than firmware load states, with
+  measured V and I logged. The power level and block order are fixed in the
+  frozen protocol. The PI's site rules still apply. Fan decoupling (#18) is
+  still a hardware check; if the fan can't be held fixed, I1 is labelled a
+  combined heat-and-airflow effect.
+- **C8 maximum extension window: 14 days.** The campaign may run up to 14
+  calendar days from the first valid interval to reach the registered coverage.
+  If coverage is still incomplete then, the result is reported as incomplete.
+- **#01 Historical outreach: deferred.** The provenance request is not sent in
+  this version. The owner has said no co-location logs exist and the pilot is
+  a new acquisition; verifying the historical deployment percentages is listed
+  under "Not in this version" in the [roadmap](../ROADMAP.md). `EN-S02` stays
+  blocked and nothing depends on it.
+
+Still open, because they need the rig to exist: #03 hardware, #04 calibration
+records, #05 site and data terms, #18 fan decoupling, #19 unit count, and the
+#06 freeze.
 
 ## A0. Disposition of all 21 rows (2026-09-25)
 
@@ -53,7 +85,7 @@ Physical progress depends on **receipts**, not on unanswered defaults.
 
 | # | Decision | Required evidence | Decision owner | Source / reference | Date | Status | Consequence if left unknown |
 |---|---|---|---|---|---|---|---|
-| 1 | May the historical-log provenance request be sent? | Identified data custodian + authorised channel | Owner | `DEPLOYMENT_PROVENANCE_REQUEST.md` | — | **open** | `EN-S02` stays blocked; `EN-S09B` cannot start; historical rates stay unverified |
+| 1 | May the historical-log provenance request be sent? | Identified data custodian + authorised channel | Owner | `DEPLOYMENT_PROVENANCE_REQUEST.md` | 2026-09-30 | **deferred — not sent in this version; see [A00](#a00-decisions-recorded-2026-09-30)** | `EN-S02` stays blocked; `EN-S09B` cannot start; historical rates stay unverified |
 | 2 | Is a new physical pilot permitted **in principle**? | Owner confirmation of PI go-ahead | PI, as reported by owner | [Canonical decision and source](COLOCATION_OWNER_SESSION.md#current-blocker) | 2026-09-29 | **accepted — owner-confirmed, in principle** | In-principle permission no longer blocks progress; campaign readiness follows the linked record |
 | 3 | Actual hardware and reference availability | Enclosure units on hand (V0, V0P, V1) + a reference instrument | Owner | pilot spec R1.2 | — | **open** | Number of arms unknown; simultaneity (row 7) undecidable |
 | 4 | Calibration records and uncertainty budget | Certificates for every sensor **and** the reference, with stated uncertainties | Owner / PI | pilot spec R3.1 | — | **open** | `U95 ≤ 0.5 °C` cannot be demonstrated; no admissible comparison |
@@ -69,8 +101,8 @@ Physical progress depends on **receipts**, not on unanswered defaults.
 | 14 | Re-register the **approximation-error threshold** from relative 3 % to **absolute °C**? *(reworded 2026-09-24: this is a threshold on linearisation error, not a scientific kill criterion — that framing is withdrawn)* | Owner choice, applied prospectively | Owner | `research-direction-2026-09-21.md` §3; `studyA_nondimensional.md` §5 | — | **open** | A relative band stays ill-conditioned near ΔT → 0 and mismatched to a `U95` acceptance |
 | 15 | Bump CI Python ≥ 3.12 to unblock dependabot #27/#28? | Owner choice | Owner | PRs #27, #28 | — | **open** | numpy/pandas bumps stay unmerged. **Caution:** a numerical-library change may alter the byte-exact thermal tables |
 
-| 16 | What is the **application tolerance** for temperature (and RH) error? | The intended use's accuracy requirement, stated before observation | Owner / PI | `COLOCATION_PROTOCOL.md` R3.5 | — | **open** | The scientific comparison tolerance stays TBD; no result can be called adequate or inadequate |
-| 17 | Are **controlled power-state changes** permitted on the hardware? | Permission to alter load states, or to fit a controlled resistive load | Owner | `COLOCATION_PROTOCOL.md` I1 | — | **open** | The dissipation term cannot be identified; `N_Q` stays inferential and the project's distinctive claim is unevidenced |
+| 16 | What is the **application tolerance** for temperature (and RH) error? | The intended use's accuracy requirement, stated before observation | Owner / PI | `COLOCATION_PROTOCOL.md` R3.5 | 2026-09-30 | **selected — estimation-only; see [A00](#a00-decisions-recorded-2026-09-30)** | The scientific comparison tolerance stays TBD; no result can be called adequate or inadequate |
+| 17 | Are **controlled power-state changes** permitted on the hardware? | Permission to alter load states, or to fit a controlled resistive load | Owner | `COLOCATION_PROTOCOL.md` I1 | 2026-09-30 | **selected — permitted, resistive load; see [A00](#a00-decisions-recorded-2026-09-30)** | The dissipation term cannot be identified; `N_Q` stays inferential and the project's distinctive claim is unevidenced |
 | 18 | Can the **fan be decoupled** from the power state? | Hardware check: does powering down also stop the fan? | Owner | `COLOCATION_PROTOCOL.md` I1 step 4 | — | **open** | I1 estimates a combined heat+airflow effect, not heat alone, and must be labelled as such |
 | 19 | How many **independently printed units** are available, and can positions be rotated? | Unit count and mounting positions | Owner | `COLOCATION_PROTOCOL.md` C7 | — | **open** | Replication cannot be planned; effect estimates carry no unit-to-unit variance |
 | 20 | Is an **RH reference** available? | Independently characterised RH sensor with calibration record | Owner | `COLOCATION_PROTOCOL.md` C4 | — | **open** | **Campaign narrows to temperature only**; the RH endpoint is deferred |
