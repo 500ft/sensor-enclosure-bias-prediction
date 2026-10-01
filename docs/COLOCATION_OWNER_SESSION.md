@@ -15,6 +15,12 @@ and the pilot will be a new acquisition under a frozen protocol. Don't ask for
 existing logs again. `EN-R03` stays blocked until that acquisition has happened
 and passed intake.
 
+**Decisions recorded 2026-09-30** (owner-delegated, revisable until the
+freeze): estimation-only reporting, the I1 test permitted with a resistive
+load, a 14-day maximum campaign window, historical outreach deferred. See the
+[decision table](OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30).
+None of them changes the next action above.
+
 This supersedes the 2026-09-29 notes that the owner had "something like this"
 and didn't know where its logs were.
 
