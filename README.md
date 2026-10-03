@@ -32,8 +32,8 @@ site and manufacturing help.
 
 ## Results
 
-At 1000 W/m² of sun and 0.5 m/s of wind, the model predicts these temperature
-rises above ambient:
+At 1000 W/m² of sun and 0.5 m/s of wind, the model gives these nominal point
+estimates of temperature rise above ambient:
 
 | Enclosure | Predicted rise |
 | --- | --- |
@@ -41,20 +41,30 @@ rises above ambient:
 | Same box, painted white | 4.5 °C |
 | Passive radiation shield | 3.0 °C |
 
-Most of the improvement comes from the white paint. The shield adds about
-1.5 °C on top of paint, not the 16.4 °C the dark-box comparison suggests. The
-two designs also differ in geometry and airflow, so this compares systems, not
-shielding alone. At night the modelled bias can change sign, which is why the
-pilot has to cover both.
-[Source and interpretation](docs/results.md#thermal-bias-model).
+At this operating point, changing the dark box's absorptance to the white-paint
+assumption accounts for most of the predicted reduction. The shield's nominal
+bias is about 1.5 °C lower than the painted box's. Geometry, internal heat load
+and airflow also differ between these systems.
+[Prediction table](analysis/output/thermal_bias_table.csv).
+
+The shield-versus-painted-box ranking reverses when the documented sensitivity
+settings for poorer shading, reduced convection and increased plate-air preheat
+are applied together. These settings are illustrative, and this model comparison
+establishes no design preference.
+[Sensitivity results and assumptions](analysis/thermal_bias_results.md),
+[calculation](analysis/matched_control_sensitivity.py).
+At night the modelled bias can change sign, which is why the pilot covers both
+day and night.
 
 Other work in the repository:
 
 - **Literature.** A [26-source matrix](literature/literature_matrix.csv) with
   [source assessments](ProConsList/README.md), and a later review of 27 more
   sources against the model's previously uncited constants.
-- **Uncertainty.** Input uncertainty is propagated through the model to the
-  prediction.
+- **Uncertainty.** The standalone [linear propagation module](analysis/uncertainty.py)
+  has [known-answer tests](analysis/tests/test_uncertainty.py). It is not
+  connected to the published prediction tables or figure, which omit propagated
+  input uncertainty.
 - **Reliability accounting.** [Schedule-aware metrics](docs/RELIABILITY_METRICS.md)
   for deployed units. The historical percentages need raw exports that are not
   in this repository, so they are reported but unverified.
@@ -93,9 +103,11 @@ covers external-data prerequisites and the intake checker.
 
 ## What's next
 
-No co-location data exists yet. The next step is the owner's: set up the rig
-at the PI's test site (the enclosures, a reference thermometer in its shield,
-and loggers). The protocol is then frozen before the first 24-hour run. The
+The thermal co-location campaign has not run yet. The next step is the owner's:
+book the PI date and inventory the rig at the test site (the enclosures, sensors,
+shielded reference and calibration records, power measurement and loggers).
+Record the siting and whether the comparison will be simultaneous or sequential.
+The protocol is then fitted to that hardware and frozen before the first run. The
 [roadmap](ROADMAP.md) has the steps, and the
 [blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) has the
 current status.

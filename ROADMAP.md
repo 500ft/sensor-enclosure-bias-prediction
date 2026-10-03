@@ -24,21 +24,27 @@ Direction A (predicting new geometries before they are built) stays
 conditional on the pilot showing a reproducible bias above the instrument
 uncertainty.
 
-## Where it stands (2026-09-30)
+## Where it stands
 
-- A lumped heat-balance model predicts, at 1000 W/m² sun and 0.5 m/s wind, a
-  rise of 19.4 °C for the dark box, 4.5 °C for the same box painted white and
-  3.0 °C for the passive shield. At night the modelled bias can change sign.
-- The model's constants have been checked against 27 fully read sources, and
-  the uncertainty is propagated to the prediction.
+- The published [thermal predictions](analysis/output/thermal_bias_table.csv)
+  are point estimates. Input uncertainty has not been propagated to these
+  outputs; [analysis/uncertainty.py](analysis/uncertainty.py) is a separate,
+  tested module. The [parameter register](docs/PARAMETER_REGISTER.csv) records
+  the source review and unresolved inputs.
+- The shield-versus-painted-box ranking reverses under the documented combined
+  sensitivity settings for shading, convection and plate-air preheat. The
+  [sensitivity results](analysis/thermal_bias_results.md) establish no design
+  preference.
 - The baseline enclosure is parametric CAD, accepted against an independent
   closed-form check.
 - The pilot protocol, intake checker and campaign validation exist as drafts.
 - The PI has given the go-ahead, with a test site and manufacturing help
   (owner statement, 2026-09-29).
-- No co-location data exists yet (owner, 2026-09-30). The rig will be set up
-  at the PI's test site, and data collected before then isn't usable for the
-  pilot.
+- The thermal co-location campaign has not run. Earlier deployment and
+  electronics work remains recorded in the
+  [data guide](docs/data-and-figures.md#deployment-log-plots). The owner still
+  needs to book the PI date and inventory the rig, including calibration, power
+  measurement, siting and simultaneous or sequential operation.
 
 - Decided 2026-09-30, before any data: estimation-only reporting, the I1
   load test permitted with a resistive load, a 14-day maximum campaign window,
