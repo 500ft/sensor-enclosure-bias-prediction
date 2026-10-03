@@ -1,0 +1,28 @@
+{
+  "_schema": "enclosure-geometry/1",
+  "_provenance_rule": "EVERY dimension below is provisional_design (route: design_then_inspect). NONE is a measurement of existing hardware. Values are derived from the repository's own provisional register entries, not invented independently. When EN-M01 supplies measured values, change them HERE only -- the authoring script and the oracle both read this file, so they cannot disagree.",
+  "part_id": "V0-baseline-enclosure",
+  "units": "mm",
+  "basis": {
+    "source_register": "docs/PARAMETER_REGISTER.csv",
+    "derived_from": "P-APROJ-V0 = 0.030 m^2 implies a ~170 x 170 mm sun-facing face; wall thickness 3 mm is the nominal used in the Biot screening (studyA section 3.1)",
+    "evidence_status": "LAB_REQUIRED -- these are design choices pending inspection, not as-built dimensions"
+  },
+  "outer_length": 170.0,
+  "outer_width": 170.0,
+  "outer_height": 170.0,
+  "wall_thickness": 3.0,
+  "floor_thickness": 3.0,
+  "vent_walls": 2,
+  "vents_per_wall": 8,
+  "vent_width": 40.0,
+  "vent_height": 4.0,
+  "vent_pitch": 12.0,
+  "vent_band_center_z": 85.0,
+  "standoff_diameter": 12.0,
+  "standoff_height": 25.0,
+  "_notes": {
+    "A_conv_mapping": "The thermal model's A_conv is an EFFECTIVE COUPLED area, not the total CAD surface. This model reports geometric areas only; the mapping to A_conv/A_proj is UNRESOLVED and must be written down before any as-built prediction (Study B design section 5).",
+    "open_top": "Modelled as an open-top shell; a lid is a separate part and is not claimed here."
+  }
+}

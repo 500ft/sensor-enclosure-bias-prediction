@@ -1,0 +1,85 @@
+{
+  "accepted": true,
+  "part_id": "V0-baseline-enclosure",
+  "units": "mm",
+  "checks": [
+    {
+      "check": "volume_mm3",
+      "measured": 416515.43338822946,
+      "expected": 416515.4333882308,
+      "abs_diff": 1.3387762010097504e-09,
+      "tolerance": 0.41651543338823077,
+      "pass": true
+    },
+    {
+      "check": "bbox_x_mm",
+      "measured": 170.0,
+      "expected": 170.0,
+      "abs_diff": 0.0,
+      "tolerance": 1e-06,
+      "pass": true
+    },
+    {
+      "check": "bbox_y_mm",
+      "measured": 170.0,
+      "expected": 170.0,
+      "abs_diff": 0.0,
+      "tolerance": 1e-06,
+      "pass": true
+    },
+    {
+      "check": "bbox_z_mm",
+      "measured": 170.0,
+      "expected": 170.0,
+      "abs_diff": 0.0,
+      "tolerance": 1e-06,
+      "pass": true
+    },
+    {
+      "check": "solid_count",
+      "measured": 1,
+      "expected": 1,
+      "abs_diff": 0,
+      "tolerance": 0,
+      "pass": true
+    },
+    {
+      "check": "reimported_volume_mm3",
+      "measured": 416515.4333882296,
+      "expected": 416515.4333882308,
+      "abs_diff": 1.2223608791828156e-09,
+      "tolerance": 4.165154333882309,
+      "pass": true
+    }
+  ],
+  "expected": {
+    "bounding_box_mm": [
+      170.0,
+      170.0,
+      170.0
+    ],
+    "solid_count": 1,
+    "outer_volume_mm3": 4913000.0,
+    "cavity_volume_mm3": 4491632.0,
+    "shell_volume_mm3": 421368.0,
+    "vent_count": 16,
+    "vent_cut_volume_mm3": 7680.0,
+    "vent_open_area_mm2": 2560.0,
+    "standoff_volume_mm3": 2827.4333882308138,
+    "expected_volume_mm3": 416515.4333882308,
+    "wall_thickness_mm": 3.0,
+    "sun_facing_projected_area_mm2": 28900.0,
+    "_area_caveat": "geometric only; the thermal model's A_proj/A_conv are EFFECTIVE coupled areas and the mapping is UNRESOLVED"
+  },
+  "measured": {
+    "volume_mm3": 416515.43338822946,
+    "bounding_box_mm": [
+      170.0,
+      170.0,
+      170.0
+    ],
+    "solid_count": 1
+  },
+  "step": "C:\\CADLoop\\jobs\\enclosure-v0\\out\\V0-baseline-enclosure.step",
+  "evidence_note": "Geometry accepted against an independent closed-form oracle. Every input dimension is provisional_design, NOT a measurement of existing hardware. This verifies the MODEL, not the physical enclosure."
+}

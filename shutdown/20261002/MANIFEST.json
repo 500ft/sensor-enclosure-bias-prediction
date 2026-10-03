@@ -1,0 +1,149 @@
+{
+  "base_commit": "abc84f6dec41b68a91677a053b837f003a6a8a01",
+  "files": [
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/README.md",
+      "preserved_path": "shutdown/20261002/local-cad/README.md",
+      "bytes": 2847,
+      "sha256": "fde57df2a66ed3d0008f9c923be3b6f16c6038a0c9314eeb6ee9a9cc0e06f4a1"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/cad/build_enclosure.py",
+      "preserved_path": "shutdown/20261002/local-cad/cad/build_enclosure.py",
+      "bytes": 4587,
+      "sha256": "1a8f244b3629af5ddeadd1f3f8b34c2a33d8460057346f1a247820514f2f2ee9"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/cad/geometry.json",
+      "preserved_path": "shutdown/20261002/local-cad/cad/geometry.json",
+      "bytes": 1552,
+      "sha256": "2b9fc2bc6e2bff0abb4adcbdea647f651ee47d0c1b4eacce9107006b45350d2c"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/cad/oracle.py",
+      "preserved_path": "shutdown/20261002/local-cad/cad/oracle.py",
+      "bytes": 2106,
+      "sha256": "58bcf8d08694c434ea59446c0751e9985b25f4c5696562f021a096f51bf4fc6b"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/docs/Study-Guide-2026-09-27.pdf",
+      "preserved_path": "shutdown/20261002/local-cad/docs/Study-Guide-2026-09-27.pdf",
+      "bytes": 52697,
+      "sha256": "f7a517483c26747718c6a22c850f322867f21fde217ea05ddfaa7aee2cbb9c18"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/docs/study_guide_build.py",
+      "preserved_path": "shutdown/20261002/local-cad/docs/study_guide_build.py",
+      "bytes": 52916,
+      "sha256": "9c651e694c07d6b160c32e671fc792f4cabf7fffa7e17ba4ee41c91f3647bc74"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/out/V0-baseline-enclosure.step",
+      "preserved_path": "shutdown/20261002/local-cad/out/V0-baseline-enclosure.step",
+      "bytes": 278321,
+      "sha256": "08eabbc40becf51d833399d8fdcd406672054c0bee2a704cdf45ee2fc7c5c29a"
+    },
+    {
+      "original_path": "/Users/redhose/Projects/Sensor-Enclosure-Thermal-Design/out/result.json",
+      "preserved_path": "shutdown/20261002/local-cad/out/result.json",
+      "bytes": 2304,
+      "sha256": "3c152ec7496fcb1e12d48b965f2c4602e3a7ac780ec28d19418346f210193830"
+    },
+    {
+      "original_path": "192.168.1.10:C:/CADLoop/jobs/enclosure-v0/cad/build_enclosure.py",
+      "preserved_path": "shutdown/20261002/cad-host/cad/build_enclosure.py",
+      "bytes": 4587,
+      "sha256": "1a8f244b3629af5ddeadd1f3f8b34c2a33d8460057346f1a247820514f2f2ee9"
+    },
+    {
+      "original_path": "192.168.1.10:C:/CADLoop/jobs/enclosure-v0/cad/geometry.json",
+      "preserved_path": "shutdown/20261002/cad-host/cad/geometry.json",
+      "bytes": 1578,
+      "sha256": "5a285776df407882c3f787a0f1344266fb8c2022b825e6e13270237065f7945d"
+    },
+    {
+      "original_path": "192.168.1.10:C:/CADLoop/jobs/enclosure-v0/cad/oracle.py",
+      "preserved_path": "shutdown/20261002/cad-host/cad/oracle.py",
+      "bytes": 2106,
+      "sha256": "58bcf8d08694c434ea59446c0751e9985b25f4c5696562f021a096f51bf4fc6b"
+    },
+    {
+      "original_path": "192.168.1.10:C:/CADLoop/jobs/enclosure-v0/out/result.json",
+      "preserved_path": "shutdown/20261002/cad-host/out/result.json",
+      "bytes": 2304,
+      "sha256": "3c152ec7496fcb1e12d48b965f2c4602e3a7ac780ec28d19418346f210193830"
+    },
+    {
+      "original_path": "192.168.1.10:C:/CADLoop/jobs/enclosure-v0/out/V0-baseline-enclosure.step",
+      "preserved_path": "shutdown/20261002/cad-host/out/V0-baseline-enclosure.step",
+      "bytes": 278321,
+      "sha256": "08eabbc40becf51d833399d8fdcd406672054c0bee2a704cdf45ee2fc7c5c29a"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/NEXT_STEPS.md",
+      "preserved_path": "shutdown/20261002/legacy-checkout/NEXT_STEPS.md",
+      "bytes": 5554,
+      "sha256": "1b6c7979e4140354d9c13083b04a63814c85049f2cf623c2cc9f19b397ffe365"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/output/pdf/pi_progress_since_may15.pdf",
+      "preserved_path": "shutdown/20261002/legacy-checkout/output/pdf/pi_progress_since_may15.pdf",
+      "bytes": 22728,
+      "sha256": "800d7c30423c2323401705e769fe6d30cb65c2e1cb73594e81dfa03fa25c02f5"
+    },
+    {
+      "original_path": "/Users/redhose/Developer/repo-professionalization-20260910/sensor-enclosure-thermal-design/output/pdf/pi_progress_since_may15.pdf",
+      "preserved_path": "shutdown/20261002/main-checkout/output/pdf/pi_progress_since_may15.pdf",
+      "bytes": 22728,
+      "sha256": "421129d074fbfbfd83a18d2396745bf302d7f4e15bea99b9bdd98c902a73a086"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/contact-sheet.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/contact-sheet.png",
+      "bytes": 651416,
+      "sha256": "0d95fea7c5efcd3ee523d603606d1a667523a4ccfb7fcd103502ad3634179a80"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-01.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-01.png",
+      "bytes": 168185,
+      "sha256": "4d152036235e21d317c00dc648118dc5c854e33965c70a351a11c7226350c634"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-02.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-02.png",
+      "bytes": 188423,
+      "sha256": "5cb7a16d4bda9efc7f3a91433e6e0c95ba2814ef7e4e40b42669342adb45b655"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-03.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-03.png",
+      "bytes": 108477,
+      "sha256": "94783a24ca07e1509ca9c86669193bceebf1ff041b247bba549e932a9648ceae"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-04.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-04.png",
+      "bytes": 169950,
+      "sha256": "4c27ff9bb8b8b1945fd3a83211df4ce8f1b88efb46e16bf1380262167b90258b"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-05.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-05.png",
+      "bytes": 183779,
+      "sha256": "d1d4d4a39752a0c5037669644ffb380b2eed78e83de0a6b50d3966e0736cfec2"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-06.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-06.png",
+      "bytes": 96425,
+      "sha256": "7880325e8f336af547189a05891f3bd88e7054a0b8570a72cfadd947240f74e5"
+    },
+    {
+      "original_path": "/Users/redhose/Enclosure-Research/tmp/pdfs/pi_progress_since_may15/page-07.png",
+      "preserved_path": "shutdown/20261002/legacy-checkout/report-previews/page-07.png",
+      "bytes": 169884,
+      "sha256": "925b086a30558d7cd1b3604efa1bc60c7f3294c2dc68607701499a805504e9d5"
+    }
+  ]
+}
