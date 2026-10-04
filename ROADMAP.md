@@ -9,6 +9,12 @@ work history is in [docs/SPRINT_PROGRESS.md](docs/SPRINT_PROGRESS.md) and
 
 ## Finish line
 
+The owner adopted a public-data-first investigation on 2026-10-04. First assess
+external-data suitability, then make a narrowly scoped external model comparison
+only if paired temperature channels, exposure metadata and data terms permit it.
+Public data does not establish a transferable enclosure ranking or replace the
+physical campaign.
+
 The project is finished when measured temperature bias for the enclosure
 variants, taken beside a reference thermometer over at least one full day and
 night, has been compared with the model's predictions and written up. This is
@@ -25,6 +31,11 @@ conditional on the pilot showing a reproducible bias above the instrument
 uncertainty.
 
 ## Where it stands
+
+- The executed [AQ-SPEC suitability probe](analysis/aqspec_feasibility.md) obtained
+  reports but no paired temperature series. Its source inventory and draft data
+  request are recorded with the result. External model comparison remains blocked
+  on usable channels, metadata and reuse terms.
 
 - The published [thermal predictions](analysis/output/thermal_bias_table.csv)
   are point estimates. Input uncertainty has not been propagated to these
@@ -56,11 +67,19 @@ uncertainty.
 
 | # | Step | Who | Done when |
 |---|---|---|---|
-| 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Current step.** |
+| A | Resolve external-data access after the completed AQ-SPEC probe | Owner reviews the draft request; data custodian supplies records and terms | A permitted paired sample and sufficient thermal/reference metadata, or a recorded inability to obtain them. **Current external-data step.** |
+| B | Compare an eligible external dataset with the model, if feasible | Agent, after data suitability is established | Selection, independent-unit/day split and estimation metrics fixed before held-out evaluation; scoped result with uncertainty and exposure limits |
+| 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Physical campaign step.** |
 | 2 | Freeze the protocol: fill the R1.3 register for the actual hardware, choose positions, state the window and uncertainty method, commit it with the approver and date | Agent drafts; owner and PI approve | Frozen protocol committed before any data |
-| 3 | Run at least 24 h with all arms and the reference side by side, with the I1 resistive-load test as the first mechanism experiment; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
+| 3 | Run at least 24 h with all arms and the reference side by side, with I1 resistive-load and I2 shading tests retained as optional mechanism work; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
 | 4 | Compute bias and uncertainty per variant, day and night, and compare with the model | Agent | Results and comparison merged |
 | 5 | Update the manuscript, README and portfolio | Agent | Merged |
+
+The small Sensor.Community/DWD metadata pilot is a possible fallback, not an
+executed result. It requires actual data licences, construction metadata and
+checks of distance, elevation, land use and overlapping reference meteorology
+before modeling. Historical lab data requires PI data terms and matching hardware
+and exposure records. External exploration does not freeze the physical protocol.
 
 ## Not in this version
 

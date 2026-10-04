@@ -1,0 +1,210 @@
+{
+  "scope": "Listed pages and linked selected PDFs; not an exhaustive archive search. Static anchor scan does not resolve JavaScript exports or APIs.",
+  "attribution": "South Coast Air Quality Management District, AQ-SPEC",
+  "data_licence": "No explicit licence for paired temperature data established; see terms snapshot and human review in aqspec_feasibility.md.",
+  "sources": [
+    {
+      "id": "evaluations",
+      "url": "https://www.aqmd.gov/aq-spec/evaluations",
+      "retrieved_utc": "2026-10-04T23:10:16.064766+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/aq-spec/evaluations",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "evaluations.html",
+      "bytes": 136133,
+      "sha256": "41f1f470744892dc7fc3c8ca8fbb446dbb5fbf1eaede9ca952fe9836ea9d645b",
+      "tabular_file_links": [],
+      "selected_report_links": []
+    },
+    {
+      "id": "summary",
+      "url": "https://www.aqmd.gov/aq-spec/evaluations/summary-table",
+      "retrieved_utc": "2026-10-04T23:10:16.837703+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/aq-spec/evaluations/summary-table",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "summary.html",
+      "bytes": 850008,
+      "sha256": "3c51e8e5aef80b81cc435a23b73ad39fcae9edbd533d4336b520325aa35bd8e9",
+      "tabular_file_links": [],
+      "selected_report_links": [
+        "https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/purpleair-pa-ii---field-evaluation_2026.pdf?sfvrsn=ea8b667e_3"
+      ]
+    },
+    {
+      "id": "field",
+      "url": "https://www.aqmd.gov/aq-spec/evaluations/criteria-pollutants/field",
+      "retrieved_utc": "2026-10-04T23:10:17.578926+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/aq-spec/evaluations/criteria-pollutants/field",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "field.html",
+      "bytes": 511930,
+      "sha256": "a1dfc50a33ff9d74d09dd51bdb9112965fe6a41dfa5202e2749ce3ff0cd89d2d",
+      "tabular_file_links": [],
+      "selected_report_links": [
+        "https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/purpleair-pa-ii---field-evaluation_2026.pdf?sfvrsn=ea8b667e_3",
+        "https://www.aqmd.gov/docs/default-source/aq-spec/protocols/sensors-field-testing-protocol.pdf?sfvrsn=5824c061_0"
+      ]
+    },
+    {
+      "id": "sensors",
+      "url": "https://www.aqmd.gov/aq-spec/sensors",
+      "retrieved_utc": "2026-10-04T23:10:18.164041+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/aq-spec/sensors",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "sensors.html",
+      "bytes": 126500,
+      "sha256": "de8e889d84aa1b2b5f0259144aa147fa2b5b5d2a6c4f8d01e5926dc1e68b4d3c",
+      "tabular_file_links": [],
+      "selected_report_links": []
+    },
+    {
+      "id": "airsensor",
+      "url": "https://www.aqmd.gov/aq-spec/special-projects/airsensor",
+      "retrieved_utc": "2026-10-04T23:10:18.723029+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/aq-spec/special-projects/airsensor",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "airsensor.html",
+      "bytes": 130844,
+      "sha256": "5ed46087d8d2bf3c84ff10d445f53a7158cea87b40e00ecdfbc4637d194032b5",
+      "tabular_file_links": [],
+      "selected_report_links": [
+        "https://www.aqmd.gov/docs/default-source/aq-spec/research-projects/airsensor-dataviewer-user-guide.pdf?sfvrsn=e2cd861_8"
+      ]
+    },
+    {
+      "id": "aqy_network",
+      "url": "https://www.aqmd.gov/aq-spec/special-projects/aeroqual-aqy-deployments",
+      "retrieved_utc": "2026-10-04T23:10:19.293523+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/aq-spec/special-projects/aeroqual-aqy-deployments",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "aqy_network.html",
+      "bytes": 138587,
+      "sha256": "d221ad52dff0b0e6c4c874020c656712916914f15c3ab165c838e3d726ee5b1c",
+      "tabular_file_links": [],
+      "selected_report_links": []
+    },
+    {
+      "id": "library_news",
+      "url": "https://www.aqmd.gov/home/research/pubs-docs-reports/newsletters/may-jun-jul-2026/empowering-communities--air-quality-sensor-library-and-new-dashboard",
+      "retrieved_utc": "2026-10-04T23:10:20.089567+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/home/research/pubs-docs-reports/newsletters/may-jun-jul-2026/empowering-communities--air-quality-sensor-library-and-new-dashboard",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "library_news.html",
+      "bytes": 121070,
+      "sha256": "a5a2960957f09d6b703e587d52f7b6e072b58c93a9e0140eb967573acd96e1d8",
+      "tabular_file_links": [],
+      "selected_report_links": []
+    },
+    {
+      "id": "legacy_viewer",
+      "url": "http://tools.mazamascience.com:6709/asdv/test/",
+      "retrieved_utc": "2026-10-04T23:10:20.127328+00:00",
+      "curl_exit": 6,
+      "response": [
+        "000",
+        "http://tools.mazamascience.com:6709/asdv/test/"
+      ],
+      "error": "curl: (6) Could not resolve host: tools.mazamascience.com",
+      "local_file": "legacy_viewer.html"
+    },
+    {
+      "id": "terms",
+      "url": "https://www.aqmd.gov/privacy/terms-of-use",
+      "retrieved_utc": "2026-10-04T23:10:20.691584+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/privacy/terms-of-use",
+        "text/html; charset=utf-8"
+      ],
+      "error": "",
+      "local_file": "terms.html",
+      "bytes": 130054,
+      "sha256": "d938e139f09f8d22522012b7f185713212223c4754d8205a1e8a8efcd505cf3f",
+      "tabular_file_links": [],
+      "selected_report_links": []
+    },
+    {
+      "id": "pa_ii_2026",
+      "url": "https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/purpleair-pa-ii---field-evaluation_2026.pdf?sfvrsn=ea8b667e_3",
+      "retrieved_utc": "2026-10-04T23:10:21.672365+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/docs/default-source/aq-spec/field-evaluations/purpleair-pa-ii---field-evaluation_2026.pdf?sfvrsn=ea8b667e_3",
+        "application/pdf"
+      ],
+      "error": "",
+      "local_file": "pa_ii_2026.pdf",
+      "bytes": 2782743,
+      "sha256": "f24d00bfb677a633d631914f8d8f4a72815dc7e9d3f9704bc7009bd74c90ff7e",
+      "extracted_text_characters": 35101
+    },
+    {
+      "id": "field_protocol",
+      "url": "https://www.aqmd.gov/docs/default-source/aq-spec/protocols/sensors-field-testing-protocol.pdf?sfvrsn=5824c061_0",
+      "retrieved_utc": "2026-10-04T23:10:22.506558+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/docs/default-source/aq-spec/protocols/sensors-field-testing-protocol.pdf?sfvrsn=5824c061_0",
+        "application/pdf"
+      ],
+      "error": "",
+      "local_file": "field_protocol.pdf",
+      "bytes": 942220,
+      "sha256": "cd602b182f3e40daae82856cfb78f1545643e786355ffdf47a0b95ad3630a716",
+      "extracted_text_characters": 33167
+    },
+    {
+      "id": "viewer_guide",
+      "url": "https://www.aqmd.gov/docs/default-source/aq-spec/research-projects/airsensor-dataviewer-user-guide.pdf?sfvrsn=e2cd861_8",
+      "retrieved_utc": "2026-10-04T23:10:23.376317+00:00",
+      "curl_exit": 0,
+      "response": [
+        "200",
+        "https://www.aqmd.gov/docs/default-source/aq-spec/research-projects/airsensor-dataviewer-user-guide.pdf?sfvrsn=e2cd861_8",
+        "application/pdf"
+      ],
+      "error": "",
+      "local_file": "viewer_guide.pdf",
+      "bytes": 2015898,
+      "sha256": "f0ca2ba6831b5272fe107b292666fa043adb3439231d109d946c238355d24cd0",
+      "extracted_text_characters": 15423
+    }
+  ]
+}

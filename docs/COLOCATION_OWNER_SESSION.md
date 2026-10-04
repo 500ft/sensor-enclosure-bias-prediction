@@ -2,24 +2,36 @@
 
 ## Current blocker
 
-**Next action:** the owner sets up the co-location rig at the PI's test site:
-the enclosure variants, the reference thermometer in its shield, and the
+**Public-data decision, 2026-10-04:** the owner authorized an external-data
+suitability study before physical validation. The executed
+[AQ-SPEC probe](../analysis/aqspec_feasibility.md) obtained reports but no paired
+sensor/reference temperature series with established reuse terms. The owner can
+review its draft data request; no outreach has been sent. External comparison
+needs a permitted sample and thermal/reference metadata from the data custodian.
+This does not close `EN-R03` or establish a transferable design ranking.
+
+**Physical next action:** the owner books the PI date and sets up the
+co-location rig at the test site: the enclosure variants, the reference
+thermometer in its shield, and the
 loggers. No pilot data is collected until the rig exists and the
 [protocol](COLOCATION_PROTOCOL.md) is frozen.
 
 **Owner statement, 2026-09-30:** "for enclosure there are currently no
 co-location logs at all. but they will be setup in the future, thus the data
-collected today is not worthwhile." There is no existing co-location evidence
-to review, so the retrospective-review route recorded on 2026-09-29 is closed,
-and the pilot will be a new acquisition under a frozen protocol. Don't ask for
-existing logs again. `EN-R03` stays blocked until that acquisition has happened
-and passed intake.
+collected today is not worthwhile." That statement left no existing
+thermal co-location evidence to review, so the retrospective-review route recorded on 2026-09-29 was closed,
+and the pilot will be a new acquisition under a frozen protocol.
+The public-data decision permits external suitability work;
+any historical lab alternative still needs PI data terms and hardware/exposure
+metadata. No historical logs or permissions have been supplied.
+`EN-R03` stays blocked until that acquisition has happened and passed intake.
 
 **Decisions recorded 2026-09-30** (owner-delegated, revisable until the
 freeze): estimation-only reporting, the I1 test permitted with a resistive
 load, a 14-day maximum campaign window, historical outreach deferred. See the
 [decision table](OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30).
-None of them changes the next action above.
+These decisions remain in force; the external-data step does not freeze the
+physical protocol.
 
 This supersedes the 2026-09-29 notes that the owner had "something like this"
 and didn't know where its logs were.
