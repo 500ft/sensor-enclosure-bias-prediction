@@ -26,10 +26,11 @@ uncertainty.
 
 ## Where it stands
 
-- The published [thermal predictions](analysis/output/thermal_bias_table.csv)
-  are point estimates. Input uncertainty has not been propagated to these
-  outputs; [analysis/uncertainty.py](analysis/uncertainty.py) is a separate,
-  tested module. The [parameter register](docs/PARAMETER_REGISTER.csv) records
+- The published [steady thermal predictions](analysis/output/thermal_bias_table.csv)
+  are point estimates. A [transient prediction model](analysis/thermal_transient.py)
+  now runs on real weather with bands from declared parameter ranges
+  ([prediction record](analysis/output/thermal_transient_prediction.json)). It
+  predicts the I1 load test's °C per watt before any data exists. The [parameter register](docs/PARAMETER_REGISTER.csv) records
   the source review and unresolved inputs.
 - The shield-versus-painted-box ranking reverses under the documented combined
   sensitivity settings for shading, convection and plate-air preheat. The
@@ -56,10 +57,11 @@ uncertainty.
 
 | # | Step | Who | Done when |
 |---|---|---|---|
-| 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Current step.** |
+| 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Current step: waiting on funding, expected to start the week of 2026-10-12.** |
+| 1a | Before data: re-run the transient prediction for the rig's actual site, hardware geometry and planned dates, and commit it as the registered prediction | Agent | Prediction committed with its inputs' hashes before the first data file |
 | 2 | Freeze the protocol: fill the R1.3 register for the actual hardware, choose positions, state the window and uncertainty method, commit it with the approver and date | Agent drafts; owner and PI approve | Frozen protocol committed before any data |
 | 3 | Run at least 24 h with all arms and the reference side by side, with the I1 resistive-load test as the first mechanism experiment; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
-| 4 | Compute bias and uncertainty per variant, day and night, and compare with the model | Agent | Results and comparison merged |
+| 4 | Compute bias and uncertainty per variant, day and night, and compare with the registered prediction, driving the model with on-site measured weather | Agent | Results and comparison merged |
 | 5 | Update the manuscript, README and portfolio | Agent | Merged |
 
 ## Not in this version

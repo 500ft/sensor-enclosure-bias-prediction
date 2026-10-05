@@ -56,15 +56,28 @@ establishes no design preference.
 At night the modelled bias can change sign, which is why the pilot covers both
 day and night.
 
+A [transient version](analysis/thermal_transient.py) adds a thermal mass and
+runs on two weeks of real Brooklyn weather (Open-Meteo archive, September 2026),
+repeated over 400 draws from declared parameter ranges. Median daytime bias and
+5–95% band: dark box 6.5 °C (5.2–8.2), painted box 1.7 °C (0.6–3.0), passive
+shield 1.5 °C (1.1–2.2), aspirated reference 0.9 °C (0.7–1.2). The painted box
+and shield bands overlap, so this also gives no ranking. In shade the model
+predicts 0.5–0.9 °C per watt of internal power for the box and 1.7–3.3 °C per
+watt for the shield's small sensor element, across 0.5–3 m/s of wind. That is
+the quantity the rig's first load test measures. The bands come from declared
+ranges, not measurements.
+[Prediction record](analysis/output/thermal_transient_prediction.json),
+[figure](analysis/figures/thermal_transient_prediction.png).
+
 Other work in the repository:
 
 - **Literature.** A [26-source matrix](literature/literature_matrix.csv) with
   [source assessments](ProConsList/README.md), and a later review of 27 more
   sources against the model's previously uncited constants.
-- **Uncertainty.** The standalone [linear propagation module](analysis/uncertainty.py)
-  has [known-answer tests](analysis/tests/test_uncertainty.py). It is not
-  connected to the published prediction tables or figure, which omit propagated
-  input uncertainty.
+- **Uncertainty.** The steady tables are point estimates. The transient
+  prediction carries bands from declared parameter ranges by Monte Carlo. The
+  standalone [linear propagation module](analysis/uncertainty.py) is tested but
+  not connected to either.
 - **Reliability accounting.** [Schedule-aware metrics](docs/RELIABILITY_METRICS.md)
   for deployed units. The historical percentages need raw exports that are not
   in this repository, so they are reported but unverified.

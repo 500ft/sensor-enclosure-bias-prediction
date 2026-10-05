@@ -1,0 +1,370 @@
+{
+  "status": "MODEL PREDICTION; no co-location data exists",
+  "model": "analysis/thermal_transient.py (steady balance of thermal_bias.py plus one thermal mass per variant)",
+  "weather": {
+    "file": "analysis/input/openmeteo_brooklyn_20260901_20260914.json",
+    "sha256": "a01ce1c2a1ac749eb4f6ffd005c4f65d7acbaacd4df41c2c120fed38b09dd8af",
+    "provider": "Open-Meteo historical weather archive (CC BY 4.0)",
+    "grid_point_lat_lon": [
+      40.667835,
+      -73.93768
+    ],
+    "period_local": [
+      "2026-09-01T00:00",
+      "2026-09-14T23:00"
+    ]
+  },
+  "integration": {
+    "dt_s": 60.0,
+    "spin_up_h": 24,
+    "method": "linearised implicit Euler"
+  },
+  "monte_carlo": {
+    "samples": 400,
+    "seed": 20261004,
+    "distribution": "uniform within declared ranges"
+  },
+  "priors": {
+    "alpha_dark": {
+      "low": 0.8,
+      "high": 0.95,
+      "applies_to": [
+        "V0"
+      ],
+      "note": "dark or unspecified finish; nominal 0.90"
+    },
+    "alpha_light": {
+      "low": 0.2,
+      "high": 0.4,
+      "applies_to": [
+        "V0P",
+        "V1",
+        "V2"
+      ],
+      "note": "white or light finish; nominal 0.30"
+    },
+    "eps": {
+      "low": 0.85,
+      "high": 0.95,
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1",
+        "V2"
+      ],
+      "note": "range stated in the eps_surface note"
+    },
+    "solar_factor": {
+      "low": 0.18,
+      "high": 0.3,
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "repo sensitivity range for shield shading"
+    },
+    "conv_boost": {
+      "low": 1.0,
+      "high": 1.4,
+      "applies_to": [
+        "V1"
+      ],
+      "note": "repo sensitivity range for the shield chimney boost"
+    },
+    "preheat_calm_k": {
+      "low": 1.2,
+      "high": 2.4,
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "repo sensitivity range for plate air pre-heat"
+    },
+    "q_int_box_w": {
+      "low": 0.4,
+      "high": 1.6,
+      "applies_to": [
+        "V0",
+        "V0P"
+      ],
+      "note": "half to double the nominal 0.8 W"
+    },
+    "q_int_shield_w": {
+      "low": 0.05,
+      "high": 0.2,
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "half to double the nominal 0.1 W"
+    },
+    "f_sky_box": {
+      "low": 0.3,
+      "high": 0.7,
+      "applies_to": [
+        "V0",
+        "V0P"
+      ],
+      "note": "declared; nominal 0.50"
+    },
+    "f_sky_shield": {
+      "low": 0.0,
+      "high": 0.1,
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "declared; nominal 0.05"
+    },
+    "h_floor": {
+      "low": 3.5,
+      "high": 6.5,
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1"
+      ],
+      "note": "declared; nominal 5.0 W/m^2K"
+    },
+    "h_slope": {
+      "low": 3.0,
+      "high": 5.0,
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1"
+      ],
+      "note": "declared; nominal 4.0 W/m^2K per m/s"
+    },
+    "wind_height_factor": {
+      "low": 0.4,
+      "high": 0.9,
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1"
+      ],
+      "note": "declared; 10 m reanalysis wind to sensor height at an urban site"
+    },
+    "c_box_j_per_k": {
+      "low": 150.0,
+      "high": 600.0,
+      "applies_to": [
+        "V0",
+        "V0P"
+      ],
+      "note": "declared; 0.1-0.4 kg of plastic wall at ~1500 J/kgK"
+    },
+    "c_shield_j_per_k": {
+      "low": 5.0,
+      "high": 40.0,
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "declared; small sensor element and its mount"
+    }
+  },
+  "nominal": {
+    "alpha_dark": 0.9,
+    "alpha_light": 0.3,
+    "eps": 0.9,
+    "solar_factor": 0.18,
+    "conv_boost": 1.4,
+    "preheat_calm_k": 1.2,
+    "q_int_box_w": 0.8,
+    "q_int_shield_w": 0.1,
+    "f_sky_box": 0.5,
+    "f_sky_shield": 0.05,
+    "h_floor": 5.0,
+    "h_slope": 4.0,
+    "wind_height_factor": 0.65,
+    "c_box_j_per_k": 300.0,
+    "c_shield_j_per_k": 15.0
+  },
+  "bias_summary": {
+    "V0": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        5.24,
+        6.53,
+        8.15
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        -1.2,
+        -0.46,
+        0.16
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        9.33,
+        11.39,
+        14.01
+      ]
+    },
+    "V0P": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        0.55,
+        1.67,
+        2.95
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        -1.2,
+        -0.46,
+        0.16
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        2.01,
+        3.44,
+        5.24
+      ]
+    },
+    "V1": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        1.05,
+        1.54,
+        2.15
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.02,
+        0.24,
+        0.48
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        1.76,
+        2.48,
+        3.46
+      ]
+    },
+    "V2": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        0.65,
+        0.93,
+        1.21
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.01,
+        0.15,
+        0.27
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        1.06,
+        1.46,
+        1.86
+      ]
+    }
+  },
+  "nominal_summary": {
+    "V0": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        6.53,
+        6.53,
+        6.53
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        -0.63,
+        -0.63,
+        -0.63
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        11.51,
+        11.51,
+        11.51
+      ]
+    },
+    "V0P": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        1.5,
+        1.5,
+        1.5
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        -0.63,
+        -0.63,
+        -0.63
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        3.32,
+        3.32,
+        3.32
+      ]
+    },
+    "V1": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.15,
+        0.15,
+        0.15
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        1.62,
+        1.62,
+        1.62
+      ]
+    },
+    "V2": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        0.67,
+        0.67,
+        0.67
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "daily_peak_bias_c_p05_p50_p95": [
+        1.05,
+        1.05,
+        1.05
+      ]
+    }
+  },
+  "i1_prediction_shade_degc_per_w_nominal": {
+    "V0": [
+      {
+        "wind_m_s": 0.5,
+        "degc_per_w": 0.926
+      },
+      {
+        "wind_m_s": 1.0,
+        "degc_per_w": 0.792
+      },
+      {
+        "wind_m_s": 2.0,
+        "degc_per_w": 0.616
+      },
+      {
+        "wind_m_s": 3.0,
+        "degc_per_w": 0.504
+      }
+    ],
+    "V1": [
+      {
+        "wind_m_s": 0.5,
+        "degc_per_w": 3.326
+      },
+      {
+        "wind_m_s": 1.0,
+        "degc_per_w": 2.806
+      },
+      {
+        "wind_m_s": 2.0,
+        "degc_per_w": 2.137
+      },
+      {
+        "wind_m_s": 3.0,
+        "degc_per_w": 1.725
+      }
+    ]
+  },
+  "limits": [
+    "Weather comes from a reanalysis grid point, not the rig site; the registered comparison uses on-site measured inputs.",
+    "Global horizontal irradiance is applied to the projected area, as in the steady model.",
+    "Bands come from declared ranges, not measured uncertainty; heat capacity and the wind-height factor are unpinned until the rig's step-response and I1 tests.",
+    "Absorptance and solar factor enter as a product, so temperature alone cannot separate them.",
+    "One thermal node per variant; the register's wall Biot estimate (P-BI, 0.07-0.72) says a printed box wall may not be isothermal."
+  ]
+}

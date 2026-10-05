@@ -94,6 +94,25 @@ The assumptions are encoded in the script and tabulated in
 model is not fitted to the deployment logs. Its comparison with published
 measurements is a literature bracket, not a validation using this enclosure.
 
+## Transient prediction plot
+
+Generator: [`analysis/thermal_transient.py`](../analysis/thermal_transient.py)
+
+```bash
+python -m analysis.thermal_transient
+```
+
+Adds one thermal mass per variant to the steady balance and integrates it over
+two weeks of hourly Brooklyn weather from the Open-Meteo archive (CC BY 4.0),
+saved in [`analysis/input/`](../analysis/input/openmeteo_brooklyn_20260901_20260914.json)
+with its hash in the output record. Sky temperature uses the Berdahl–Martin
+clear-sky emissivity with the Clark–Allen cloud correction. Each bounded input is
+drawn 400 times from the ranges declared in the script; the figure shows the
+median and 5–95% band. With constant inputs the model settles on the steady
+solver's answer ([test](../analysis/tests/test_thermal_transient.py)).
+Writes `analysis/figures/thermal_transient_prediction.png` and
+`analysis/output/thermal_transient_prediction.json`.
+
 ## Literature records and report visuals
 
 `literature/literature_matrix.csv`, the bibliography, the cross-source summary,

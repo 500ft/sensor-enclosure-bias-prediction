@@ -1,35 +1,51 @@
 {
-  "schema_version": "1.0",
-  "project": "Enclosure Research",
-  "figures": [
-    {
-      "id": "thermal-bias-sweep",
-      "evidence_type": "analytical simulation",
-      "generator": "analysis/thermal_bias.py",
-      "command": "python analysis/thermal_bias.py",
-      "inputs": [
-        "analysis/thermal_bias.py"
-      ],
-      "outputs": [
-        "analysis/figures/thermal_bias.png"
-      ],
-      "notes": "Lumped steady-state heat balance and RH conversion; assumptions are encoded in the generator and documented in analysis/thermal_bias_results.md."
-    },
-    {
-      "id": "deployment-log-audit",
-      "evidence_type": "external field-log analysis",
-      "generator": "analysis/analyze_deployment_logs.py",
-      "command": "python analysis/analyze_deployment_logs.py --data-dir /path/to/DataEnclosure --out-dir analysis/output",
-      "inputs": [
-        "external:data1.3_24 - Sheet1.csv",
-        "external:data2_5_29 - Sheet1.csv"
-      ],
-      "outputs": [
-        "analysis/figures/deployment_daily_brownout.png",
-        "analysis/figures/deployment_battv_outcome.png",
-        "analysis/figures/deployment_temp_window.png"
-      ],
-      "notes": "The generator writes fig1, fig3, and fig4 names to the selected output directory; committed publication copies use descriptive filenames. Raw logs are not versioned."
-    }
-  ]
+ "schema_version": "1.0",
+ "project": "Enclosure Research",
+ "figures": [
+  {
+   "id": "thermal-bias-sweep",
+   "evidence_type": "analytical simulation",
+   "generator": "analysis/thermal_bias.py",
+   "command": "python analysis/thermal_bias.py",
+   "inputs": [
+    "analysis/thermal_bias.py"
+   ],
+   "outputs": [
+    "analysis/figures/thermal_bias.png"
+   ],
+   "notes": "Lumped steady-state heat balance and RH conversion; assumptions are encoded in the generator and documented in analysis/thermal_bias_results.md."
+  },
+  {
+   "id": "deployment-log-audit",
+   "evidence_type": "external field-log analysis",
+   "generator": "analysis/analyze_deployment_logs.py",
+   "command": "python analysis/analyze_deployment_logs.py --data-dir /path/to/DataEnclosure --out-dir analysis/output",
+   "inputs": [
+    "external:data1.3_24 - Sheet1.csv",
+    "external:data2_5_29 - Sheet1.csv"
+   ],
+   "outputs": [
+    "analysis/figures/deployment_daily_brownout.png",
+    "analysis/figures/deployment_battv_outcome.png",
+    "analysis/figures/deployment_temp_window.png"
+   ],
+   "notes": "The generator writes fig1, fig3, and fig4 names to the selected output directory; committed publication copies use descriptive filenames. Raw logs are not versioned."
+  },
+  {
+   "id": "thermal-transient-prediction",
+   "evidence_type": "analytical simulation driven by reanalysis weather",
+   "generator": "analysis/thermal_transient.py",
+   "command": "python -m analysis.thermal_transient",
+   "inputs": [
+    "analysis/thermal_transient.py",
+    "analysis/thermal_bias.py",
+    "analysis/input/openmeteo_brooklyn_20260901_20260914.json"
+   ],
+   "outputs": [
+    "analysis/figures/thermal_transient_prediction.png",
+    "analysis/output/thermal_transient_prediction.json"
+   ],
+   "notes": "Steady balance plus one thermal mass per variant; uniform draws from declared ranges; weather from the Open-Meteo archive (CC BY 4.0). Bands are not measured uncertainty."
+  }
+ ]
 }
