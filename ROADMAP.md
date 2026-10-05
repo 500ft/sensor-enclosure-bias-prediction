@@ -71,7 +71,7 @@ uncertainty.
 | B | Compare an eligible external dataset with the model, if feasible | Agent, after data suitability is established | Selection, independent-unit/day split and estimation metrics fixed before held-out evaluation; scoped result with uncertainty and exposure limits |
 | 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Physical campaign step.** |
 | 2 | Freeze the protocol: fill the R1.3 register for the actual hardware, choose positions, state the window and uncertainty method, commit it with the approver and date | Agent drafts; owner and PI approve | Frozen protocol committed before any data |
-| 3 | Run at least 24 h with all arms and the reference side by side, with I1 resistive-load and I2 shading tests retained as optional mechanism work; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
+| 3 | Run at least 24 h with all arms and the reference side by side, with the I1 resistive-load test as the first mechanism experiment and I2 shading retained as optional mechanism work; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
 | 4 | Compute bias and uncertainty per variant, day and night, and compare with the model | Agent | Results and comparison merged |
 | 5 | Update the manuscript, README and portfolio | Agent | Merged |
 
