@@ -103,7 +103,12 @@ covers external-data prerequisites and the intake checker.
 
 ## What's next
 
-The thermal co-location campaign has not run yet. The next step is the owner's:
+The [external-data suitability result](analysis/aqspec_feasibility.md) records
+the AQ-SPEC access probe and missing inputs for a temperature comparison. The
+[roadmap](ROADMAP.md) now starts with public-data suitability and retains the
+physical campaign below.
+
+The thermal co-location campaign has not run yet. Its next step is the owner's:
 book the PI date and inventory the rig at the test site (the enclosures, sensors,
 shielded reference and calibration records, power measurement and loggers).
 Record the siting and whether the comparison will be simultaneous or sequential.
