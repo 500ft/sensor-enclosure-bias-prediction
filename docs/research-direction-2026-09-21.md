@@ -1,15 +1,31 @@
 # Research-direction decision record — 2026-09-21
 
-**Status: decision aid for the owner. Nothing here is frozen until the owner chooses.** Base:
-`main` at `84e0ef3`. Companion to the open owner draft [PR #20](https://github.com/500ft/sensor-enclosure-thermal-design/pull/20)
+Current disposition: Direction B was selected as the immediate scope. The
+new proposed switch to Direction A is unanswered [E1](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
+The [roadmap](../ROADMAP.md) is the active plan; the sections below preserve the
+dated analytical work and earlier proposals.
+
+If E1 is adopted with Guibaud, the first analysis would test prediction
+identifiability over plausible parameter/noise ranges and I1/I2/ventilation
+interventions, rather than infer it from local Fisher information at one point.
+A simpler predictive model is acceptable. Later confirmation would withhold a
+geometry and future period, use unit replicates or swaps, distinguish measured
+deployment inputs from frozen coefficients, compare simpler heat-balance and
+empirical baselines, and report error and interval coverage by regime. No
+arbitrary precision percentage is an application requirement. Heated cold-climate
+boxes and PM-correction effects remain separate later studies. The cross-shield
+refitting claim remains unverified pending inspection of the actual source.
+
+Historical decision aid. Base:
+`main` at `84e0ef3`. Companion to the historical owner draft [PR #20](https://github.com/500ft/sensor-enclosure-thermal-design/pull/20)
 (`docs/research-question-draft.md`), which is *not* duplicated here. Authority: scope decision in
 [PHD_SCOPE_AND_NOVELTY.md](PHD_SCOPE_AND_NOVELTY.md); result in [studyA_nondimensional.md](studyA_nondimensional.md).
-Every number below is **ANALYTICAL (simulation)** unless stated otherwise; no physical measurement exists.
+The analytical results below do not supply thermal co-location measurements;
+older deployment/electronics evidence remains separate.
 
-## 1. The decision: two directions, one must be chosen
+## 1. Historical comparison of the two directions
 
-The repository currently carries **two different research questions**, and drifting between them is
-the main risk this week:
+The original decision aid compared these questions:
 
 | | **Direction A — pre-build prediction (narrowed)** | **Direction B — bounded engineering study (PR #20)** |
 |---|---|---|
@@ -19,11 +35,12 @@ the main risk this week:
 | Demotes to | Direction B if transfer is not demonstrated — a research judgement on the evidence, **not** an automatic consequence of one benchmark | — |
 | Needs | Multi-geometry/material printed variant set + held-out test + CHT | Three variants + reference, 24 h+ |
 
-**Recommendation:** pursue **A with B as the guaranteed floor.** The three-variant pilot (Study C)
-serves both: it is B's complete experiment and A's first held-out check. Do not write proposal text
-that assumes A until K2 (below) has a defined benchmark.
+The original recommendation to pursue A did not adopt it. Direction B needs
+physical observations of its own, and its pilot becomes a held-out check for A
+only if the predictor and split were fixed without fitting to that geometry.
+See the selected direction below and the pending E1 decision above.
 
-## 2. Direction A, stated falsifiably
+## 2. Historical Direction A proposal
 
 - **Main hypothesis (H1):** in the solar-driven regime, signed enclosure bias is predicted before
   fabrication by `(Pi_G, N_Q, N_r, f_sky, Pi_delta)` plus a wall-Biot correction, to within the
@@ -71,7 +88,7 @@ uncertainty (U95). A relative band near ΔT→0 is unphysical. Proposal: **re-re
 as absolute °C against the registered U95**, recorded as a prospective amendment — not applied
 retroactively to call the current result a pass.
 
-## 4. Kill criteria (Direction A → Direction B)
+## 4. Historical Direction A criteria and selected scope
 
 - **K1** — no reproducible physical bias above the registered instrument + propagation uncertainty.
 - **K2** — pre-build groups do not predict *held-out* geometries better than the post-build

@@ -9,7 +9,12 @@ Read the [README results](../README.md#results), compare the
 [dark, painted and shielded variants](../analysis/thermal_bias_results.md), then
 look at the [pilot protocol](COLOCATION_PROTOCOL.md). So far the project has a
 model comparison, a literature check of its constants, and tested intake and
-reliability code. Nothing has been measured yet; the PI has approved a pilot.
+reliability code. The thermal campaign has not run; older deployment and
+electronics work is retained below. PI approval is in principle, and campaign
+readiness follows the [current blocker](COLOCATION_OWNER_SESSION.md#current-blocker).
+Read the [PR #56 hold](results.md#transient-result-on-hold) before using its
+transient outputs. Direction B remains approved; the proposed switch is pending
+in [E1-E4](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
 
 ## Reviewer: reproduce the contained analysis
 

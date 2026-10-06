@@ -2,24 +2,49 @@
 
 ## Current blocker
 
-**Next action:** the owner sets up the co-location rig at the PI's test site:
-the enclosure variants, the reference thermometer in its shield, and the
+Documentation reconciliation, 2026-10-06: the owner-authorized switch handoff
+reports funding expected but not received; receipt is unconfirmed here. There is
+no confirmed campaign date, rig inventory, reference calibration or protocol
+freeze. [E1-E4](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions) remain
+unanswered or unresolved. In-principle PI approval does not answer them.
+
+[PR #56 remains on HOLD](results.md#transient-result-on-hold). Its numerical and
+provenance corrections require a separately activated implementation task and
+parent review. This documentation task does not authorize physical work.
+Direction B and estimation-only reporting remain selected; I1 is mandatory as
+the first mechanism experiment. The owner next confirms the PI/rig/funding
+inputs and, separately, whether to adopt Direction A with Guibaud.
+
+**Public-data decision, 2026-10-04:** the owner authorized an external-data
+suitability study before physical validation. The executed
+[AQ-SPEC probe](../analysis/aqspec_feasibility.md) obtained reports but no paired
+sensor/reference temperature series with established reuse terms. The owner can
+review its draft data request; no outreach has been sent. External comparison
+needs a permitted sample and thermal/reference metadata from the data custodian.
+This does not close `EN-R03` or establish a transferable design ranking.
+
+**Physical next action:** the owner books the PI date and sets up the
+co-location rig at the test site: the enclosure variants, the reference
+thermometer in its shield, and the
 loggers. No pilot data is collected until the rig exists and the
 [protocol](COLOCATION_PROTOCOL.md) is frozen.
 
 **Owner statement, 2026-09-30:** "for enclosure there are currently no
 co-location logs at all. but they will be setup in the future, thus the data
-collected today is not worthwhile." There is no existing co-location evidence
-to review, so the retrospective-review route recorded on 2026-09-29 is closed,
-and the pilot will be a new acquisition under a frozen protocol. Don't ask for
-existing logs again. `EN-R03` stays blocked until that acquisition has happened
-and passed intake.
+collected today is not worthwhile." That statement left no existing
+thermal co-location evidence to review, so the retrospective-review route recorded on 2026-09-29 was closed,
+and the pilot will be a new acquisition under a frozen protocol.
+The public-data decision permits external suitability work;
+any historical lab alternative still needs PI data terms and hardware/exposure
+metadata. No historical logs or permissions have been supplied.
+`EN-R03` stays blocked until that acquisition has happened and passed intake.
 
 **Decisions recorded 2026-09-30** (owner-delegated, revisable until the
 freeze): estimation-only reporting, the I1 test permitted with a resistive
 load, a 14-day maximum campaign window, historical outreach deferred. See the
 [decision table](OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30).
-None of them changes the next action above.
+These decisions remain in force; the external-data step does not freeze the
+physical protocol.
 
 This supersedes the 2026-09-29 notes that the owner had "something like this"
 and didn't know where its logs were.
@@ -58,7 +83,7 @@ source for each answer; leave missing answers explicitly unknown.
 | Reference quality | Current calibration, aspiration/shield characterization, uncertainty budget and pre/post check method | Blocked; no calibration verified |
 | Prospective protocol freeze | Approved version/commit, positions and pairing, intended UTC start/end, cadence, interventions and uncertainty method recorded before acquisition | Draft only; not frozen |
 | Acquisition and custody | Authorized operator, raw export location, raw-byte SHA-256, omissions and separate sky/intervention records | No acquisition yet, and none before the rig exists and the protocol is frozen |
-| Physical interpretation | Authenticated provenance review, as-built prediction and propagated uncertainty, application tolerance registered before comparison | Blocked; no model-agreement band exists |
+| Physical interpretation | Provenance review, corrected as-built model and declared uncertainty treatment; application tolerance only for a later fit-for-purpose verdict | Estimation-only comparison pending physical data; no model-agreement band or frozen prediction exists |
 
 When the rig is built, record its inventory (enclosure IDs, sensors, the
 reference and its calibration certificate), then accept or amend the draft

@@ -2,11 +2,17 @@
 
 **Version:** V1.0 working draft  
 **Status:** Draft for PI/lab review  
-**Repository:** 500ft/Enclosure-Research
+**Repository:** 500ft/sensor-enclosure-thermal-design
+
+Current scope follows the [roadmap](../ROADMAP.md): Direction B is an
+estimation-only thermal comparison. The broader calibration, electronics and
+reliability discussion below preserves the earlier working draft and historical
+work; it is not evidence of an executed thermal campaign. Direction A adoption
+remains unanswered [E1](../docs/OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
 
 ## Abstract
 
-Low-cost outdoor sensor boxes can increase the spatial and temporal resolution of environmental measurements, but enclosure heating, sensor calibration, power, firmware, and data loss affect the deployed system. This work currently provides a literature synthesis, a first-order thermal model, and provisional analysis of external deployment-log exports. Reference co-location, calibration, and physical thermal comparisons are planned, not completed. At 1000 W/m² and 0.5 m/s the model predicts temperature rises of 19.4°C for a dark baseline, 4.5°C for that box painted white, and 3.0°C for the passive shield; the whole-system variants also change heat coupling and convection, so the contrast does not isolate shielding. Historical log summaries reported no brownout-coded records, 95.7% successful-post records, and 91.4% observed-span completeness in an inferred 22-day outdoor window. These rates and the indoor/outdoor classification remain unverified here because the source exports and intended deployment configuration are external. The historical completeness estimator counted rows against an observed-span denominator; revised software instead requires an explicit intended schedule and counts unique occupied slots. No revised field percentage or wall-clock uptime claim is made. The proposed next study compares matched-finish configurations against a documented reference and reconciles reliability denominators using confirmed deployment metadata.
+Low-cost outdoor sensor boxes can increase the spatial and temporal resolution of environmental measurements, but enclosure heating, sensor calibration, power, firmware, and data loss affect the deployed system. This work currently provides a literature synthesis, a first-order thermal model, and provisional analysis of external deployment-log exports. Reference co-location, calibration, and physical thermal comparisons are planned, not completed. At 1000 W/m² and 0.5 m/s the model predicts temperature rises of 19.4°C for a dark baseline, 4.5°C for that box painted white, and 3.0°C for the passive shield; the whole-system variants also change heat coupling and convection, so the contrast does not isolate shielding. These are point estimates without propagated input uncertainty. The [documented combined sensitivity settings](../analysis/thermal_bias_results.md) reverse the shield-versus-painted-box ranking, so no design preference follows from that comparison. Historical log summaries reported no brownout-coded records, 95.7% successful-post records, and 91.4% observed-span completeness in an inferred 22-day outdoor window. These rates and the indoor/outdoor classification remain unverified here because the source exports and intended deployment configuration are external. The historical completeness estimator counted rows against an observed-span denominator; revised software instead requires an explicit intended schedule and counts unique occupied slots. No revised field percentage or wall-clock uptime claim is made. The approved study will estimate temperature bias and uncertainty against a calibrated reference, with no pass/fail verdict. Historical reliability verification remains deferred; it is separate from the unrun thermal campaign.
 
 ## 1. Introduction
 
@@ -14,11 +20,17 @@ Environmental monitoring often requires measurements at locations or spatial den
 
 However, a low-cost sensor box is not accurate simply because its datasheet reports an acceptable sensor tolerance. Outdoor deployment changes sensor behavior. Solar radiation can heat the enclosure and bias temperature and relative humidity. Poor airflow can delay response and create a microclimate inside the box. Rain, snow, condensation, dust, and ultraviolet exposure can degrade materials and electronics. Battery voltage and power management can affect runtime and data continuity. Wireless links, SD cards, firmware, and connectors can fail before the sensing element itself fails. These integration effects determine whether the box produces useful data for days, weeks, or months without intervention.
 
-The working research question is:
+The approved research question is:
 
-> Can the lab's low-cost sensor box collect accurate, reliable outdoor data for a useful period of time without constant maintenance, and what factors most affect that performance?
+> What temperature bias and uncertainty do the actual enclosure variants show
+> beside a calibrated reference, by operating regime, and how do those results
+> compare with the model?
 
-This question expands the earlier enclosure-only direction. The previous scope emphasized passive 3D-printed radiation shields, temperature and relative-humidity bias, response time, and short-term weathering. Those issues remain relevant, but they are now treated as part of a larger sensor-box performance problem. The main contribution of this paper is therefore not a universal sensor-box design. It is a structured, protocol-anchored evaluation of the lab's current box, the calibration improvement achievable from field data, a falsifiable first-order prediction of the enclosure's thermal bias that the field data will test, and the design criteria that should guide future versions.
+This is Direction B. Predicting a withheld geometry without fitting its
+coefficients is the proposed Direction A follow-on, pending owner/PI adoption.
+Older whole-box questions about calibration, autonomy, firmware and reliability
+remain useful context and retain their historical results, but are not all
+requirements of the current thermal study.
 
 ## 2. Background and Literature Review
 
@@ -143,6 +155,14 @@ The first field deployment should use the existing box as-is. This creates the b
 
 ## 4. Methods
 
+The thermal method remains the draft [co-location protocol](../docs/COLOCATION_PROTOCOL.md),
+including mandatory-first I1 and estimation-only reporting. The broader methods
+below are retained proposals. Neither they nor the
+[held transient output](../docs/results.md#transient-result-on-hold) constitute a
+frozen protocol. Record measured deployment inputs separately from frozen
+coefficients, and drive a corrected model with independently acquired weather
+under a procedure fixed before outcomes.
+
 ### 4.1 Study design
 
 The study has four phases:
@@ -227,7 +247,7 @@ This draft now includes preliminary field-reliability results (Sections 5.0, 5.3
 
 ### 5.0 Data source and provisional status
 
-Two device logs were analyzed (Log A: 9,324 records, 2026-03-24 to 2026-06-04; Log B: 1,087 records, 2026-05-29 to 2026-06-04; timestamps logger-local, timezone unconfirmed). All statistics are regenerated by a single script (`analysis/analyze_deployment_logs.py`); the raw CSVs are held outside this repository pending a data-governance decision, and are identified in the script output by SHA-256 hash.
+Two device logs were analyzed (Log A: 9,324 records, 2026-03-24 to 2026-06-04; Log B: 1,087 records, 2026-05-29 to 2026-06-04; timestamps logger-local, timezone unconfirmed). The historical summaries were produced using `analysis/analyze_deployment_logs.py`; the revised schedule-aware estimator has not regenerated those percentages without the raw exports and confirmed schedule. Source CSVs remain outside this repository pending data terms; hash recording is supported by the script, but does not establish their availability here.
 
 Throughout, a *brownout record* is one whose reset reason is the hardware brownout detector, and an *operational record* is a normal deep-sleep wake with a valid environmental read. Supporting figures: `analysis/figures/deployment_temp_window.png` (deployment-window identification), `deployment_daily_brownout.png` (daily brownout fraction), `deployment_battv_outcome.png` (battery voltage by record outcome).
 
@@ -302,7 +322,7 @@ The discussion should identify the dominant limiting factor in the current box. 
 - If sensors fail physically, corrode, or drift rapidly, weather protection and replacement schedule become the design priority.
 - If maintenance is frequent or difficult, future design should prioritize modularity, connector protection, and easier field access.
 
-A related distinction the discussion must make explicit is *calibrated-away* versus *designed-away* error. A regression that uses solar radiation or enclosure temperature as a covariate can compensate for an enclosure-driven bias without removing its physical cause; that correction is tied to the deployment conditions under which it was trained, and the calibration-transferability literature cautions that such corrections may not transfer across sites, seasons, or hardware revisions [@desouza2022; @diez2024]. An enclosure fix (shielding, ventilation, surface finish) removes the error for every subsequent deployment. When both routes reach similar test-period error, the design fix should be preferred for any box intended for reuse.
+A related distinction the discussion must make explicit is *calibrated-away* versus *designed-away* error. A regression that uses solar radiation or enclosure temperature as a covariate can compensate for an enclosure-driven bias without removing its physical cause; that correction is tied to the deployment conditions under which it was trained, and the calibration-transferability literature cautions that such corrections may not transfer across sites, seasons, or hardware revisions [@desouza2022; @diez2024]. Shielding, ventilation and surface finish can reduce physical heat inputs or alter heat transfer, but performance still depends on exposure, unit construction and maintenance. Similar error in one test period does not establish which approach transfers better to later deployments.
 
 The paper should avoid claiming that one material or geometry is universally best. Instead, it should report which component most affects the lab's measurement goal. A temperature and relative-humidity box may need airflow and radiation shielding above all else. A particulate-matter box may need inlet geometry, fan reliability, and humidity correction. A multi-sensor box may need separation between a ventilated sensor region and a sealed electronics/power region.
 
@@ -317,7 +337,7 @@ The lab should use a weighted decision framework when choosing future box design
 | Autonomy | Days before intervention | Longer runtime without field visit |
 | Reliability | Uptime and data completeness | Fewer missing samples and dropouts |
 | Weather resistance | Physical inspection and failure events | Less UV, rain, condensation, and dust damage |
-| Thermal behavior | Error versus sun/wind/enclosure temperature, compared against the modeled self-heating prediction (`analysis/thermal_bias_results.md`) | Less heat-induced bias; measured bias consistent with or below the variant's predicted band |
+| Thermal behavior | Signed bias and absolute error by sun/wind regime, compared with a corrected model and declared uncertainty treatment | Estimation-only reporting; assumed-input sensitivity bands do not define acceptance |
 | Maintainability | Time to replace sensor/battery | Faster repair with fewer fragile steps |
 | Manufacturability | Print/build time, cost, repeatability | Faster, cheaper, more repeatable builds |
 
@@ -330,7 +350,12 @@ The first material set to compare should be the current enclosure material again
 
 ## 8. Conclusion
 
-This V1.0 paper reframes the project around the deployed sensor box rather than only the enclosure. The proposed evaluation measures raw accuracy, calibration improvement, autonomy, reliability, and design effects from material, geometry, airflow, sealing, and weather exposure. The immediate next step is to document the lab's current hardware and run a baseline co-location deployment. After that, the paper can identify whether the current box is limited mainly by calibration, power, enclosure design, firmware, or maintenance. The final contribution will be a practical decision framework for building the lab's next outdoor sensor boxes with clearer tradeoffs between accuracy, autonomy, reliability, and manufacturability.
+The current result is an analytical enclosure comparison and provisional
+historical deployment accounting. Physical thermal validation remains pending.
+Direction B is the approved floor; a switch to held-out-geometry prediction has
+not been adopted. The [current blocker](../docs/COLOCATION_OWNER_SESSION.md#current-blocker)
+holds the PI, rig and funding status. The transient model remains on parent
+review HOLD until its numerical, forcing and provenance corrections are checked.
 
 ## References
 

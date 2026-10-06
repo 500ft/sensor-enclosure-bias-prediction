@@ -96,22 +96,18 @@ measurements is a literature bracket, not a validation using this enclosure.
 
 ## Transient prediction plot
 
-Generator: [`analysis/thermal_transient.py`](../analysis/thermal_transient.py)
+This plot and its [JSON output](../analysis/output/thermal_transient_prediction.json)
+are preserved artifacts of [held PR #56](results.md#transient-result-on-hold).
+Generator: [`analysis/thermal_transient.py`](../analysis/thermal_transient.py).
+The original generation command was `python -m analysis.thermal_transient`;
+it writes the committed output paths, so do not regenerate them during the
+review hold.
 
-```bash
-python -m analysis.thermal_transient
-```
-
-Adds one thermal mass per variant to the steady balance and integrates it over
-two weeks of hourly Brooklyn weather from the Open-Meteo archive (CC BY 4.0),
-saved in [`analysis/input/`](../analysis/input/openmeteo_brooklyn_20260901_20260914.json)
-with its hash in the output record. Sky temperature uses the Berdahl–Martin
-clear-sky emissivity with the Clark–Allen cloud correction. Each bounded input is
-drawn 400 times from the ranges declared in the script; the figure shows the
-median and 5–95% band. With constant inputs the model settles on the steady
-solver's answer ([test](../analysis/tests/test_thermal_transient.py)).
-Writes `analysis/figures/thermal_transient_prediction.png` and
-`analysis/output/thermal_transient_prediction.json`.
+The [weather bytes](../analysis/input/openmeteo_brooklyn_20260901_20260914.json)
+and output hash are retained. Exact acquisition request, retrieval date and
+product/version remain unresolved. The figure depicts sensitivity to assumed
+uniform input ranges. Its sky equation, time labels and forcing treatment await
+the linked corrections. Steady convergence alone does not validate transients.
 
 ## Literature records and report visuals
 

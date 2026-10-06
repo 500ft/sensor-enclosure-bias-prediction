@@ -1,7 +1,7 @@
 # Sensor Enclosure Thermal Design
 
-How much does an outdoor sensor enclosure bias the temperature it reports,
-and which enclosure is worth the extra cost? This repository has a heat-balance
+How much does an outdoor sensor enclosure bias the temperature it reports
+under the tested exposure conditions? This repository has a heat-balance
 model that compares enclosure designs, a literature review of its assumptions,
 and a planned side-by-side test against a reference thermometer.
 
@@ -27,7 +27,7 @@ mislead.
 The project compares enclosure options with a first-order heat-balance model,
 checks the model's constants against the literature, and prepares a
 co-location pilot: the enclosures mounted next to a reference thermometer for
-at least a full day and night. The PI has approved the pilot and offered a test
+at least a full day and night. The PI has approved the pilot in principle and offered a test
 site and manufacturing help.
 
 ## Results
@@ -56,18 +56,12 @@ establishes no design preference.
 At night the modelled bias can change sign, which is why the pilot covers both
 day and night.
 
-A [transient version](analysis/thermal_transient.py) adds a thermal mass and
-runs on two weeks of real Brooklyn weather (Open-Meteo archive, September 2026),
-repeated over 400 draws from declared parameter ranges. Median daytime bias and
-5–95% band: dark box 6.5 °C (5.2–8.2), painted box 1.7 °C (0.6–3.0), passive
-shield 1.5 °C (1.1–2.2), aspirated reference 0.9 °C (0.7–1.2). The painted box
-and shield bands overlap, so this also gives no ranking. In shade the model
-predicts 0.5–0.9 °C per watt of internal power for the box and 1.7–3.3 °C per
-watt for the shield's small sensor element, across 0.5–3 m/s of wind. That is
-the quantity the rig's first load test measures. The bands come from declared
-ranges, not measurements.
-[Prediction record](analysis/output/thermal_transient_prediction.json),
-[figure](analysis/figures/thermal_transient_prediction.png).
+The [transient result in PR #56](docs/results.md#transient-result-on-hold) is on
+HOLD for timestamp, forcing and provenance corrections. Its original output and
+figure remain available for review. The bands describe assumed-input sensitivity;
+interval overlap does not determine a paired design difference. Its power
+perturbation concerns heat coupled to the modeled node, which needs a documented
+heat path before comparison with measured electrical power.
 
 Other work in the repository:
 
@@ -75,7 +69,7 @@ Other work in the repository:
   [source assessments](ProConsList/README.md), and a later review of 27 more
   sources against the model's previously uncited constants.
 - **Uncertainty.** The steady tables are point estimates. The transient
-  prediction carries bands from declared parameter ranges by Monte Carlo. The
+  draft carries sensitivity bands from assumed uniform ranges by Monte Carlo. The
   standalone [linear propagation module](analysis/uncertainty.py) is tested but
   not connected to either.
 - **Reliability accounting.** [Schedule-aware metrics](docs/RELIABILITY_METRICS.md)
@@ -116,18 +110,21 @@ covers external-data prerequisites and the intake checker.
 
 ## What's next
 
-The thermal co-location campaign has not run yet. The next step is the owner's:
-book the PI date and inventory the rig at the test site (the enclosures, sensors,
-shielded reference and calibration records, power measurement and loggers).
-Record the siting and whether the comparison will be simultaneous or sequential.
-The protocol is then fitted to that hardware and frozen before the first run. The
-[roadmap](ROADMAP.md) has the steps, and the
-[blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) has the
-current status.
+The [external-data suitability result](analysis/aqspec_feasibility.md) records
+the AQ-SPEC access probe and missing inputs for a temperature comparison. The
+[roadmap](ROADMAP.md) now starts with public-data suitability and retains the
+physical campaign below.
+
+The thermal co-location campaign has not run. Direction B remains the approved
+estimation-only scope; adopting Direction A with the PI is unanswered. The
+[blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) holds current
+funding, rig and decision status. The [roadmap](ROADMAP.md) retains mandatory-first
+I1. Freeze the model and processing before outcomes; future measured weather
+will drive predictions under that procedure once it exists.
 
 ## Limits
 
-- The model is lumped and steady-state. One 24-hour campaign would not
+- The published steady model is lumped; the transient extension remains on HOLD. One 24-hour campaign would not
   establish seasonal accuracy.
 - The pilot protocol is a draft until it is frozen with its approver and date.
   Its data-quality targets are proposals, and the model's day and night

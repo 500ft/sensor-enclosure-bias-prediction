@@ -33,7 +33,7 @@
   },
   {
    "id": "thermal-transient-prediction",
-   "evidence_type": "analytical simulation driven by reanalysis weather",
+   "evidence_type": "analytical draft on HOLD; transient timing and provenance unresolved",
    "generator": "analysis/thermal_transient.py",
    "command": "python -m analysis.thermal_transient",
    "inputs": [
@@ -45,7 +45,7 @@
     "analysis/figures/thermal_transient_prediction.png",
     "analysis/output/thermal_transient_prediction.json"
    ],
-   "notes": "Steady balance plus one thermal mass per variant; uniform draws from declared ranges; weather from the Open-Meteo archive (CC BY 4.0). Bands are not measured uncertainty."
+   "notes": "Original artifacts preserved under PR #56 HOLD; see docs/results.md#transient-result-on-hold. Uniform assumed-input sensitivity bands do not establish calibrated uncertainty. Acquisition provenance, sky equation and time handling remain unresolved. Do not regenerate before numerical corrections and review."
   }
  ]
 }

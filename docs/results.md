@@ -46,38 +46,44 @@ without obtaining the source exports.
 
 ## Thermal-bias model
 
-The primary comparison includes the inexpensive painted-box control. At
-`G = 1000 W/m²`, `wind = 0.5 m/s`:
-
-| Analytical variant | Predicted rise |
-|---|---:|
-| Dark baseline box | 19.4°C |
-| Same modeled box painted white (absorptance 0.90 → 0.30) | 4.5°C |
-| Passive shield | 3.0°C |
-
-Thus about 1.5°C of modeled benefit remains relative to the painted baseline,
-not the 16.4°C dark-box contrast. The shield also changes geometry, internal
-heat coupling, and convection, so this is a system comparison rather than an
-isolated shielding effect. Use matched finish and explicit heat-load controls
-in the proposed physical comparison. No model parameters or frozen outputs
-were changed to produce these already-existing sensitivity results.
-
-At `G = 1000 W/m²` and wind speeds from `0–5 m/s`, the lumped steady-state model
-predicts:
-
-| Variant | Temperature rise | Relative-humidity error |
-| --- | ---: | ---: |
-| Closed baseline box | 8.3–22.7 °C | −18.6 to −35.0 %RH |
-| Passive multi-plate shield | 0.9–3.7 °C | −2.5 to −9.4 %RH |
-| Actively aspirated reference | about 1.3 °C | about −3.7 %RH |
+The [committed day table](../analysis/output/thermal_bias_table.csv) contains
+nominal point estimates for the dark box, painted control and shield variants.
+The [model interpretation](../analysis/thermal_bias_results.md) records their
+assumptions and the combined sensitivity settings that reverse the shield's
+nominal advantage over the painted box. Geometry, heat coupling and airflow
+differ across those systems, so this comparison establishes no design preference.
 
 ![Predicted thermal and relative-humidity bias](../analysis/figures/thermal_bias.png)
 
-These are analytical predictions, not measurements or FEA results. Geometry,
-surface properties, internal heat, and convection assumptions are listed in
-[`analysis/thermal_bias_results.md`](../analysis/thermal_bias_results.md). The
-planned heat-soak, co-location, and CHT comparisons are described in
-[`docs/cad_fea_plan.md`](cad_fea_plan.md).
+The table and figure omit propagated input uncertainty. The standalone
+[uncertainty module](../analysis/uncertainty.py) is not connected to them.
+These are analytical outputs; no physical thermal comparison or FEA validation
+is supplied by this figure.
+
+## Transient result on HOLD
+
+[PR #56](https://github.com/500ft/sensor-enclosure-thermal-design/pull/56) remains
+on HOLD under the parent's six-item review of `cdd26ba`. The code, raw weather,
+[original output](../analysis/output/thermal_transient_prediction.json) and
+[figure](../analysis/figures/thermal_transient_prediction.png) are preserved.
+Their original labels do not establish a reviewed prediction or a protocol
+freeze. The documentation correction does not change those artifacts.
+
+| Review item | Current evidence and disposition |
+| --- | --- |
+| Initial state and integration | `simulate` advances before storing its first state and uses fixed `dt_s` instead of actual timestamp intervals. The initial-state defect remains. Existing steady-convergence tests do not check transient accuracy or timestep convergence. |
+| Forcing time | `load_weather` interpolates every field as a point sample. Open-Meteo defines shortwave radiation as the preceding-hour mean. Energy-preserving interval handling, timestamp/unit checks, absolute labels and partial-day treatment remain unresolved. |
+| Provenance and sky model | The output records the weather hash and provider, but the inspected files do not retain the exact acquisition request, retrieval date or selected weather product/version. The implemented sky-emissivity hybrid and total-cloud assumption lack verified equation-level support. Do not infer missing provenance from current API defaults. |
+| Statistical and power interpretation | The bands are sensitivity quantiles from assumed uniform inputs, not measurement-derived uncertainty or calibrated prediction intervals. Marginal overlap cannot decide a paired variant difference. `i1_sensitivity` computes a finite secant for an added watt of sensor-coupled heat, not a differential derivative or a verified response per watt at the supply. Prose is corrected; code/output labels still need correction. |
+| Decisions and registration | Funding expectation and unanswered E1-E4 are reconciled in the linked records below. I1 remains the first mechanism experiment. Freeze the model, processing and coefficients before outcomes; separately acquired weather can drive that frozen model under a registered procedure. A future exact weather trajectory cannot yet be supplied. |
+| Integration and review | Current main is incorporated with its accepted public-data result and mandatory-first I1. Transient regeneration and numerical/provenance checks remain pending the corrections. Parent review must resolve HOLD before merge. |
+
+The [API variable definitions](https://open-meteo.com/en/docs/historical-weather-api)
+distinguish instantaneous temperature/wind from preceding-hour solar means.
+Hourly reanalysis cannot establish minute-scale measured forcing at the rig.
+The [current blocker](COLOCATION_OWNER_SESSION.md#current-blocker) and
+[E1-E4](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions) hold owner status.
+No ranking inference is made from the held transient artifacts.
 
 ## Reading the evidence
 
