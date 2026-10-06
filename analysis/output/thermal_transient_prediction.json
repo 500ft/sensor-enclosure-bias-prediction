@@ -1,10 +1,10 @@
 {
   "status": "CORRECTED SENSITIVITY CALCULATION; parent review HOLD; no thermal co-location data",
   "software": {
-    "python": "3.12.0",
+    "python": "3.12.15",
     "numpy": "2.5.3"
   },
-  "model_sha256": "038890676730de6a0a76074970f9d369d1f7133a52e73914f7cb6ba7b29b8911",
+  "model_sha256": "8b0a424c9bbfe98fe3308a4f2175224a9b1fd9573ddef081bfc08d2bf605621e",
   "model": "analysis/thermal_transient.py (steady balance of thermal_bias.py plus one thermal mass per variant)",
   "weather": {
     "file": "analysis/input/openmeteo_brooklyn_20260901_20260914.json",

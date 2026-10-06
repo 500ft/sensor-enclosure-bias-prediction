@@ -38,12 +38,19 @@ does not replace the authoritative protocol or task ledger.
 The README leads with the model's bias plot,
 [`analysis/figures/thermal_bias.png`](../analysis/figures/thermal_bias.png).
 It is an analytical result; its generator and inputs are in the
-[figure guide](data-and-figures.md#thermal-bias-plot). Once the pilot has run,
-a plot of measured bias should replace it.
+[figure guide](data-and-figures.md#thermal-bias-plot). Once an eligible external
+comparison or the pilot produces measured bias, a plot of that should replace it.
+The README also shows the transient sensitivity plot,
+[`analysis/figures/thermal_transient_prediction.png`](../analysis/figures/thermal_transient_prediction.png),
+with its lineage in the [figure guide](data-and-figures.md#transient-prediction-plot).
+Both plots use the same colour for each enclosure variant.
 
 [`media/project-overview.svg`](media/project-overview.svg) is an editable
-diagram of the study. It contains no measured values. Each stage has a text
-label, so the meaning doesn't depend on colour, and the SVG has a title and
+diagram of the study's five stages in roadmap order: literature, the steady and
+transient models, first-stage co-location, the held-out error and effort
+comparison, and an optional external comparison. It contains no measured
+values. A dashed outline marks the optional stage. Each stage has a text label and a status
+tag, so the meaning doesn't depend on colour, and the SVG has a title and
 description for screen readers.
 
 ## Keeping navigation reproducible

@@ -285,7 +285,8 @@ def make_figure(weather, runs, path):
     ax0b.plot(dates, weather["wind10"][start:], color="#4a6fa5", lw=1, label="Wind at 10 m [m/s]")
     ax0.set_ylabel("Solar [W/m²]", color="#d08c00"); ax0b.set_ylabel("Wind, 10 m [m/s]", color="#4a6fa5")
     ax0.set_title("Preserved Open-Meteo forcing; acquisition product/date unknown", fontsize=10, loc="left")
-    colors = {"V0": "#3b3b3b", "V0P": "#8a6d3b", "V1": "#2e7d32", "V2": "#1565c0"}
+    # Same variant colours as analysis/thermal_bias.py so the two README figures read alike.
+    colors = {"V0": "#c0392b", "V0P": "#7d3c98", "V1": "#2980b9", "V2": "#27ae60"}
     names = {v.vid: v.name for v in build_variants()}
     for vid, temp in runs.items():
         bias = temp[start:] - weather["t_air"][start:, None]
@@ -297,8 +298,8 @@ def make_figure(weather, runs, path):
     ax1.set_xlabel("Timestamp [UTC]; hourly forcing, final day incomplete")
     ax1.xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
     ax1.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
-    ax1.set_title("Clear-sky scenario: median and 5–95% assumed-input sensitivity",
-                  fontsize=10, loc="left")
+    ax1.set_title("SIMULATION, clear-sky scenario: median and 5–95% assumed-input sensitivity; "
+                  "no measured comparison yet", fontsize=10, loc="left")
     ax1.legend(fontsize=8, ncol=2, loc="upper left")
     fig.tight_layout()
     Path(path).parent.mkdir(parents=True, exist_ok=True)

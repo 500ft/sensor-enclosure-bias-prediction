@@ -1,42 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 490" role="img" aria-labelledby="title desc">
   <title id="title">Sensor Enclosure Thermal Design — conceptual overview</title>
-  <desc id="desc">Literature and control variants inform analytical day/night thermal comparisons, which await a co-location pilot with a calibrated independent reference.</desc>
+  <desc id="desc">The question is how much design-specific co-location measured geometry, material and power data plus shared thermal laws can replace at comparable prediction error. Five stages in roadmap order. Literature and control variants define the comparisons. Steady and transient heat-balance models give numerically verified predictions. The first stage is an estimation-only co-location against a calibrated reference, with the I1 heat test at known airflow; it has not run. The finish line compares held-out prediction error with total measurement and calibration effort; it has not started. An optional external comparison follows; the AQ-SPEC probe found no paired sensor and reference temperature series, so it needs usable data and terms.</desc>
   <defs>
     <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="#101e32"/><stop offset="1" stop-color="#162f43"/>
     </linearGradient>
     <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="none" stroke="#78c9cc" stroke-width="1.2"/></marker>
   </defs>
-  <rect width="1200" height="420" rx="18" fill="url(#background)"/>
+  <rect width="1200" height="490" rx="18" fill="url(#background)"/>
   <path d="M48 43 H91" stroke="#7de0d6" stroke-width="4"/>
   <g font-family="Arial, Helvetica, sans-serif">
     <text x="106" y="49" fill="#b4c6d7" font-size="14" font-weight="700" letter-spacing="1.8">ENVIRONMENTAL SENSING</text>
     <text x="48" y="117" fill="#f5f8fc" font-size="43" font-weight="700">Sensor Enclosure Thermal Design</text>
-    <text x="48" y="154" fill="#d3deea" font-size="21">Separate enclosure effects from sensor and field uncertainty.</text>
-    <g transform="translate(48,202)">
-      <rect width="344" height="152" rx="10" fill="#1d354b" stroke="#526c83"/>
-      <text x="22" y="29" fill="#84e0d5" font-size="15" font-weight="700">01</text>
-      <text x="57" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">LITERATURE</text>
-      <text x="22" y="75" fill="#ffffff" font-size="25" font-weight="700">Define comparisons</text>
-      <text x="22" y="111" fill="#d3deea" font-size="18">Sources and control variants</text>
+    <text x="48" y="152" fill="#d3deea" font-size="20">How much design-specific co-location can measured geometry, material and power data</text>
+    <text x="48" y="178" fill="#d3deea" font-size="20">plus shared thermal laws replace, at comparable prediction error?</text>
+
+    <g transform="translate(48,214)">
+      <rect width="208" height="214" rx="10" fill="#1d354b" stroke="#526c83"/>
+      <text x="18" y="29" fill="#84e0d5" font-size="15" font-weight="700">01</text>
+      <text x="50" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">LITERATURE</text>
+      <text x="18" y="68" fill="#ffffff" font-size="21" font-weight="700">Define</text>
+      <text x="18" y="94" fill="#ffffff" font-size="21" font-weight="700">comparisons</text>
+      <text x="18" y="124" fill="#d3deea" font-size="15">Sources and control</text>
+      <text x="18" y="143" fill="#d3deea" font-size="15">variants</text>
+      <rect x="18" y="180" width="85" height="20" rx="10" fill="#2a5a5a"/>
+      <text x="60" y="194" fill="#d9f7f2" font-size="11" font-weight="700" letter-spacing="0.6" text-anchor="middle">COMPLETE</text>
     </g>
-    <path d="M398 278 H410" stroke="#78c9cc" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <g transform="translate(416,202)">
-      <rect width="344" height="152" rx="10" fill="#1d354b" stroke="#526c83"/>
-      <text x="22" y="29" fill="#84e0d5" font-size="15" font-weight="700">02</text>
-      <text x="57" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">ANALYTICAL</text>
-      <text x="22" y="75" fill="#ffffff" font-size="25" font-weight="700">Model thermal bias</text>
-      <text x="22" y="111" fill="#d3deea" font-size="18">Day and night conditions</text>
+    <path d="M258 314 H270" stroke="#78c9cc" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <g transform="translate(274,214)">
+      <rect width="208" height="214" rx="10" fill="#1d354b" stroke="#526c83"/>
+      <text x="18" y="29" fill="#84e0d5" font-size="15" font-weight="700">02</text>
+      <text x="50" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">ANALYTICAL</text>
+      <text x="18" y="68" fill="#ffffff" font-size="21" font-weight="700">Model thermal</text>
+      <text x="18" y="94" fill="#ffffff" font-size="21" font-weight="700">bias</text>
+      <text x="18" y="124" fill="#d3deea" font-size="15">Steady and transient,</text>
+      <text x="18" y="143" fill="#d3deea" font-size="15">numerically verified</text>
+      <rect x="18" y="180" width="114" height="20" rx="10" fill="#2a5a5a"/>
+      <text x="75" y="194" fill="#d9f7f2" font-size="11" font-weight="700" letter-spacing="0.6" text-anchor="middle">MODEL OUTPUT</text>
     </g>
-    <path d="M766 278 H778" stroke="#78c9cc" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <g transform="translate(784,202)">
-      <rect width="344" height="152" rx="10" fill="#1d354b" stroke="#526c83"/>
-      <text x="22" y="29" fill="#84e0d5" font-size="15" font-weight="700">03</text>
-      <text x="57" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">PROTOCOL DRAFT</text>
-      <text x="22" y="75" fill="#ffffff" font-size="25" font-weight="700">Co-locate sensors</text>
-      <text x="22" y="111" fill="#d3deea" font-size="18">Independent calibrated reference</text>
+    <path d="M484 314 H496" stroke="#78c9cc" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <g transform="translate(500,214)">
+      <rect width="208" height="214" rx="10" fill="#1d354b" stroke="#526c83"/>
+      <text x="18" y="29" fill="#84e0d5" font-size="15" font-weight="700">03</text>
+      <text x="50" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">FIRST STAGE</text>
+      <text x="18" y="68" fill="#ffffff" font-size="21" font-weight="700">Co-locate</text>
+      <text x="18" y="94" fill="#ffffff" font-size="21" font-weight="700">sensors</text>
+      <text x="18" y="124" fill="#d3deea" font-size="15">Qualified rig, I1 at</text>
+      <text x="18" y="143" fill="#d3deea" font-size="15">known airflow,</text>
+      <text x="18" y="162" fill="#d3deea" font-size="15">estimation only</text>
+      <rect x="18" y="180" width="77" height="20" rx="10" fill="#3b4656"/>
+      <text x="56" y="194" fill="#e2e8f0" font-size="11" font-weight="700" letter-spacing="0.6" text-anchor="middle">NOT RUN</text>
     </g>
-    <text x="48" y="391" fill="#b4c6d7" font-size="13" letter-spacing="1.1">CONCEPTUAL OVERVIEW · NOT MEASURED OUTPUT</text>
-    <text x="1152" y="391" fill="#b4c6d7" text-anchor="end" font-size="13">ANALYTICAL DESIGN STUDY</text>
+    <path d="M710 314 H722" stroke="#78c9cc" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <g transform="translate(726,214)">
+      <rect width="208" height="214" rx="10" fill="#1d354b" stroke="#84e0d5" stroke-width="2"/>
+      <text x="18" y="29" fill="#84e0d5" font-size="15" font-weight="700">04</text>
+      <text x="50" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">FINISH LINE</text>
+      <text x="18" y="68" fill="#ffffff" font-size="21" font-weight="700">Compare error</text>
+      <text x="18" y="94" fill="#ffffff" font-size="21" font-weight="700">and effort</text>
+      <text x="18" y="124" fill="#d3deea" font-size="15">Held-out prediction</text>
+      <text x="18" y="143" fill="#d3deea" font-size="15">error against total</text>
+      <text x="18" y="162" fill="#d3deea" font-size="15">calibration effort</text>
+      <rect x="18" y="180" width="107" height="20" rx="10" fill="#3b4656"/>
+      <text x="72" y="194" fill="#e2e8f0" font-size="11" font-weight="700" letter-spacing="0.6" text-anchor="middle">NOT STARTED</text>
+    </g>
+    <path d="M936 314 H948" stroke="#78c9cc" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrow)"/>
+    <g transform="translate(952,214)">
+      <rect width="208" height="214" rx="10" fill="#18293b" stroke="#7d93a8" stroke-dasharray="6 5"/>
+      <text x="18" y="29" fill="#84e0d5" font-size="15" font-weight="700">05</text>
+      <text x="50" y="29" fill="#c8d6e3" font-size="12" font-weight="700" letter-spacing="0.7">OPTIONAL</text>
+      <text x="18" y="68" fill="#ffffff" font-size="21" font-weight="700">External</text>
+      <text x="18" y="94" fill="#ffffff" font-size="21" font-weight="700">comparison</text>
+      <text x="18" y="124" fill="#d3deea" font-size="15">AQ-SPEC probe: no</text>
+      <text x="18" y="143" fill="#d3deea" font-size="15">paired series; needs</text>
+      <text x="18" y="162" fill="#d3deea" font-size="15">data and terms</text>
+      <rect x="18" y="180" width="92" height="20" rx="10" fill="#5a4a24"/>
+      <text x="64" y="194" fill="#fbe9c2" font-size="11" font-weight="700" letter-spacing="0.6" text-anchor="middle">PROBE RUN</text>
+    </g>
+
+    <text x="48" y="464" fill="#9fb2c5" font-size="13" letter-spacing="0.8">CONCEPTUAL OVERVIEW · NOT MEASURED OUTPUT · DASHED = OPTIONAL</text>
+    <text x="1152" y="464" fill="#9fb2c5" font-size="13" letter-spacing="0.8" text-anchor="end">ORDER FOLLOWS THE ROADMAP</text>
   </g>
 </svg>
