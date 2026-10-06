@@ -9,36 +9,34 @@ work history is in [docs/SPRINT_PROGRESS.md](docs/SPRINT_PROGRESS.md) and
 
 ## Finish line
 
-The owner adopted a public-data-first investigation on 2026-10-04. First assess
-external-data suitability, then make a narrowly scoped external model comparison
-only if paired temperature channels, exposure metadata and data terms permit it.
-Public data does not establish a transferable enclosure ranking or replace the
-physical campaign.
+The owner-authorized v2 direction asks how much target-design calibration
+measured geometry, material and power data plus shared thermal laws can replace.
+A transfer result will need a withheld enclosure, independent units or swaps,
+a future-period split, explicit calibration budgets and simpler physical and
+empirical baselines. Report error and interval coverage by exposure regime.
+Geometry transfer is an eventual result, not evidence supplied by the current
+single-node calculation.
 
-The project is finished when measured temperature bias for the enclosure
-variants, taken beside a reference thermometer over at least one full day and
-night, has been compared with the model's predictions and written up. This is
-Direction B in the [direction record](docs/research-direction-2026-09-21.md),
-chosen on 2026-09-25 as the floor.
+The first-stage floor remains Direction B: measure temperature bias and
+uncertainty beside a calibrated reference over day and night, compare with the
+model and write up the result. Reporting remains estimation-only with no
+pass/fail verdict. A claim that co-location can be skipped would require a
+prospective application tolerance with Guibaud. The [decision record](docs/OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions)
+separates owner adoption of the direction from unresolved physical and PI gates.
 
-The study is registered as estimation-only: it reports bias and uncertainty,
-with no pass/fail verdict, because no maximum tolerable error has been stated
-for the sensor's intended use
-([decided 2026-09-30](docs/OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30)).
-
-Direction B remains the approved floor. Direction A would require predicting a
-withheld geometry without fitting coefficients to that geometry. Adoption with
-Guibaud is unanswered E1 in the [decision record](docs/OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
-If authorized, its first analysis would assess prediction identifiability across
-plausible parameter and noise ranges using I1, I2 and ventilation interventions.
-Local Fisher information alone would not establish practical identifiability;
-a simpler predictive model is an acceptable outcome.
+This task corrects PR #56; it does not launch the transfer study or a campaign.
+An I1 thermal step at known airflow identifies effective heat/conductance and
+capacity/conductance in the single-node limit. It cannot identify every physical
+parameter. Broader prediction identifiability needs plausible parameter/noise
+ranges and the actual I1/I2/ventilation interventions, not local Fisher
+information at one point. A simpler predictor remains an acceptable outcome.
 
 ## Where it stands
 
-- The [transient result in PR #56](docs/results.md#transient-result-on-hold)
-  remains on HOLD. This documentation reconciliation does not repair its solver,
-  forcing or provenance gaps and does not register it for a campaign.
+- The [corrected transient result in PR #56](docs/results.md#transient-result-on-hold)
+  has executed initial-state, exact-RC, interval-energy and refinement checks.
+  Current output uses explicit sky scenarios and sensitivity labels. Parent
+  review remains on HOLD; missing acquisition provenance stays unknown.
 
 - The executed [AQ-SPEC suitability probe](analysis/aqspec_feasibility.md) obtained
   reports but no paired temperature series. Its source inventory and draft data
@@ -75,13 +73,15 @@ a simpler predictive model is an acceptable outcome.
 
 | # | Step | Who | Done when |
 |---|---|---|---|
-| A | Resolve external-data access after the completed AQ-SPEC probe | Owner reviews the draft request; data custodian supplies records and terms | A permitted paired sample and sufficient thermal/reference metadata, or a recorded inability to obtain them. **Current external-data step.** |
+| 0 | Review the corrected PR #56 result | Parent reviewer | Numerical evidence and source limitations accepted; HOLD disposition recorded. **Current software step.** |
+| A | Resolve external-data access after the completed AQ-SPEC probe | Owner reviews the draft request; data custodian supplies records and terms | A permitted paired sample and sufficient thermal/reference metadata, or a recorded inability to obtain them. Optional external-data route; no outreach authorized. |
 | B | Compare an eligible external dataset with the model, if feasible | Agent, after data suitability is established | Selection, independent-unit/day split and estimation metrics fixed before held-out evaluation; scoped result with uncertainty and exposure limits |
 | 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Physical campaign step.** |
 | 2 | After model corrections and hardware readiness, freeze the protocol, model, processing, coefficients, parameter treatment and weather acquisition procedure with the approver and date | Agent drafts; owner and PI approve | Frozen protocol committed before any data |
 | 3 | Run at least 24 h with all arms and the reference side by side, with the I1 resistive-load test as the first mechanism experiment and I2 shading retained as optional mechanism work; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
 | 4 | Compute bias and uncertainty per variant, day and night; drive the frozen model with independently collected weather under the registered procedure and compare with observations | Agent | Results and comparison merged |
-| 5 | Update the manuscript, README and portfolio | Agent | Merged |
+| 5 | Write up the first-stage estimation result in the manuscript and README | Agent | Reviewed result merged |
+| 6 | Register a geometry/calibration-transfer comparison after identifying usable parameters and resolving designs/replicates | Owner and PI approve; agent implements only after activation | Frozen holdouts, calibration budgets, baselines and regime-specific metrics before evaluation |
 
 The small Sensor.Community/DWD metadata pilot is a possible fallback, not an
 executed result. It requires actual data licences, construction metadata and
@@ -91,7 +91,7 @@ and exposure records. External exploration does not freeze the physical protocol
 
 ## Not in this version
 
-- Direction A: held-out geometries and pre-build prediction.
+- Executing the eventual geometry-transfer study in this correction task.
 - CFD or conjugate heat-transfer runs, unless the pilot disagrees with the
   lumped model by more than its uncertainty.
 - Verifying the historical deployment percentages, which needs raw exports

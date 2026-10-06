@@ -33,7 +33,7 @@
   },
   {
    "id": "thermal-transient-prediction",
-   "evidence_type": "analytical draft on HOLD; transient timing and provenance unresolved",
+   "evidence_type": "corrected analytical sensitivity; parent review HOLD, no thermal measurements",
    "generator": "analysis/thermal_transient.py",
    "command": "python -m analysis.thermal_transient",
    "inputs": [
@@ -45,7 +45,7 @@
     "analysis/figures/thermal_transient_prediction.png",
     "analysis/output/thermal_transient_prediction.json"
    ],
-   "notes": "Original artifacts preserved under PR #56 HOLD; see docs/results.md#transient-result-on-hold. Uniform assumed-input sensitivity bands do not establish calibrated uncertainty. Acquisition provenance, sky equation and time handling remain unresolved. Do not regenerate before numerical corrections and review."
+   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer."
   }
  ]
 }

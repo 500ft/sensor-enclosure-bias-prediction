@@ -1,38 +1,22 @@
 #!/usr/bin/env python3
-"""Transient prediction of enclosure temperature bias from a weather time series.
+"""Single-node thermal sensitivity calculation on preserved hourly weather.
 
-Extends the steady energy balance in ``thermal_bias.py`` with a thermal mass, so
-the bias can be predicted hour by hour from real weather and later compared with
-the co-location rig. Same balance, same variants; one added state per variant:
-
-    C dT/dt = alpha * solar_factor * G * A_proj + Q_int
-              - h_eff * A_conv * (T - T_local)
-              - eps * sigma * A_conv * [f_sky (T^4 - T_sky^4) + (1 - f_sky)(T^4 - T_local^4)]
-
-Integrated with a linearised implicit Euler step, which stays stable when the
-time step is longer than a small shield's time constant. With constant inputs it
-converges to ``thermal_bias.solve_surface_temperature``; the tests check that.
-
-Inputs it needs that the steady model did not:
-  * hourly air temperature, dew point, wind at 10 m, global horizontal irradiance
-    and cloud cover (here from the Open-Meteo archive, CC BY 4.0);
-  * a sky temperature, from the Berdahl–Martin clear-sky emissivity with the
-    Clark–Allen cloud correction;
-  * a heat capacity per variant and a factor taking 10 m wind to sensor height.
-
-Uncertainty: every bounded input is drawn from the range in ``PRIORS`` and the
-run is repeated. The bands show the spread those declared ranges produce. They
-are not measured uncertainty. The rig's step-response test (protocol item 6)
-and I1 load test are what pin the heat capacity and the internal-power term.
-
-Run: python -m analysis.thermal_transient
+C dT/dt = absorbed solar + effective coupled heat - convection - long-wave loss.
+The initial state is stored at its timestamp. Each actual interval uses midpoint
+instantaneous forcing and its preceding-hour solar mean, held piecewise constant.
+A locally linearized exponential step is exact for a constant-coefficient RC
+system. This is an assumed-input sensitivity study, without thermal measurements.
+See docs/results.md for the review status and acquisition/sky limitations.
 """
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
+import platform
 from dataclasses import replace
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 
 import numpy as np
@@ -80,36 +64,78 @@ NOMINAL = {
 }
 
 
-def sky_temperature_c(t_air_c, t_dew_c, cloud_frac):
-    """Effective sky temperature from Berdahl–Martin clear-sky emissivity and the
-    Clark–Allen cloud correction (cloud cover in tenths)."""
-    td = np.asarray(t_dew_c, float) / 100.0
-    eps_clear = 0.711 + 0.56 * td + 0.73 * td**2
-    n = 10.0 * np.clip(np.asarray(cloud_frac, float), 0.0, 1.0)
-    eps_sky = np.clip(eps_clear * (1.0 + 0.0224 * n - 0.0035 * n**2 + 0.00028 * n**3), 0.0, 1.0)
-    t_air_k = np.asarray(t_air_c, float) + 273.15
-    return eps_sky**0.25 * t_air_k - 273.15
+SKY_SOURCE = "https://energyplus.readthedocs.io/en/stable/auxiliary-programs/auxiliary-programs.html#field-horizontal-infrared-radiation-intensity"
+WEATHER_SOURCE = "https://open-meteo.com/en/docs/historical-weather-api"
 
 
-def load_weather(path=WEATHER, dt_s=DT_S):
-    raw = json.loads(Path(path).read_text())
+def sky_temperature_c(t_air_c, t_dew_c, opaque_fraction):
+    """Clark & Allen clear sky, Walton opaque-cloud correction per EnergyPlus.
+
+    Dewpoint is in kelvin inside the logarithm, opaque cover in tenths.
+    Total cloud fraction is not a substitute for opaque cover. The caller must
+    supply measured opaque cover or label it as a scenario assumption.
+    """
+    td = np.asarray(t_dew_c, float) + 273.15
+    opaque = np.asarray(opaque_fraction, float)
+    if np.any(td <= 0) or np.any((opaque < 0) | (opaque > 1)):
+        raise ValueError("invalid dewpoint or opaque-cloud fraction")
+    clear = 0.787 + 0.764 * np.log(td / 273.0)
+    n = 10.0 * opaque
+    emissivity = clear * (1 + 0.0224*n - 0.0035*n**2 + 0.00028*n**3)
+    if np.any(~np.isfinite(emissivity)) or np.any((emissivity <= 0) | (emissivity > 1)):
+        raise ValueError("sky correlation outside physical emissivity range")
+    return emissivity**0.25 * (np.asarray(t_air_c, float) + 273.15) - 273.15
+
+
+def load_weather(path=WEATHER, dt_s=DT_S, opaque_fraction=0.0):
+    """Node samples plus interval GHI: ghi[k] applies on (t[k-1], t[k]].
+
+    Begin at the first instantaneous record; discard the preceding solar hour
+    lacking other forcing. Stop at the final timestamp, without extending it.
+    Include every hourly boundary even when dt_s does not divide an hour.
+    """
+    if not np.isfinite(dt_s) or dt_s <= 0:
+        raise ValueError("dt_s must be positive and finite")
+    path = Path(path)
+    raw = json.loads(path.read_text())
     h = raw["hourly"]
-    hours = np.arange(len(h["time"]), dtype=float)
-    t = np.arange(0.0, hours[-1] * 3600.0 + dt_s / 2, dt_s)
-    interp = lambda key: np.interp(t / 3600.0, hours, np.asarray(h[key], float))
+    expected = {"time": "iso8601", "temperature_2m": "°C", "dew_point_2m": "°C",
+                "wind_speed_10m": "m/s", "shortwave_radiation": "W/m²", "cloud_cover": "%"}
+    if any(raw["hourly_units"].get(k) != v for k, v in expected.items()):
+        raise ValueError("weather units differ from the supported source convention")
+    zone = ZoneInfo(raw["timezone"])
+    offset = timedelta(seconds=raw["utc_offset_seconds"])
+    dates = [datetime.fromisoformat(x).replace(tzinfo=zone) for x in h["time"]]
+    if any(d.utcoffset() != offset for d in dates):
+        raise ValueError("timestamp offset differs from file metadata; DST needs explicit offsets")
+    dates = [d.astimezone(timezone.utc) for d in dates]
+    seconds = np.array([(d-dates[0]).total_seconds() for d in dates])
+    if len(seconds) < 2 or not np.all(np.diff(seconds) == 3600):
+        raise ValueError("expected consecutive hourly timestamps")
+    vals = {k: np.asarray(h[k], float) for k in expected if k != "time"}
+    if any(v.shape != seconds.shape or not np.all(np.isfinite(v)) for v in vals.values()):
+        raise ValueError("missing, nonfinite or mismatched hourly forcing")
+    if np.any(vals["wind_speed_10m"] < 0) or np.any(vals["shortwave_radiation"] < 0):
+        raise ValueError("negative wind or radiation")
+    if np.any((vals["cloud_cover"] < 0) | (vals["cloud_cover"] > 100)):
+        raise ValueError("cloud cover outside percent range")
+    t = np.unique(np.r_[np.arange(0, seconds[-1], dt_s), seconds])
+    interp = lambda key: np.interp(t, seconds, vals[key])
+    # The next hourly endpoint labels the mean for each supported subinterval.
+    ghi = vals["shortwave_radiation"][np.searchsorted(seconds, t, side="left")]
+    ghi[0] = 0.0  # no interval precedes the initial state in this calculation
     w = {
-        "t_s": t,
-        "time_labels": h["time"],
-        "t_air": interp("temperature_2m"),
-        "t_dew": interp("dew_point_2m"),
-        "wind10": np.maximum(interp("wind_speed_10m"), 0.0),
-        "ghi": np.maximum(interp("shortwave_radiation"), 0.0),
-        "cloud": interp("cloud_cover") / 100.0,
-        "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(),
-        "source": raw.get("source", "Open-Meteo historical weather archive"),
+        "t_s": t, "start_utc": dates[0].isoformat(),
+        "time_labels": [d.isoformat() for d in dates],
+        "t_air": interp("temperature_2m"), "t_dew": interp("dew_point_2m"),
+        "wind10": interp("wind_speed_10m"), "ghi": ghi,
+        "opaque_fraction_assumed": opaque_fraction,
+        "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "lat": raw["latitude"], "lon": raw["longitude"],
+        "timezone": raw["timezone"], "utc_offset_seconds": raw["utc_offset_seconds"],
+        "source_energy_j_m2": float(np.sum(vals["shortwave_radiation"][1:]) * 3600),
     }
-    w["t_sky"] = sky_temperature_c(w["t_air"], w["t_dew"], w["cloud"])
+    w["t_sky"] = sky_temperature_c(w["t_air"], w["t_dew"], opaque_fraction)
     return w
 
 
@@ -135,23 +161,35 @@ def _params_for(vid, p):
     }
 
 
-def simulate(vid, weather, p, dt_s=DT_S):
+def simulate(vid, weather, p):
     """Sensor temperature over time for one variant. ``p`` values may be scalars
     or 1-D arrays (one per Monte Carlo sample). Returns (n_steps, n_samples)."""
     q = _params_for(vid, p)
-    n_steps = len(weather["t_s"])
+    times = np.asarray(weather["t_s"], float)
+    if len(times) < 2 or not np.all(np.isfinite(times)) or np.any(np.diff(times) <= 0):
+        raise ValueError("simulation timestamps must strictly increase")
+    if np.any(np.asarray(q["c"]) <= 0):
+        raise ValueError("thermal capacity must be positive")
+    n_steps = len(times)
     shape = np.broadcast(*[np.asarray(val) for val in p.values()]).shape or (1,)
     t = np.full(shape, weather["t_air"][0] + 273.15)
     out = np.empty((n_steps,) + shape)
-    for k in range(n_steps):
-        t_air = weather["t_air"][k] + 273.15
-        t_sky = weather["t_sky"][k] + 273.15
+    out[0] = t - 273.15
+    for k in range(1, n_steps):
+        dt_s = times[k] - times[k-1]
+        midpoint = lambda key: (weather[key][k-1] + weather[key][k]) / 2
+        t_air = midpoint("t_air") + 273.15
+        if "opaque_fraction_assumed" in weather:
+            t_sky = sky_temperature_c(t_air-273.15, midpoint("t_dew"),
+                                     weather["opaque_fraction_assumed"]) + 273.15
+        else:
+            t_sky = midpoint("t_sky") + 273.15
         g = weather["ghi"][k]
         if q["forced_h"] is not None:
             h_eff = q["forced_h"]
             wind_eff = FORCED_EQUIV_WIND
         else:
-            wind_eff = weather["wind10"][k] * p["wind_height_factor"]
+            wind_eff = midpoint("wind10") * p["wind_height_factor"]
             h_eff = (p["h_floor"] + p["h_slope"] * wind_eff) * q["conv_boost"]
         preheat = 0.0
         if q["shielded"]:
@@ -162,7 +200,11 @@ def simulate(vid, weather, p, dt_s=DT_S):
         net = (q_in - h_eff * q["a_conv"] * (t - t_loc)
                - rad * (q["f_sky"] * (t**4 - t_sky**4) + (1.0 - q["f_sky"]) * (t**4 - t_loc**4)))
         dnet = -h_eff * q["a_conv"] - 4.0 * rad * t**3
-        t = t + dt_s * net / (q["c"] - dt_s * dnet)
+        # Exact integration of the local tangent ODE, including the zero-loss limit.
+        rate = -dnet / q["c"]
+        gain = np.full_like(np.asarray(rate, float), dt_s)
+        np.divide(-np.expm1(-rate * dt_s), rate, out=gain, where=rate != 0)
+        t = t + net / q["c"] * gain
         out[k] = t - 273.15
     return out
 
@@ -173,9 +215,11 @@ def draw(n, seed=SEED):
 
 
 def i1_sensitivity(wind_values=(0.5, 1.0, 2.0, 3.0), t_air_c=20.0):
-    """Predicted bias change per watt of added internal power, in shade (G = 0),
-    for the closed box and the shield, from the steady solver. This is the
-    quantity the rig's first experiment (I1) measures."""
+    """Finite 1 W secant in effective sensor-coupled heat under steady shade.
+
+    This uses the steady model's sky assumption, not the weather-driven sky.
+    Electrical supply power needs an identified heat path before comparison.
+    """
     t_sky = t_air_c - float(_a("T_sky_offset"))
     h_floor, h_slope = float(_a("h_free_floor")), float(_a("h_wind_slope"))
     out = {}
@@ -187,29 +231,42 @@ def i1_sensitivity(wind_values=(0.5, 1.0, 2.0, 3.0), t_air_c=20.0):
             h = h_external(w, h_floor, h_slope)
             t0 = solve_surface_temperature(v, 0.0, t_air_c, t_sky, h)
             t1 = solve_surface_temperature(replace(v, q_internal=v.q_internal + 1.0), 0.0, t_air_c, t_sky, h)
-            rows.append({"wind_m_s": w, "degc_per_w": round(t1 - t0, 3)})
+            rows.append({"wind_m_s": w, "finite_secant_c_per_effective_w": round(t1 - t0, 6)})
         out[v.vid] = rows
     return out
 
 
-def summarise(weather, runs):
-    """Daytime, night and daily-peak bias per variant: median and 5-95% band
-    across samples, after the spin-up day."""
-    start = int(SPIN_UP_H * 3600 / DT_S)
-    day = weather["ghi"][start:] > 50.0
-    night = weather["ghi"][start:] <= 0.0
-    steps_per_day = int(86400 / DT_S)
+def summarise(weather, runs, spin_up_h=SPIN_UP_H, bias_inputs=False):
+    """Duration-weighted interval means; peaks only for complete retained days.
+
+    Day bins start at the file's initial timestamp (local midnight for this file).
+    Retain partial-day intervals in means but exclude their peaks from daily means.
+    """
+    t = weather["t_s"]
+    cut = spin_up_h * 3600
+    keep = t[:-1] >= cut
+    if not np.any(keep):
+        raise ValueError("no intervals remain after spin-up")
+    duration = np.diff(t)[keep]
+    g = weather["ghi"][1:][keep]
+    masks = {"daytime": g > 50.0, "night": g == 0.0}
+    days = []
+    for left in np.arange(cut, t[-1], 86400):
+        if left + 86400 <= t[-1]:
+            days.append((t >= left) & (t <= left + 86400))
+    pct = lambda a: [float(x) for x in np.percentile(a, [5, 50, 95])]
     summary = {}
     for vid, temp in runs.items():
-        bias = temp[start:] - weather["t_air"][start:, None]
-        n_days = bias.shape[0] // steps_per_day
-        peaks = bias[: n_days * steps_per_day].reshape(n_days, steps_per_day, -1).max(axis=1)
-        pct = lambda a: [round(float(x), 2) for x in np.percentile(a, [5, 50, 95])]
-        summary[vid] = {
-            "daytime_mean_bias_c_p05_p50_p95": pct(bias[day].mean(axis=0)),
-            "night_mean_bias_c_p05_p50_p95": pct(bias[night].mean(axis=0)),
-            "daily_peak_bias_c_p05_p50_p95": pct(peaks.mean(axis=0)),
-        }
+        bias = temp if bias_inputs else temp - weather["t_air"][:, None]
+        midpoint_bias = ((bias[:-1] + bias[1:]) / 2)[keep]
+        row = {}
+        for name, mask in masks.items():
+            row[name + "_mean_bias_c_p05_p50_p95"] = (
+                pct(np.average(midpoint_bias[mask], axis=0, weights=duration[mask]))
+                if np.any(mask) else None)
+        row["complete_day_mean_peak_bias_c_p05_p50_p95"] = (
+            pct(np.mean([bias[mask].max(axis=0) for mask in days], axis=0)) if days else None)
+        summary[vid] = row
     return summary
 
 
@@ -217,31 +274,36 @@ def make_figure(weather, runs, path):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    start = int(SPIN_UP_H * 3600 / DT_S)
-    hours = weather["t_s"][start:] / 3600.0
+    from matplotlib.dates import DateFormatter, DayLocator
+    start = np.searchsorted(weather["t_s"], SPIN_UP_H * 3600)
+    dates = [datetime.fromisoformat(weather["start_utc"]) + timedelta(seconds=float(t))
+             for t in weather["t_s"][start:]]
     fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(10, 6.5), sharex=True,
                                    gridspec_kw={"height_ratios": [1, 2]})
-    ax0.plot(hours, weather["ghi"][start:], color="#d08c00", lw=1, label="Solar, global horizontal [W/m²]")
+    ax0.step(dates, weather["ghi"][start:], where="pre", color="#d08c00", lw=1, label="Solar, global horizontal [W/m²]")
     ax0b = ax0.twinx()
-    ax0b.plot(hours, weather["wind10"][start:], color="#4a6fa5", lw=1, label="Wind at 10 m [m/s]")
+    ax0b.plot(dates, weather["wind10"][start:], color="#4a6fa5", lw=1, label="Wind at 10 m [m/s]")
     ax0.set_ylabel("Solar [W/m²]", color="#d08c00"); ax0b.set_ylabel("Wind, 10 m [m/s]", color="#4a6fa5")
-    ax0.set_title("Inputs: Brooklyn, 2026-09-02 to 09-14 (Open-Meteo archive)", fontsize=10, loc="left")
+    ax0.set_title("Preserved Open-Meteo forcing; acquisition product/date unknown", fontsize=10, loc="left")
     colors = {"V0": "#3b3b3b", "V0P": "#8a6d3b", "V1": "#2e7d32", "V2": "#1565c0"}
     names = {v.vid: v.name for v in build_variants()}
     for vid, temp in runs.items():
         bias = temp[start:] - weather["t_air"][start:, None]
         lo, mid, hi = np.percentile(bias, [5, 50, 95], axis=1)
-        ax1.fill_between(hours, lo, hi, color=colors[vid], alpha=0.18, lw=0)
-        ax1.plot(hours, mid, color=colors[vid], lw=1.1, label=f"{vid} {names[vid]}")
+        ax1.fill_between(dates, lo, hi, color=colors[vid], alpha=0.18, lw=0)
+        ax1.plot(dates, mid, color=colors[vid], lw=1.1, label=f"{vid} {names[vid]}")
     ax1.axhline(0, color="#999", lw=0.6)
     ax1.set_ylabel("Predicted sensor minus air [°C]")
-    ax1.set_xlabel("Hours from 2026-09-01 00:00 local")
-    ax1.set_title("Model prediction: median and 5–95% band from declared parameter ranges (not measured)",
+    ax1.set_xlabel("Timestamp [UTC]; hourly forcing, final day incomplete")
+    ax1.xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
+    ax1.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
+    ax1.set_title("Clear-sky scenario: median and 5–95% assumed-input sensitivity",
                   fontsize=10, loc="left")
     ax1.legend(fontsize=8, ncol=2, loc="upper left")
     fig.tight_layout()
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=140)
+    plt.close(fig)
 
 
 def main():
@@ -251,6 +313,8 @@ def main():
     ap.add_argument("--figure", default=str(OUT_FIG))
     ap.add_argument("--no-figure", action="store_true")
     args = ap.parse_args()
+    if args.samples < 1:
+        ap.error("--samples must be positive")
 
     weather = load_weather()
     p = draw(args.samples)
@@ -258,23 +322,53 @@ def main():
     runs = {vid: simulate(vid, weather, p) for vid in vids}
     nominal = {vid: simulate(vid, weather, {k: np.array([v]) for k, v in NOMINAL.items()}) for vid in vids}
 
+    opaque_weather = load_weather(opaque_fraction=1.0)
+    opaque_runs = {vid: simulate(vid, opaque_weather, NOMINAL) for vid in vids}
+    duration = float(weather["t_s"][-1] - SPIN_UP_H * 3600)
+    # Shared draws define a paired contrast, without a population probability claim.
+    paired = {"V1_minus_V0P_signed_bias": runs["V1"] - runs["V0P"]}
     result = {
-        "status": "MODEL PREDICTION; no co-location data exists",
+        "status": "CORRECTED SENSITIVITY CALCULATION; parent review HOLD; no thermal co-location data",
+        "software": {"python": platform.python_version(), "numpy": np.__version__},
+        "model_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "model": "analysis/thermal_transient.py (steady balance of thermal_bias.py plus one thermal mass per variant)",
         "weather": {
             "file": str(WEATHER.relative_to(ROOT)), "sha256": weather["sha256"],
             "provider": "Open-Meteo historical weather archive (CC BY 4.0)",
             "grid_point_lat_lon": [weather["lat"], weather["lon"]],
-            "period_local": [weather["time_labels"][0], weather["time_labels"][-1]],
+            "period_utc": [weather["time_labels"][0], weather["time_labels"][-1]],
+            "source_timezone": weather["timezone"],
+            "acquisition_request": None, "retrieved_at": None, "product_version": None,
+            "provenance_status": "Unavailable in preserved files; no reconstruction from current API defaults",
+            "definitions_source": WEATHER_SOURCE,
+            "license_source": "https://open-meteo.com/en/terms",
+            "radiation_rule": "ghi[k] held on preceding interval; first source solar hour excluded",
+            "source_energy_j_m2": weather["source_energy_j_m2"],
+            "integrated_energy_j_m2": float(np.dot(weather["ghi"][1:], np.diff(weather["t_s"]))),
         },
-        "integration": {"dt_s": DT_S, "spin_up_h": SPIN_UP_H, "method": "linearised implicit Euler"},
-        "monte_carlo": {"samples": args.samples, "seed": SEED, "distribution": "uniform within declared ranges"},
+        "integration": {"dt_s": DT_S, "spin_up_h": SPIN_UP_H, "method": "local exponential tangent step; midpoint instantaneous forcing; actual intervals"},
+        "sky": {"source": SKY_SOURCE, "equation": "Clark & Allen clear sky with Walton opaque correction",
+                "opaque_fraction_in_primary_run": 0.0,
+                "alternative_nominal_opaque_fraction": 1.0,
+                "interpretation": "two assumed sky scenarios; total cloud is not opaque cloud; neither is measured sky forcing or a guaranteed bound"},
+        "time_support": {"retained_duration_h": duration/3600,
+                         "complete_days_for_peaks": int(duration//86400),
+                         "partial_day_h_in_means_only": (duration % 86400)/3600,
+                         "mean_rule": "trapezoidal node bias weighted by interval duration; daytime GHI>50 W/m2, night GHI=0; twilight excluded from both",
+                         "peak_rule": "mean of node-sampled signed peaks over complete retained days; bins start at source local midnight",
+                         "instantaneous_forcing": "linear interpolation between hourly records, evaluated at interval midpoint"},
+        "monte_carlo": {"samples": args.samples, "seed": SEED, "distribution": "independent uniform parameters, shared draws across variants; sensitivity only"},
         "priors": {k: {"low": lo, "high": hi, "applies_to": list(app), "note": note}
                    for k, (lo, hi, app, note) in PRIORS.items()},
         "nominal": NOMINAL,
         "bias_summary": summarise(weather, runs),
         "nominal_summary": summarise(weather, nominal),
-        "i1_prediction_shade_degc_per_w_nominal": i1_sensitivity(),
+        "nominal_opaque_sky_scenario": summarise(opaque_weather, opaque_runs),
+        "paired_signed_contrast": summarise(weather, paired, bias_inputs=True),
+        "paired_contrast_definition": "V1 minus V0P signed bias in each shared draw; sign is not absolute-error superiority; quantiles are assumed-input sensitivity",
+        "i1_finite_secant_shade": {"effective_heat_increment_w": 1.0,
+                                   "sky_assumption_source": "analysis/thermal_bias.py:ASSUMPTIONS:T_sky_offset",
+                                   "values": i1_sensitivity()},
         "limits": [
             "Weather comes from a reanalysis grid point, not the rig site; the registered comparison uses on-site measured inputs.",
             "Global horizontal irradiance is applied to the projected area, as in the steady model.",
@@ -289,7 +383,7 @@ def main():
         make_figure(weather, runs, args.figure)
     for vid, s in result["bias_summary"].items():
         print(vid, s)
-    print("I1 (nominal, shade):", result["i1_prediction_shade_degc_per_w_nominal"])
+    print("I1 (nominal, shade):", result["i1_finite_secant_shade"])
 
 
 if __name__ == "__main__":

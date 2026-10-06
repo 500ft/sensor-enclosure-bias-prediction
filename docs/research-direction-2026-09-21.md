@@ -1,20 +1,23 @@
 # Research-direction decision record — 2026-09-21
 
-Current disposition: Direction B was selected as the immediate scope. The
-new proposed switch to Direction A is unanswered [E1](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
-The [roadmap](../ROADMAP.md) is the active plan; the sections below preserve the
-dated analytical work and earlier proposals.
+Current disposition: the owner-authorized v2 question is how much target-design
+calibration measured geometry, material and power data plus shared thermal laws
+can replace. [ENC-1](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions)
+supersedes the earlier unresolved owner-adoption question. Direction B remains
+the first-stage estimation-only floor, and PI/physical decisions remain open.
+The [roadmap](../ROADMAP.md) is the active plan. The dated proposals below are
+history, not additional work authorization.
 
-If E1 is adopted with Guibaud, the first analysis would test prediction
-identifiability over plausible parameter/noise ranges and I1/I2/ventilation
-interventions, rather than infer it from local Fisher information at one point.
-A simpler predictive model is acceptable. Later confirmation would withhold a
-geometry and future period, use unit replicates or swaps, distinguish measured
-deployment inputs from frozen coefficients, compare simpler heat-balance and
-empirical baselines, and report error and interval coverage by regime. No
-arbitrary precision percentage is an application requirement. Heated cold-climate
-boxes and PM-correction effects remain separate later studies. The cross-shield
-refitting claim remains unverified pending inspection of the actual source.
+The [executed correction](results.md#transient-result-on-hold) tests a single-node
+thermal step and weather integration. Later identifiability must cover plausible
+parameters/noise and actual I1/I2/ventilation interventions. Local Fisher
+information alone is insufficient. A simpler predictor is acceptable. Later
+confirmation needs geometry and future-period holdouts, independent units or
+swaps, measured deployment inputs distinguished from frozen coefficients,
+calibration budgets, simpler physical/empirical baselines and regime-specific
+error/coverage. No arbitrary precision percentage is an application requirement.
+Heated cold-climate boxes and PM-correction effects remain separate. The
+cross-shield refitting claim remains unverified pending its actual source.
 
 Historical decision aid. Base:
 `main` at `84e0ef3`. Companion to the historical owner draft [PR #20](https://github.com/500ft/sensor-enclosure-thermal-design/pull/20)
@@ -38,7 +41,7 @@ The original decision aid compared these questions:
 The original recommendation to pursue A did not adopt it. Direction B needs
 physical observations of its own, and its pilot becomes a held-out check for A
 only if the predictor and split were fixed without fitting to that geometry.
-See the selected direction below and the pending E1 decision above.
+See the selected direction below and the current ENC-1 disposition above.
 
 ## 2. Historical Direction A proposal
 

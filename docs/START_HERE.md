@@ -13,8 +13,9 @@ reliability code. The thermal campaign has not run; older deployment and
 electronics work is retained below. PI approval is in principle, and campaign
 readiness follows the [current blocker](COLOCATION_OWNER_SESSION.md#current-blocker).
 Read the [PR #56 hold](results.md#transient-result-on-hold) before using its
-transient outputs. Direction B remains approved; the proposed switch is pending
-in [E1-E4](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
+corrected transient outputs. The owner-authorized direction concerns geometry
+and calibration transfer; the first-stage estimation-only study and unresolved
+PI/physical gates are recorded in [ENC-1 to ENC-5](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
 
 ## Reviewer: reproduce the contained analysis
 

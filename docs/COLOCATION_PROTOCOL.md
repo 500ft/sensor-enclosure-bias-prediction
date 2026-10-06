@@ -6,7 +6,8 @@ before any data is collected; don't backdate a freeze to this draft. The PI has
 approved the pilot in principle. The current blocker is in the
 [owner session record](COLOCATION_OWNER_SESSION.md#current-blocker) and the
 open decisions are in [OWNER_DECISIONS](OWNER_DECISIONS_2026-09-24.md).
-Direction B remains the approved estimation-only scope. The
+Direction B remains the first-stage estimation-only scope within the
+owner-authorized direction toward geometry/calibration transfer. The
 [held transient result](results.md#transient-result-on-hold) is not a frozen
 campaign prediction. I1 remains the first mechanism experiment.
 
@@ -158,7 +159,7 @@ close a `measurement` field.
 | Group | Fields | Obtained by |
 | --- | --- | --- |
 | Identity | hardware ID, sensor ID, firmware version, enclosure revision | measurement |
-| Material and optics | material, finish, solar absorptance `alpha` and emissivity `eps`, measured or bounded with the standard named (E903, C1549 or E1918 per `levinson2010`) | measurement; no measured `alpha` for a printed wall exists in the literature, and a colour name is not evidence |
+| Material and optics | material, finish, solar absorptance `alpha` and emissivity `eps`, measured or bounded with the standard named (E903, C1549 or E1918 per `levinson2010`) | measurement; the reviewed source record supplies no measured `alpha` for these printed walls, and a colour name is not evidence |
 | Geometry | wall thickness, vent count and sizes, open area, sensor stand-off, electronics location, plate gaps | measurement |
 | Power | electrical input power (W) and where it is measured, plus the fraction reaching the sensor zone | measurement; this is the new quantity |
 | Reference | instrument ID, calibration certificate, stated uncertainty, shield and aspiration | vendor drawing and measurement |
@@ -190,8 +191,20 @@ the design cannot separate the named confounder.
 
 ### I1 procedure (the first experiment)
 
-I1 is the only design here that identifies the dissipation term, and the
-literature has no measured value for a low-cost air-quality enclosure.
+The [executed exact-RC check](../analysis/output/thermal_transient_verification.json)
+tests the single-node equation `C*dtheta/dt + G*theta = Q_effective`.
+A step identifies `DeltaQ_effective/G` and `C/G`. Electrical input equals
+coupled heat only with a documented heat path; without that relation, absolute
+`G` and `C` remain confounded with coupling. Airflow and fan state must be held
+or measured. This reasoning does not establish multi-node identifiability.
+Subsequent shading interventions need a sensitivity check and counterbalancing,
+because shading also changes airflow and long-wave exchange. Judge campaign
+coverage from measured irradiance/wind and intervention records. Climatology
+does not qualify a rig campaign; a window that misses coverage is incomplete
+acquisition rather than a negative physics result.
+
+I1 directly perturbs the heat load; interpretation needs the heat-path and
+airflow controls above. No measured heat-coupling value for this rig is available.
 
 1. Temperature probes powered and logged independently, fixed in place, so the
    measurement chain doesn't change with the load state.
@@ -432,7 +445,8 @@ an explicit independent input, rather than estimating pairwise covariances.
 - The fixed sky-temperature depression is an assumption. Use measured long-wave
   forcing where available, or an explicitly sourced sky model with its required
   cloud information and uncertainty. Dewpoint alone is insufficient under cloud;
-  the transient implementation's hybrid equation remains on HOLD.
+  the corrected transient calculation uses sourced clear/opaque sky scenarios
+  because total cloud cover does not identify the required opaque fraction.
 - An error in `alpha` becomes 0.6 K per 10 W/m² of solar heat gain
   (`levinson2010`).
 

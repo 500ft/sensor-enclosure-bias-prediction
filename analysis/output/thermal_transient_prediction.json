@@ -1,5 +1,10 @@
 {
-  "status": "MODEL PREDICTION; no co-location data exists",
+  "status": "CORRECTED SENSITIVITY CALCULATION; parent review HOLD; no thermal co-location data",
+  "software": {
+    "python": "3.12.0",
+    "numpy": "2.5.3"
+  },
+  "model_sha256": "038890676730de6a0a76074970f9d369d1f7133a52e73914f7cb6ba7b29b8911",
   "model": "analysis/thermal_transient.py (steady balance of thermal_bias.py plus one thermal mass per variant)",
   "weather": {
     "file": "analysis/input/openmeteo_brooklyn_20260901_20260914.json",
@@ -9,20 +14,45 @@
       40.667835,
       -73.93768
     ],
-    "period_local": [
-      "2026-09-01T00:00",
-      "2026-09-14T23:00"
-    ]
+    "period_utc": [
+      "2026-09-01T04:00:00+00:00",
+      "2026-09-15T03:00:00+00:00"
+    ],
+    "source_timezone": "America/New_York",
+    "acquisition_request": null,
+    "retrieved_at": null,
+    "product_version": null,
+    "provenance_status": "Unavailable in preserved files; no reconstruction from current API defaults",
+    "definitions_source": "https://open-meteo.com/en/docs/historical-weather-api",
+    "license_source": "https://open-meteo.com/en/terms",
+    "radiation_rule": "ghi[k] held on preceding interval; first source solar hour excluded",
+    "source_energy_j_m2": 253000800.0,
+    "integrated_energy_j_m2": 253000800.0
   },
   "integration": {
     "dt_s": 60.0,
     "spin_up_h": 24,
-    "method": "linearised implicit Euler"
+    "method": "local exponential tangent step; midpoint instantaneous forcing; actual intervals"
+  },
+  "sky": {
+    "source": "https://energyplus.readthedocs.io/en/stable/auxiliary-programs/auxiliary-programs.html#field-horizontal-infrared-radiation-intensity",
+    "equation": "Clark & Allen clear sky with Walton opaque correction",
+    "opaque_fraction_in_primary_run": 0.0,
+    "alternative_nominal_opaque_fraction": 1.0,
+    "interpretation": "two assumed sky scenarios; total cloud is not opaque cloud; neither is measured sky forcing or a guaranteed bound"
+  },
+  "time_support": {
+    "retained_duration_h": 311.0,
+    "complete_days_for_peaks": 12,
+    "partial_day_h_in_means_only": 23.0,
+    "mean_rule": "trapezoidal node bias weighted by interval duration; daytime GHI>50 W/m2, night GHI=0; twilight excluded from both",
+    "peak_rule": "mean of node-sampled signed peaks over complete retained days; bins start at source local midnight",
+    "instantaneous_forcing": "linear interpolation between hourly records, evaluated at interval midpoint"
   },
   "monte_carlo": {
     "samples": 400,
     "seed": 20261004,
-    "distribution": "uniform within declared ranges"
+    "distribution": "independent uniform parameters, shared draws across variants; sensitivity only"
   },
   "priors": {
     "alpha_dark": {
@@ -185,180 +215,274 @@
   "bias_summary": {
     "V0": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        5.24,
-        6.53,
-        8.15
+        4.776410308205657,
+        6.062194306881008,
+        7.756230619380128
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        -1.2,
-        -0.46,
-        0.16
+        -2.2501301943516525,
+        -1.1897136727658073,
+        -0.38228321502087276
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        9.33,
-        11.39,
-        14.01
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        9.042811514500375,
+        11.146542992796665,
+        13.565874938446322
       ]
     },
     "V0P": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        0.55,
-        1.67,
-        2.95
+        -0.10861206431956025,
+        1.1722460952947302,
+        2.5979175769603944
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        -1.2,
-        -0.46,
-        0.16
+        -2.2517398899257586,
+        -1.1911928569524366,
+        -0.3839347628761986
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        2.01,
-        3.44,
-        5.24
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.1689064138359404,
+        2.80616907650973,
+        4.811922878617849
       ]
     },
     "V1": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        1.05,
-        1.54,
-        2.15
+        1.0110538653811822,
+        1.5029666677742697,
+        2.112949521513954
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        0.02,
-        0.24,
-        0.48
+        -0.08966697428681641,
+        0.16134367213103087,
+        0.43442123279727574
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        1.76,
-        2.48,
-        3.46
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.752767659723959,
+        2.482314426218502,
+        3.4805956377362492
       ]
     },
     "V2": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        0.65,
-        0.93,
-        1.21
+        0.6149117026025431,
+        0.9045291246364919,
+        1.178620735227849
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        0.01,
-        0.15,
-        0.27
+        -0.05224349985489855,
+        0.10145859427889593,
+        0.2500597923039238
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        1.06,
-        1.46,
-        1.86
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.0131358200834535,
+        1.423253875183196,
+        1.8316960173019907
       ]
     }
   },
   "nominal_summary": {
     "V0": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        6.53,
-        6.53,
-        6.53
+        6.0801310380738185,
+        6.0801310380738185,
+        6.0801310380738185
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        -0.63,
-        -0.63,
-        -0.63
+        -1.3921137146175897,
+        -1.3921137146175897,
+        -1.3921137146175897
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        11.51,
-        11.51,
-        11.51
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        11.184676316968803,
+        11.184676316968803,
+        11.184676316968803
       ]
     },
     "V0P": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        1.5,
-        1.5,
-        1.5
+        1.0209072055036774,
+        1.0209072055036774,
+        1.0209072055036774
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        -0.63,
-        -0.63,
-        -0.63
+        -1.3935838716070805,
+        -1.3935838716070805,
+        -1.3935838716070805
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        3.32,
-        3.32,
-        3.32
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        2.674884609424924,
+        2.674884609424924,
+        2.674884609424924
       ]
     },
     "V1": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        1.0,
-        1.0,
-        1.0
+        0.9681049014979103,
+        0.9681049014979103,
+        0.9681049014979103
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        0.15,
-        0.15,
-        0.15
+        0.09287821176129812,
+        0.09287821176129812,
+        0.09287821176129812
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        1.62,
-        1.62,
-        1.62
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.6333812428810877,
+        1.6333812428810877,
+        1.6333812428810877
       ]
     },
     "V2": {
       "daytime_mean_bias_c_p05_p50_p95": [
-        0.67,
-        0.67,
-        0.67
+        0.6432709027983661,
+        0.6432709027983661,
+        0.6432709027983661
       ],
       "night_mean_bias_c_p05_p50_p95": [
-        0.1,
-        0.1,
-        0.1
+        0.06399110976744744,
+        0.06399110976744744,
+        0.06399110976744744
       ],
-      "daily_peak_bias_c_p05_p50_p95": [
-        1.05,
-        1.05,
-        1.05
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.0193161520205294,
+        1.0193161520205294,
+        1.0193161520205294
       ]
     }
   },
-  "i1_prediction_shade_degc_per_w_nominal": {
-    "V0": [
-      {
-        "wind_m_s": 0.5,
-        "degc_per_w": 0.926
-      },
-      {
-        "wind_m_s": 1.0,
-        "degc_per_w": 0.792
-      },
-      {
-        "wind_m_s": 2.0,
-        "degc_per_w": 0.616
-      },
-      {
-        "wind_m_s": 3.0,
-        "degc_per_w": 0.504
-      }
-    ],
-    "V1": [
-      {
-        "wind_m_s": 0.5,
-        "degc_per_w": 3.326
-      },
-      {
-        "wind_m_s": 1.0,
-        "degc_per_w": 2.806
-      },
-      {
-        "wind_m_s": 2.0,
-        "degc_per_w": 2.137
-      },
-      {
-        "wind_m_s": 3.0,
-        "degc_per_w": 1.725
-      }
-    ]
+  "nominal_opaque_sky_scenario": {
+    "V0": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        7.591869090154746,
+        7.591869090154746,
+        7.591869090154746
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.12812841906606906,
+        0.12812841906606906,
+        0.12812841906606906
+      ],
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        12.763224373868717,
+        12.763224373868717,
+        12.763224373868717
+      ]
+    },
+    "V0P": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        2.5584218147240496,
+        2.5584218147240496,
+        2.5584218147240496
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.1266729899560737,
+        0.1266729899560737,
+        0.1266729899560737
+      ],
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        4.2958678715486425,
+        4.2958678715486425,
+        4.2958678715486425
+      ]
+    },
+    "V1": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        1.0898480177965764,
+        1.0898480177965764,
+        1.0898480177965764
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.2122988963616768,
+        0.2122988963616768,
+        0.2122988963616768
+      ],
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.7684503452318932,
+        1.7684503452318932,
+        1.7684503452318932
+      ]
+    },
+    "V2": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        0.7274505638794869,
+        0.7274505638794869,
+        0.7274505638794869
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.1458166527373077,
+        0.1458166527373077,
+        0.1458166527373077
+      ],
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        1.104671680838613,
+        1.104671680838613,
+        1.104671680838613
+      ]
+    }
+  },
+  "paired_signed_contrast": {
+    "V1_minus_V0P_signed_bias": {
+      "daytime_mean_bias_c_p05_p50_p95": [
+        -0.8636776832938762,
+        0.31382018702301784,
+        1.4665173346867701
+      ],
+      "night_mean_bias_c_p05_p50_p95": [
+        0.5354715623058369,
+        1.3669421501839727,
+        2.4542371904769924
+      ],
+      "complete_day_mean_peak_bias_c_p05_p50_p95": [
+        0.6979596341695197,
+        1.699799864491484,
+        3.0104831445016704
+      ]
+    }
+  },
+  "paired_contrast_definition": "V1 minus V0P signed bias in each shared draw; sign is not absolute-error superiority; quantiles are assumed-input sensitivity",
+  "i1_finite_secant_shade": {
+    "effective_heat_increment_w": 1.0,
+    "sky_assumption_source": "analysis/thermal_bias.py:ASSUMPTIONS:T_sky_offset",
+    "values": {
+      "V0": [
+        {
+          "wind_m_s": 0.5,
+          "finite_secant_c_per_effective_w": 0.925574
+        },
+        {
+          "wind_m_s": 1.0,
+          "finite_secant_c_per_effective_w": 0.792286
+        },
+        {
+          "wind_m_s": 2.0,
+          "finite_secant_c_per_effective_w": 0.615566
+        },
+        {
+          "wind_m_s": 3.0,
+          "finite_secant_c_per_effective_w": 0.503519
+        }
+      ],
+      "V1": [
+        {
+          "wind_m_s": 0.5,
+          "finite_secant_c_per_effective_w": 3.326218
+        },
+        {
+          "wind_m_s": 1.0,
+          "finite_secant_c_per_effective_w": 2.80615
+        },
+        {
+          "wind_m_s": 2.0,
+          "finite_secant_c_per_effective_w": 2.136758
+        },
+        {
+          "wind_m_s": 3.0,
+          "finite_secant_c_per_effective_w": 1.724802
+        }
+      ]
+    }
   },
   "limits": [
     "Weather comes from a reanalysis grid point, not the rig site; the registered comparison uses on-site measured inputs.",

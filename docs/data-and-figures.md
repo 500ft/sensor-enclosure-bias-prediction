@@ -86,7 +86,7 @@ python analysis/thermal_bias.py
 The script solves a lumped steady-state energy balance for absorbed solar and
 internal heat against convection and long-wave radiation. It converts predicted
 sensor temperature rise into relative-humidity error at fixed water-vapor
-content, sweeps solar loading and wind speed, and writes
+partial pressure, sweeps solar loading and wind speed, and writes
 `analysis/figures/thermal_bias.png`.
 
 The assumptions are encoded in the script and tabulated in
@@ -96,18 +96,32 @@ measurements is a literature bracket, not a validation using this enclosure.
 
 ## Transient prediction plot
 
-This plot and its [JSON output](../analysis/output/thermal_transient_prediction.json)
-are preserved artifacts of [held PR #56](results.md#transient-result-on-hold).
-Generator: [`analysis/thermal_transient.py`](../analysis/thermal_transient.py).
-The original generation command was `python -m analysis.thermal_transient`;
-it writes the committed output paths, so do not regenerate them during the
-review hold.
+The [corrected JSON](../analysis/output/thermal_transient_prediction.json) and
+figure come from [`analysis/thermal_transient.py`](../analysis/thermal_transient.py).
+Reproduce into fresh paths:
+
+```bash
+python -m analysis.thermal_transient --json /tmp/enclosure-transient.json --figure /tmp/enclosure-transient.png
+python -m analysis.verify_thermal_transient --out /tmp/enclosure-verification.json
+```
 
 The [weather bytes](../analysis/input/openmeteo_brooklyn_20260901_20260914.json)
-and output hash are retained. Exact acquisition request, retrieval date and
-product/version remain unresolved. The figure depicts sensitivity to assumed
-uniform input ranges. Its sky equation, time labels and forcing treatment await
-the linked corrections. Steady convergence alone does not validate transients.
+are unchanged. Their acquisition request, retrieval date and product/version
+are unknown. The output records the hash, source definitions, time support and
+integrated radiation energy. Instantaneous inputs are interpolated; solar means
+are constant over their preceding hours. Figure timestamps are UTC and the
+final partial day is excluded from mean daily peaks, while its intervals remain
+in duration-weighted means.
+
+The primary plot uses an explicit clear-sky assumption with uniform input
+sensitivity bands. The JSON also reports a nominal fully opaque sky scenario.
+Total cloud cover is not silently substituted for opaque cover. These are
+assumptions, not measured sky forcing or a calibrated prediction interval.
+[Verification](../analysis/output/thermal_transient_verification.json) records
+exact-RC error, energy preservation and timestep refinement for nominal and two
+joint parameter corners under both sky assumptions. It does not check every
+parameter combination or establish physical accuracy. [Review status](results.md#transient-result-on-hold)
+and [original artifacts](history/README.md) distinguish current and superseded outputs.
 
 ## Literature records and report visuals
 

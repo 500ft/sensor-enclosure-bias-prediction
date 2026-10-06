@@ -2,18 +2,18 @@
 
 ## Current blocker
 
-Documentation reconciliation, 2026-10-06: the owner-authorized switch handoff
-reports funding expected but not received; receipt is unconfirmed here. There is
-no confirmed campaign date, rig inventory, reference calibration or protocol
-freeze. [E1-E4](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions) remain
-unanswered or unresolved. In-principle PI approval does not answer them.
+V2 implementation, 2026-10-06: the owner explicitly activated the six
+corrections to PR #56 and the direction toward geometry/calibration transfer.
+The corrected [result and verification](results.md#transient-result-on-hold)
+are ready for parent review; HOLD remains until that review. Original weather
+bytes are retained, while unavailable acquisition request/date/product remain
+unknown. No physical campaign or transfer evaluation has run.
 
-[PR #56 remains on HOLD](results.md#transient-result-on-hold). Its numerical and
-provenance corrections require a separately activated implementation task and
-parent review. This documentation task does not authorize physical work.
-Direction B and estimation-only reporting remain selected; I1 is mandatory as
-the first mechanism experiment. The owner next confirms the PI/rig/funding
-inputs and, separately, whether to adopt Direction A with Guibaud.
+The first stage remains estimation-only with I1 first. Owner adoption does not
+record Guibaud's agreement to new designs or tolerances. Funding is expected;
+receipt, rig inventory, calibration, site/data terms and fan independence remain
+unconfirmed. No campaign date or protocol freeze is recorded. The owner supplies
+the PI/rig/funding inputs in [ENC-2 through ENC-5](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
 
 **Public-data decision, 2026-10-04:** the owner authorized an external-data
 suitability study before physical validation. The executed

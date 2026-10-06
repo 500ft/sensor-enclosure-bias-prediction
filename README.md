@@ -1,9 +1,10 @@
 # Sensor Enclosure Thermal Design
 
-How much does an outdoor sensor enclosure bias the temperature it reports
-under the tested exposure conditions? This repository has a heat-balance
-model that compares enclosure designs, a literature review of its assumptions,
-and a planned side-by-side test against a reference thermometer.
+How much target-design calibration can measured geometry, material and power
+data plus shared thermal laws replace? This repository has a heat-balance
+model, an executed numerical correction, a literature review of its assumptions,
+and a planned first-stage comparison against a reference thermometer. Transfer
+to a withheld enclosure is the research direction; it has not been demonstrated.
 
 [![CI](https://github.com/500ft/sensor-enclosure-thermal-design/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/500ft/sensor-enclosure-thermal-design/actions/workflows/ci.yml)
 [![Evidence: analytical model](https://img.shields.io/badge/evidence-analytical_model-475569)](docs/results.md)
@@ -56,12 +57,17 @@ establishes no design preference.
 At night the modelled bias can change sign, which is why the pilot covers both
 day and night.
 
-The [transient result in PR #56](docs/results.md#transient-result-on-hold) is on
-HOLD for timestamp, forcing and provenance corrections. Its original output and
-figure remain available for review. The bands describe assumed-input sensitivity;
-interval overlap does not determine a paired design difference. Its power
-perturbation concerns heat coupled to the modeled node, which needs a documented
-heat path before comparison with measured electrical power.
+The [corrected transient calculation](docs/results.md#transient-result-on-hold)
+stores its initial state at the right time, conserves hourly solar input and
+passes exact thermal-step and timestep-refinement checks. Its figure shows a
+clear-sky assumption and sensitivity to declared inputs. Missing acquisition
+metadata and actual sky forcing limit interpretation; parent review remains on
+HOLD. No physical accuracy or design-transfer result has been obtained.
+
+![Corrected thermal sensitivity under the clear-sky assumption](analysis/figures/thermal_transient_prediction.png)
+
+*Archived hourly forcing with a stated sky scenario, not rig measurements.
+[Inputs, method and reproduction](docs/data-and-figures.md#transient-prediction-plot).*
 
 Other work in the repository:
 
@@ -112,11 +118,13 @@ covers external-data prerequisites and the intake checker.
 
 The [external-data suitability result](analysis/aqspec_feasibility.md) records
 the AQ-SPEC access probe and missing inputs for a temperature comparison. The
-[roadmap](ROADMAP.md) now starts with public-data suitability and retains the
-physical campaign below.
+[roadmap](ROADMAP.md) now starts with review of the corrected transient result.
+An eligible external comparison remains a possible supporting route.
 
 The thermal co-location campaign has not run. Direction B remains the approved
-estimation-only scope; adopting Direction A with the PI is unanswered. The
+first-stage estimation-only scope. The owner has adopted the direction toward
+geometry/calibration transfer; PI agreement on designs or acceptance remains
+open. The
 [blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) holds current
 funding, rig and decision status. The [roadmap](ROADMAP.md) retains mandatory-first
 I1. Freeze the model and processing before outcomes; future measured weather
