@@ -60,15 +60,17 @@ The table and figure omit propagated input uncertainty. The standalone
 These are analytical outputs; no physical thermal comparison or FEA validation
 is supplied by this figure.
 
-## Transient result on HOLD
+## Transient result
 
-[PR #56](https://github.com/500ft/sensor-enclosure-thermal-design/pull/56) now
-contains the corrected sensitivity calculation and [executed numerical
+[PR #56](https://github.com/500ft/sensor-enclosure-thermal-design/pull/56)
+merged the corrected sensitivity calculation and [executed numerical
 verification](../analysis/output/thermal_transient_verification.json).
 The [prediction JSON](../analysis/output/thermal_transient_prediction.json) is
 the source for the current scenario summaries, parameter draws, paired signed
-contrast, finite heat secant and weather provenance. Parent review must resolve
-HOLD before merge. [Original artifacts](history/README.md) remain available.
+contrast, finite heat secant and weather provenance. The owner approved the merge on 2026-10-06
+after an agent inspection of the corrected integration loop. The prediction
+JSON's `status` field was written before that approval and still says HOLD; it
+changes at the next regeneration. [Original artifacts](history/README.md) remain available.
 
 | Review item | Implemented correction and evidence |
 | --- | --- |
@@ -77,7 +79,7 @@ HOLD before merge. [Original artifacts](history/README.md) remain available.
 | Provenance and sky model | Keep raw weather bytes/hash. Request, retrieval date and product/version remain explicitly unknown. Replace the hybrid with the sourced Clark-Allen clear-sky equation and Walton opaque-cloud correction. Because the file supplies total cloud rather than opaque cloud, report explicit clear and fully opaque scenarios, not inferred sky measurements or guaranteed bounds. |
 | Interpretation | Uniform assumed-input quantiles remain sensitivity ranges. A shared-draw V1-minus-V0P signed-bias contrast is reported directly; marginal overlap supplies no paired inference. The I1 calculation is a finite secant per effective coupled heat, with its steady sky assumption stated. It does not identify supply-to-sensor heat coupling. |
 | Decisions and registration | Record owner-authorized geometry/calibration-transfer direction while retaining estimation-only first-stage reporting, I1 first and PI/physical gates. The model, processing, coefficients and weather procedure must be frozen before later outcomes. |
-| Integration and review | Current main is incorporated. Only transient outputs were regenerated after the corrections and numerical checks; raw weather and steady tables remain unchanged. Parent review and unresolved acquisition evidence remain explicit. |
+| Integration and review | Current main is incorporated. Only transient outputs were regenerated after the corrections and numerical checks; raw weather and steady tables remain unchanged. Merged on owner approval; unresolved acquisition evidence remains explicit. |
 
 The [Open-Meteo definitions](https://open-meteo.com/en/docs/historical-weather-api)
 identify the solar interval convention and total cloud variable. The

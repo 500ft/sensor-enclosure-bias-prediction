@@ -57,12 +57,11 @@ establishes no design preference.
 At night the modelled bias can change sign, which is why the pilot covers both
 day and night.
 
-The [corrected transient calculation](docs/results.md#transient-result-on-hold)
+The [corrected transient calculation](docs/results.md#transient-result)
 stores its initial state at the right time, conserves hourly solar input and
 passes exact thermal-step and timestep-refinement checks. Its figure shows a
 clear-sky assumption and sensitivity to declared inputs. Missing acquisition
-metadata and actual sky forcing limit interpretation; parent review remains on
-HOLD. No physical accuracy or design-transfer result has been obtained.
+metadata and actual sky forcing limit interpretation. No physical accuracy or design-transfer result has been obtained.
 
 ![Corrected thermal sensitivity under the clear-sky assumption](analysis/figures/thermal_transient_prediction.png)
 
@@ -132,7 +131,7 @@ will drive predictions under that procedure once it exists.
 
 ## Limits
 
-- The published steady model is lumped; the transient extension remains on HOLD. One 24-hour campaign would not
+- The published steady model is lumped; the transient extension has no field data yet. One 24-hour campaign would not
   establish seasonal accuracy.
 - The pilot protocol is a draft until it is frozen with its approver and date.
   Its data-quality targets are proposals, and the model's day and night

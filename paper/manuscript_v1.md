@@ -160,7 +160,7 @@ This describes the earlier box. The new rig inventory and selection of designs r
 The thermal method remains the draft [co-location protocol](../docs/COLOCATION_PROTOCOL.md),
 including mandatory-first I1 and estimation-only reporting. The broader methods
 below are retained proposals. Neither they nor the
-[held transient output](../docs/results.md#transient-result-on-hold) constitute a
+[corrected transient output](../docs/results.md#transient-result) constitute a
 frozen protocol. Record measured deployment inputs separately from frozen
 coefficients, and drive a corrected model with independently acquired weather
 under a procedure fixed before outcomes.
@@ -245,12 +245,12 @@ Candidate materials and geometries should be classified before testing using pra
 
 ## 5. Results
 
-The current [transient result](../docs/results.md#transient-result-on-hold)
+The current [transient result](../docs/results.md#transient-result)
 corrects initial time, interval forcing and sky assumptions. Its machine-readable
 [verification](../analysis/output/thermal_transient_verification.json) contains
 the executed RC and refinement checks. Output bands are assumed-input
 sensitivity; no calibrated interval, field accuracy or transfer is established.
-Original acquisition metadata remains unavailable and parent review stays on HOLD.
+Original acquisition metadata remains unavailable.
 
 At unchanged water-vapor partial pressure, `RH_sensor = RH_air * e_sat(T_air) /
 e_sat(T_sensor)`. The same verification output records this limited thermal
@@ -369,7 +369,7 @@ The current result is a corrected analytical sensitivity calculation and
 numerical verification. The owner-authorized direction asks how much target
 calibration can be replaced; first-stage estimation and later geometry-transfer
 evidence remain uncollected. The [current blocker](../docs/COLOCATION_OWNER_SESSION.md#current-blocker)
-holds parent review and PI, rig and funding status. Historical deployment and
+holds PI, rig and funding status. Historical deployment and
 electronics work remains preserved separately.
 
 ## References

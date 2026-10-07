@@ -4,8 +4,8 @@
 
 V2 implementation, 2026-10-06: the owner explicitly activated the six
 corrections to PR #56 and the direction toward geometry/calibration transfer.
-The corrected [result and verification](results.md#transient-result-on-hold)
-are ready for parent review; HOLD remains until that review. Original weather
+The corrected [result and verification](results.md#transient-result)
+were approved by the owner and merged with PR #56. Original weather
 bytes are retained, while unavailable acquisition request/date/product remain
 unknown. No physical campaign or transfer evaluation has run.
 

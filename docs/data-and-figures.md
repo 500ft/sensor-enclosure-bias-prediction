@@ -120,7 +120,7 @@ assumptions, not measured sky forcing or a calibrated prediction interval.
 [Verification](../analysis/output/thermal_transient_verification.json) records
 exact-RC error, energy preservation and timestep refinement for nominal and two
 joint parameter corners under both sky assumptions. It does not check every
-parameter combination or establish physical accuracy. [Review status](results.md#transient-result-on-hold)
+parameter combination or establish physical accuracy. [Review status](results.md#transient-result)
 and [original artifacts](history/README.md) distinguish current and superseded outputs.
 
 ## Literature records and report visuals

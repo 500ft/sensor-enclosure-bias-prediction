@@ -8,7 +8,7 @@ the first-stage estimation-only floor, and PI/physical decisions remain open.
 The [roadmap](../ROADMAP.md) is the active plan. The dated proposals below are
 history, not additional work authorization.
 
-The [executed correction](results.md#transient-result-on-hold) tests a single-node
+The [executed correction](results.md#transient-result) tests a single-node
 thermal step and weather integration. Later identifiability must cover plausible
 parameters/noise and actual I1/I2/ventilation interventions. Local Fisher
 information alone is insufficient. A simpler predictor is acceptable. Later

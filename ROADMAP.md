@@ -24,7 +24,7 @@ pass/fail verdict. A claim that co-location can be skipped would require a
 prospective application tolerance with Guibaud. The [decision record](docs/OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions)
 separates owner adoption of the direction from unresolved physical and PI gates.
 
-This task corrects PR #56; it does not launch the transfer study or a campaign.
+The merged PR #56 correction does not launch the transfer study or a campaign.
 An I1 thermal step at known airflow identifies effective heat/conductance and
 capacity/conductance in the single-node limit. It cannot identify every physical
 parameter. Broader prediction identifiability needs plausible parameter/noise
@@ -33,10 +33,10 @@ information at one point. A simpler predictor remains an acceptable outcome.
 
 ## Where it stands
 
-- The [corrected transient result in PR #56](docs/results.md#transient-result-on-hold)
+- The [corrected transient result in PR #56](docs/results.md#transient-result)
   has executed initial-state, exact-RC, interval-energy and refinement checks.
-  Current output uses explicit sky scenarios and sensitivity labels. Parent
-  review remains on HOLD; missing acquisition provenance stays unknown.
+  Current output uses explicit sky scenarios and sensitivity labels. The owner
+  approved the merge; missing acquisition provenance stays unknown.
 
 - The executed [AQ-SPEC suitability probe](analysis/aqspec_feasibility.md) obtained
   reports but no paired temperature series. Its source inventory and draft data
@@ -73,7 +73,7 @@ information at one point. A simpler predictor remains an acceptable outcome.
 
 | # | Step | Who | Done when |
 |---|---|---|---|
-| 0 | Review the corrected PR #56 result | Parent reviewer | Numerical evidence and source limitations accepted; HOLD disposition recorded. **Current software step.** |
+| 0 | Review the corrected PR #56 result | Owner | Done: owner approved and merged; source limitations remain recorded. |
 | A | Resolve external-data access after the completed AQ-SPEC probe | Owner reviews the draft request; data custodian supplies records and terms | A permitted paired sample and sufficient thermal/reference metadata, or a recorded inability to obtain them. Optional external-data route; no outreach authorized. |
 | B | Compare an eligible external dataset with the model, if feasible | Agent, after data suitability is established | Selection, independent-unit/day split and estimation metrics fixed before held-out evaluation; scoped result with uncertainty and exposure limits |
 | 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Physical campaign step.** |

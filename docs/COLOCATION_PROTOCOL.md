@@ -8,7 +8,7 @@ approved the pilot in principle. The current blocker is in the
 open decisions are in [OWNER_DECISIONS](OWNER_DECISIONS_2026-09-24.md).
 Direction B remains the first-stage estimation-only scope within the
 owner-authorized direction toward geometry/calibration transfer. The
-[held transient result](results.md#transient-result-on-hold) is not a frozen
+[corrected transient result](results.md#transient-result) is not a frozen
 campaign prediction. I1 remains the first mechanism experiment.
 
 On 2026-09-30 this file absorbed the two companion specifications, the pilot
