@@ -2,6 +2,19 @@
 
 ## Current blocker
 
+V2 implementation, 2026-10-06: the owner explicitly activated the six
+corrections to PR #56 and the direction toward geometry/calibration transfer.
+The corrected [result and verification](results.md#transient-result)
+were approved by the owner and merged with PR #56. Original weather
+bytes are retained, while unavailable acquisition request/date/product remain
+unknown. No physical campaign or transfer evaluation has run.
+
+The first stage remains estimation-only with I1 first. Owner adoption does not
+record Guibaud's agreement to new designs or tolerances. Funding is expected;
+receipt, rig inventory, calibration, site/data terms and fan independence remain
+unconfirmed. No campaign date or protocol freeze is recorded. The owner supplies
+the PI/rig/funding inputs in [ENC-2 through ENC-5](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
+
 **Public-data decision, 2026-10-04:** the owner authorized an external-data
 suitability study before physical validation. The executed
 [AQ-SPEC probe](../analysis/aqspec_feasibility.md) obtained reports but no paired
@@ -70,7 +83,7 @@ source for each answer; leave missing answers explicitly unknown.
 | Reference quality | Current calibration, aspiration/shield characterization, uncertainty budget and pre/post check method | Blocked; no calibration verified |
 | Prospective protocol freeze | Approved version/commit, positions and pairing, intended UTC start/end, cadence, interventions and uncertainty method recorded before acquisition | Draft only; not frozen |
 | Acquisition and custody | Authorized operator, raw export location, raw-byte SHA-256, omissions and separate sky/intervention records | No acquisition yet, and none before the rig exists and the protocol is frozen |
-| Physical interpretation | Authenticated provenance review, as-built prediction and propagated uncertainty, application tolerance registered before comparison | Blocked; no model-agreement band exists |
+| Physical interpretation | Provenance review, corrected as-built model and declared uncertainty treatment; application tolerance only for a later fit-for-purpose verdict | Estimation-only comparison pending physical data; no model-agreement band or frozen prediction exists |
 
 When the rig is built, record its inventory (enclosure IDs, sensors, the
 reference and its calibration certificate), then accept or amend the draft

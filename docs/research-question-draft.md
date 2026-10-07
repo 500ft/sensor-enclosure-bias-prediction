@@ -1,5 +1,9 @@
 # Research-question draft: sensor-enclosure thermal design
 
+Historical question, superseded by the owner-authorized v2 direction in
+[the roadmap](../ROADMAP.md) and [ENC-1](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions).
+The original exercise below is retained as background; it is not the current question.
+
 Prepared for the research-question exercise. This draft focuses on enclosure-induced temperature and relative-humidity bias, which is the clearest current research focus in the project.
 
 ## 1. Additional reading

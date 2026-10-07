@@ -1,9 +1,10 @@
 # Sensor Enclosure Thermal Design
 
-How much does an outdoor sensor enclosure bias the temperature it reports,
-and which enclosure is worth the extra cost? This repository has a heat-balance
-model that compares enclosure designs, a literature review of its assumptions,
-and a planned side-by-side test against a reference thermometer.
+How much target-design calibration can measured geometry, material and power
+data plus shared thermal laws replace? This repository has a heat-balance
+model, an executed numerical correction, a literature review of its assumptions,
+and a planned first-stage comparison against a reference thermometer. Transfer
+to a withheld enclosure is the research direction; it has not been demonstrated.
 
 [![CI](https://github.com/500ft/sensor-enclosure-thermal-design/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/500ft/sensor-enclosure-thermal-design/actions/workflows/ci.yml)
 [![Evidence: analytical model](https://img.shields.io/badge/evidence-analytical_model-475569)](docs/results.md)
@@ -27,7 +28,7 @@ mislead.
 The project compares enclosure options with a first-order heat-balance model,
 checks the model's constants against the literature, and prepares a
 co-location pilot: the enclosures mounted next to a reference thermometer for
-at least a full day and night. The PI has approved the pilot and offered a test
+at least a full day and night. The PI has approved the pilot in principle and offered a test
 site and manufacturing help.
 
 ## Results
@@ -56,15 +57,26 @@ establishes no design preference.
 At night the modelled bias can change sign, which is why the pilot covers both
 day and night.
 
+The [corrected transient calculation](docs/results.md#transient-result)
+stores its initial state at the right time, conserves hourly solar input and
+passes exact thermal-step and timestep-refinement checks. Its figure shows a
+clear-sky assumption and sensitivity to declared inputs. Missing acquisition
+metadata and actual sky forcing limit interpretation. No physical accuracy or design-transfer result has been obtained.
+
+![Corrected thermal sensitivity under the clear-sky assumption](analysis/figures/thermal_transient_prediction.png)
+
+*Archived hourly forcing with a stated sky scenario, not rig measurements.
+[Inputs, method and reproduction](docs/data-and-figures.md#transient-prediction-plot).*
+
 Other work in the repository:
 
 - **Literature.** A [26-source matrix](literature/literature_matrix.csv) with
   [source assessments](ProConsList/README.md), and a later review of 27 more
   sources against the model's previously uncited constants.
-- **Uncertainty.** The standalone [linear propagation module](analysis/uncertainty.py)
-  has [known-answer tests](analysis/tests/test_uncertainty.py). It is not
-  connected to the published prediction tables or figure, which omit propagated
-  input uncertainty.
+- **Uncertainty.** The steady tables are point estimates. The transient
+  draft carries sensitivity bands from assumed uniform ranges by Monte Carlo. The
+  standalone [linear propagation module](analysis/uncertainty.py) is tested but
+  not connected to either.
 - **Reliability accounting.** [Schedule-aware metrics](docs/RELIABILITY_METRICS.md)
   for deployed units. The historical percentages need raw exports that are not
   in this repository, so they are reported but unverified.
@@ -105,21 +117,21 @@ covers external-data prerequisites and the intake checker.
 
 The [external-data suitability result](analysis/aqspec_feasibility.md) records
 the AQ-SPEC access probe and missing inputs for a temperature comparison. The
-[roadmap](ROADMAP.md) now starts with public-data suitability and retains the
-physical campaign below.
+[roadmap](ROADMAP.md) now starts with review of the corrected transient result.
+An eligible external comparison remains a possible supporting route.
 
-The thermal co-location campaign has not run yet. Its next step is the owner's:
-book the PI date and inventory the rig at the test site (the enclosures, sensors,
-shielded reference and calibration records, power measurement and loggers).
-Record the siting and whether the comparison will be simultaneous or sequential.
-The protocol is then fitted to that hardware and frozen before the first run. The
-[roadmap](ROADMAP.md) has the steps, and the
-[blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) has the
-current status.
+The thermal co-location campaign has not run. Direction B remains the approved
+first-stage estimation-only scope. The owner has adopted the direction toward
+geometry/calibration transfer; PI agreement on designs or acceptance remains
+open. The
+[blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) holds current
+funding, rig and decision status. The [roadmap](ROADMAP.md) retains mandatory-first
+I1. Freeze the model and processing before outcomes; future measured weather
+will drive predictions under that procedure once it exists.
 
 ## Limits
 
-- The model is lumped and steady-state. One 24-hour campaign would not
+- The published steady model is lumped; the transient extension has no field data yet. One 24-hour campaign would not
   establish seasonal accuracy.
 - The pilot protocol is a draft until it is frozen with its approver and date.
   Its data-quality targets are proposals, and the model's day and night

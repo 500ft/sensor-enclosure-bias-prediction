@@ -6,6 +6,10 @@ before any data is collected; don't backdate a freeze to this draft. The PI has
 approved the pilot in principle. The current blocker is in the
 [owner session record](COLOCATION_OWNER_SESSION.md#current-blocker) and the
 open decisions are in [OWNER_DECISIONS](OWNER_DECISIONS_2026-09-24.md).
+Direction B remains the first-stage estimation-only scope within the
+owner-authorized direction toward geometry/calibration transfer. The
+[corrected transient result](results.md#transient-result) is not a frozen
+campaign prediction. I1 remains the first mechanism experiment.
 
 On 2026-09-30 this file absorbed the two companion specifications, the pilot
 design (sections R1–R3) and the experiment contract (sections C1–C9). Their
@@ -155,7 +159,7 @@ close a `measurement` field.
 | Group | Fields | Obtained by |
 | --- | --- | --- |
 | Identity | hardware ID, sensor ID, firmware version, enclosure revision | measurement |
-| Material and optics | material, finish, solar absorptance `alpha` and emissivity `eps`, measured or bounded with the standard named (E903, C1549 or E1918 per `levinson2010`) | measurement; no measured `alpha` for a printed wall exists in the literature, and a colour name is not evidence |
+| Material and optics | material, finish, solar absorptance `alpha` and emissivity `eps`, measured or bounded with the standard named (E903, C1549 or E1918 per `levinson2010`) | measurement; the reviewed source record supplies no measured `alpha` for these printed walls, and a colour name is not evidence |
 | Geometry | wall thickness, vent count and sizes, open area, sensor stand-off, electronics location, plate gaps | measurement |
 | Power | electrical input power (W) and where it is measured, plus the fraction reaching the sensor zone | measurement; this is the new quantity |
 | Reference | instrument ID, calibration certificate, stated uncertainty, shield and aspiration | vendor drawing and measurement |
@@ -187,8 +191,20 @@ the design cannot separate the named confounder.
 
 ### I1 procedure (the first experiment)
 
-I1 is the only design here that identifies the dissipation term, and the
-literature has no measured value for a low-cost air-quality enclosure.
+The [executed exact-RC check](../analysis/output/thermal_transient_verification.json)
+tests the single-node equation `C*dtheta/dt + G*theta = Q_effective`.
+A step identifies `DeltaQ_effective/G` and `C/G`. Electrical input equals
+coupled heat only with a documented heat path; without that relation, absolute
+`G` and `C` remain confounded with coupling. Airflow and fan state must be held
+or measured. This reasoning does not establish multi-node identifiability.
+Subsequent shading interventions need a sensitivity check and counterbalancing,
+because shading also changes airflow and long-wave exchange. Judge campaign
+coverage from measured irradiance/wind and intervention records. Climatology
+does not qualify a rig campaign; a window that misses coverage is incomplete
+acquisition rather than a negative physics result.
+
+I1 directly perturbs the heat load; interpretation needs the heat-path and
+airflow controls above. No measured heat-coupling value for this rig is available.
 
 1. Temperature probes powered and logged independently, fixed in place, so the
    measurement chain doesn't change with the load state.
@@ -426,8 +442,11 @@ an explicit independent input, rather than estimating pairwise covariances.
   whose intercept is 5.6, valid for `U ≤ 5 m/s`, on free-stream wind. Against
   station wind `U10` the measured slopes are 0.90–2.9. This is why the recorded
   wind has to be declared.
-- `T_sky = T_air − 20 K` is unsupported; compute sky temperature from dewpoint
-  instead.
+- The fixed sky-temperature depression is an assumption. Use measured long-wave
+  forcing where available, or an explicitly sourced sky model with its required
+  cloud information and uncertainty. Dewpoint alone is insufficient under cloud;
+  the corrected transient calculation uses sourced clear/opaque sky scenarios
+  because total cloud cover does not identify the required opaque fraction.
 - An error in `alpha` becomes 0.6 K per 10 W/m² of solar heat gain
   (`levinson2010`).
 
@@ -463,10 +482,17 @@ The 1,440 samples are correlated in time (`arlot2010` on the i.i.d.
 assumption), so don't report confidence intervals that treat them as
 independent.
 
-Checking the model against the data needs an as-built prediction with its
-propagated uncertainty and an application tolerance, both registered before
-comparison. Neither exists yet, so the intake never classifies a pilot as
-VALIDATED.
+The model comparison needs an as-built model and declared input-uncertainty
+treatment. An application tolerance is required only for a later fit-for-purpose
+verdict; it is not a prerequisite for the approved estimation-only analysis.
+The intake never classifies a pilot as VALIDATED.
+
+Before outcomes, freeze the corrected model, processing, coefficients, input
+selection and weather acquisition/alignment procedure. Then use independently
+collected exogenous weather to drive that frozen model. Record measured
+deployment inputs separately from fitted coefficients. Future weather and an
+exact future trajectory do not exist at registration. Assumed-range sensitivity
+bands are not measured uncertainty or calibrated prediction intervals.
 
 ### C6 What each comparison can answer
 
@@ -474,7 +500,7 @@ VALIDATED.
 | --- | --- | --- |
 | V0 against V0P | the effect of the documented finish change on matched hardware | `alpha` alone (paint moves `eps` too); any vent or material effect |
 | V0P against V1 | a practical ranking of two complete designs | which of geometry, ventilation, sensor position or heat coupling caused it |
-| I1 load states in one unit | °C per W for that unit and configuration | the same coefficient in another geometry |
+| I1 load states in one unit | finite temperature contrast per measured electrical-power change, with the heat path and fan state stated | a differential derivative, sensor-coupled heat without identification, or the same coefficient in another geometry |
 | I3 vent variants, all else fixed | the open-area effect for that material and heat source | the same effect at another power state, unless crossed (C7) |
 | Any arm against the reference | absolute bias, with the reference uncertainty in full | — |
 | Two arms, simultaneous, same reference | relative bias, with the shared-reference term cancelling | position mismatch, per-probe calibration, timestamp mismatch |

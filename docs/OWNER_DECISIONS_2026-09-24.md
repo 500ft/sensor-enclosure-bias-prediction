@@ -18,6 +18,22 @@ the [pilot protocol](COLOCATION_PROTOCOL.md).
 revisable until the protocol freeze). A request that has been *sent* is
 `pending`, never `accepted` — transmission is not receipt.
 
+## E. Switch-review decisions
+
+The owner explicitly authorized this existing session's reviewed v2 software
+implementation and repository reconciliation on 2026-10-06. This records the
+research direction, not PI acceptance of a physical design or a campaign freeze.
+The [current blocker](COLOCATION_OWNER_SESSION.md#current-blocker) holds readiness.
+The earlier documentation-only E1 disposition is superseded only to this extent.
+
+| v2 ID / earlier ID | Decision or evidence | Current disposition |
+| --- | --- | --- |
+| ENC-1 / E1 | Direction toward geometry/calibration transfer | Owner-authorized direction and bounded PR #56 correction; no claim of Guibaud agreement or completed transfer |
+| ENC-2 | Application acceptance tolerance | Estimation-only remains selected; a skip-co-location verdict would need a new prospective PI-agreed tolerance |
+| ENC-3 / E2 | Designs, withheld geometry, replicates or swaps | Unanswered; no new count or inventory supplied |
+| ENC-4 / E3 | Actual rig and reference calibration | Unresolved; see current blocker |
+| ENC-5 / E4 | Funding received | Unconfirmed; expectation is not receipt |
+
 ## A00. Decisions recorded 2026-09-30
 
 Made under the owner's delegation in this project session, before any pilot
@@ -81,6 +97,9 @@ Physical progress depends on **receipts**, not on unanswered defaults.
 
 ## A. Decisions
 
+This table retains the original requests. Dated dispositions in A0/A00 take
+precedence over older open labels; ENC-1 above records the new owner-authorized direction.
+
 *Rows 16–21 added 2026-09-24 from the experiment contract (WP2) and the revised K2 contests.*
 
 | # | Decision | Required evidence | Decision owner | Source / reference | Date | Status | Consequence if left unknown |
@@ -97,7 +116,7 @@ Physical progress depends on **receipts**, not on unanswered defaults.
 | 10 | Is CAD work actually needed before the first pilot? | A named geometry/fixture need | Owner | `CAD_TASKS.csv` (all deferred) | — | **open** | CAD stays deferred (the default). Existing apparatus may answer the first question |
 | 11 | Is solver/toolchain work funded and authorised? | Allocation for install + verification budget | Owner | `specs/study-b-cht/design.md` §8 | — | **open** | FEA stays a stub; Study B's CHT half cannot start |
 | 12 | Adopt the proposed **CAD tooling rewording**? | Owner sign-off | Owner | `specs/study-b-cht/design.md` §6 | — | **open** | `CAD_PLAN.md` keeps the CadQuery + Onshape allocation |
-| 13 | Adopt **Direction A or B**? | Owner choice | Owner | `research-direction-2026-09-21.md` §1 | — | **open** | The repo carries two research questions; downstream framing stays ambiguous |
+| 13 | Adopt Direction A or B? | Owner choice | Owner | [Direction selected](research-direction-2026-09-21.md) and A0 | 2026-09-25 | selected: B now, A conditional | The v2 direction is recorded in ENC-1; first-stage B and physical gates remain |
 | 14 | Re-register the **approximation-error threshold** from relative 3 % to **absolute °C**? *(reworded 2026-09-24: this is a threshold on linearisation error, not a scientific kill criterion — that framing is withdrawn)* | Owner choice, applied prospectively | Owner | `research-direction-2026-09-21.md` §3; `studyA_nondimensional.md` §5 | — | **open** | A relative band stays ill-conditioned near ΔT → 0 and mismatched to a `U95` acceptance |
 | 15 | Bump CI Python ≥ 3.12 to unblock dependabot #27/#28? | Owner choice | Owner | PRs #27, #28 | — | **open** | numpy/pandas bumps stay unmerged. **Caution:** a numerical-library change may alter the byte-exact thermal tables |
 

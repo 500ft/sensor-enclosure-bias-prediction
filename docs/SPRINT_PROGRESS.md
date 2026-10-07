@@ -6,6 +6,13 @@ plan is in the [roadmap](../ROADMAP.md) and the current blocker in the
 earlier, longer version of this log is kept at
 [commit 4d1134e](https://github.com/500ft/sensor-enclosure-thermal-design/blob/4d1134ecf598f0abd53161d3339fb0fd5576eadf/docs/SPRINT_PROGRESS.md).
 
+## Week of 2026-10-05
+
+- **10-04** Transient prediction model: one thermal mass per variant on the
+  steady balance, two weeks of Brooklyn weather, 400 Monte Carlo draws from
+  declared ranges; predicts the I1 °C-per-watt response before data. Physical
+  testing paused until funding starts.
+
 ## Week of 2026-09-28
 
 - **09-30** Pilot policy decided before any data: estimation-only (no

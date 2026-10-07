@@ -1,15 +1,34 @@
 # Research-direction decision record — 2026-09-21
 
-**Status: decision aid for the owner. Nothing here is frozen until the owner chooses.** Base:
-`main` at `84e0ef3`. Companion to the open owner draft [PR #20](https://github.com/500ft/sensor-enclosure-thermal-design/pull/20)
+Current disposition: the owner-authorized v2 question is how much target-design
+calibration measured geometry, material and power data plus shared thermal laws
+can replace. [ENC-1](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions)
+supersedes the earlier unresolved owner-adoption question. Direction B remains
+the first-stage estimation-only floor, and PI/physical decisions remain open.
+The [roadmap](../ROADMAP.md) is the active plan. The dated proposals below are
+history, not additional work authorization.
+
+The [executed correction](results.md#transient-result) tests a single-node
+thermal step and weather integration. Later identifiability must cover plausible
+parameters/noise and actual I1/I2/ventilation interventions. Local Fisher
+information alone is insufficient. A simpler predictor is acceptable. Later
+confirmation needs geometry and future-period holdouts, independent units or
+swaps, measured deployment inputs distinguished from frozen coefficients,
+calibration budgets, simpler physical/empirical baselines and regime-specific
+error/coverage. No arbitrary precision percentage is an application requirement.
+Heated cold-climate boxes and PM-correction effects remain separate. The
+cross-shield refitting claim remains unverified pending its actual source.
+
+Historical decision aid. Base:
+`main` at `84e0ef3`. Companion to the historical owner draft [PR #20](https://github.com/500ft/sensor-enclosure-thermal-design/pull/20)
 (`docs/research-question-draft.md`), which is *not* duplicated here. Authority: scope decision in
 [PHD_SCOPE_AND_NOVELTY.md](PHD_SCOPE_AND_NOVELTY.md); result in [studyA_nondimensional.md](studyA_nondimensional.md).
-Every number below is **ANALYTICAL (simulation)** unless stated otherwise; no physical measurement exists.
+The analytical results below do not supply thermal co-location measurements;
+older deployment/electronics evidence remains separate.
 
-## 1. The decision: two directions, one must be chosen
+## 1. Historical comparison of the two directions
 
-The repository currently carries **two different research questions**, and drifting between them is
-the main risk this week:
+The original decision aid compared these questions:
 
 | | **Direction A — pre-build prediction (narrowed)** | **Direction B — bounded engineering study (PR #20)** |
 |---|---|---|
@@ -19,11 +38,12 @@ the main risk this week:
 | Demotes to | Direction B if transfer is not demonstrated — a research judgement on the evidence, **not** an automatic consequence of one benchmark | — |
 | Needs | Multi-geometry/material printed variant set + held-out test + CHT | Three variants + reference, 24 h+ |
 
-**Recommendation:** pursue **A with B as the guaranteed floor.** The three-variant pilot (Study C)
-serves both: it is B's complete experiment and A's first held-out check. Do not write proposal text
-that assumes A until K2 (below) has a defined benchmark.
+The original recommendation to pursue A did not adopt it. Direction B needs
+physical observations of its own, and its pilot becomes a held-out check for A
+only if the predictor and split were fixed without fitting to that geometry.
+See the selected direction below and the current ENC-1 disposition above.
 
-## 2. Direction A, stated falsifiably
+## 2. Historical Direction A proposal
 
 - **Main hypothesis (H1):** in the solar-driven regime, signed enclosure bias is predicted before
   fabrication by `(Pi_G, N_Q, N_r, f_sky, Pi_delta)` plus a wall-Biot correction, to within the
@@ -71,7 +91,7 @@ uncertainty (U95). A relative band near ΔT→0 is unphysical. Proposal: **re-re
 as absolute °C against the registered U95**, recorded as a prospective amendment — not applied
 retroactively to call the current result a pass.
 
-## 4. Kill criteria (Direction A → Direction B)
+## 4. Historical Direction A criteria and selected scope
 
 - **K1** — no reproducible physical bias above the registered instrument + propagation uncertainty.
 - **K2** — pre-build groups do not predict *held-out* geometries better than the post-build
