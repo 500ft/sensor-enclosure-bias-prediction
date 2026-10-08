@@ -2,6 +2,17 @@
 
 ## Current blocker
 
+Dependency-plan adoption and cleanup, 2026-10-07: the owner explicitly asked
+this existing session to replace scheduled roadmaps with prerequisites and
+completion evidence and remove obsolete active material. PR #56 is verified
+merged as `2beffdf`; its former review HOLD is closed. The current physical
+blocker is unchanged. No inventory, calibration, design count, funding receipt,
+new tolerance or protocol approval was supplied by this request.
+The [roadmap](../ROADMAP.md) now owns the dependency order; retired CAD work
+queues and the unused FEA stub are removed. The approved campaign ceiling in
+[the protocol](COLOCATION_PROTOCOL.md#c8-stopping-and-extension) remains a maximum,
+not the external source plan's proposed minimum.
+
 V2 implementation, 2026-10-06: the owner explicitly activated the six
 corrections to PR #56 and the direction toward geometry/calibration transfer.
 The corrected [result and verification](results.md#transient-result)

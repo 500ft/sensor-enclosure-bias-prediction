@@ -5,7 +5,7 @@ Base: `2e8da8abb70e8fc36d5e3cacee18872bdffbe651`. Reviewed original:
 [PR #16](https://github.com/500ft/sensor-enclosure-thermal-design/pull/16),
 head `4e87c84bd068a4c1b09212541ae19b65532ee6e1`, one added 59-line day plan.
 The replacement [day plan](https://github.com/500ft/sensor-enclosure-thermal-design/blob/ddf0a23098964ecfd036e32105dfa9564adc4ea7/docs/DAY_PLAN_2026-09-15.md) and
-[scope](../../docs/specs/pilot-readiness/scope.md) are proposals. The examples
+[scope](https://github.com/500ft/sensor-enclosure-thermal-design/blob/2beffdf412e57145062994e5626863de80438016/docs/specs/pilot-readiness/scope.md) are proposals. The examples
 below are review reproductions using synthetic data and the existing solver;
 no application code, task status, physical input or committed model output was
 changed. This is an agent review, not independent human scientific validation.
@@ -140,7 +140,7 @@ physical inferiority nor supplies joint uncertainty bounds or a validation band.
 ## Planning corrections grounded in current records
 
 - [SPRINT_TASKS.csv](../../docs/SPRINT_TASKS.csv) contains 15 done and four
-  blocked tasks; [CAD_TASKS.csv](../../docs/CAD_TASKS.csv) has nine deferred
+  blocked tasks; [CAD_TASKS.csv](https://github.com/500ft/sensor-enclosure-thermal-design/blob/2beffdf412e57145062994e5626863de80438016/docs/CAD_TASKS.csv) has nine deferred
   tasks. `EN-R03` is blocked physical acquisition; `EN-R03S` is the completed
   synthetic rehearsal. The September 11 prose in
   [SPRINT_PROGRESS.md](../../docs/SPRINT_PROGRESS.md) incorrectly assigns the
@@ -156,7 +156,7 @@ physical inferiority nor supplies joint uncertainty bounds or a validation band.
   16 deletions and one insertion across the FEA stub and PI report helper. Its
   branch was absent from the `git ls-remote` query during this review. No cleanup
   code was moved into this replacement plan; the local branch is preserved.
-- The [FEA stub](../../analysis/cad_fea/thermal_fea_pipeline.py) parses CLI
+- The [FEA stub](https://github.com/500ft/sensor-enclosure-thermal-design/blob/2beffdf412e57145062994e5626863de80438016/analysis/cad_fea/thermal_fea_pipeline.py) parses CLI
   arguments and imports CadQuery/gmsh only for its toolchain check. A replacement
   consisting solely of a docstring/message would not retain that interface.
   Keeping it avoids spending this iteration on an unrelated design decision.

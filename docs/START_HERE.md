@@ -1,7 +1,8 @@
 # Start here — Sensor Enclosure Thermal Design
 
 The [README](../README.md) is the overview and the [roadmap](../ROADMAP.md) is
-the plan. This guide is for reading the work quickly or rerunning it.
+the only plan. It states prerequisites and completion evidence without a
+schedule. This guide is for reading the work quickly or rerunning it.
 
 ## Two-minute read
 
@@ -77,9 +78,16 @@ Read [CONTRIBUTING.md](../CONTRIBUTING.md). Keep the
 [literature matrix](../literature/literature_matrix.csv), the source
 assessments and the synthesis in sync, and keep units and uncertainty in any
 model change. The [review index](REVIEW_READY.md) lists the evidence; the
-[CAD/FEA plan](cad_fea_plan.md) describes future work. There is no open-source
-license, and this guide grants no reuse permission.
+[geometry reference](cad_geometry_reference.md) retains useful CAD inputs and
+checks. There is no open-source license, and this guide grants no reuse permission.
 
 The [repository identity note](REPOSITORY_IDENTITY.md) explains the rename.
 The September 11 [correction](specs/evidence-gap-correction/test-report.md)
 explains which early deliverables were preparation rather than finished work.
+
+## Retired work queues
+
+The unused FEA stub, competing CAD work orders and obsolete campaign/question
+plans were removed after tracing their consumers. [History](history/README.md)
+links their prior versions and explains retained reproducible evidence. Use the
+roadmap for active work, not the older sprint ledger or dated proposals.

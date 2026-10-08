@@ -1,8 +1,8 @@
 # Sensor Enclosure Thermal Design
 
-How much target-design calibration can measured geometry, material and power
-data plus shared thermal laws replace? This repository has a heat-balance
-model, an executed numerical correction, a literature review of its assumptions,
+How much design-specific co-location can measured geometry, material and power
+data plus shared thermal laws replace, at comparable prediction error? This
+repository has a heat-balance model, an executed numerical correction, a literature review of its assumptions,
 and a planned first-stage comparison against a reference thermometer. Transfer
 to a withheld enclosure is the research direction; it has not been demonstrated.
 
@@ -115,19 +115,17 @@ covers external-data prerequisites and the intake checker.
 
 ## What's next
 
-The [external-data suitability result](analysis/aqspec_feasibility.md) records
-the AQ-SPEC access probe and missing inputs for a temperature comparison. The
-[roadmap](ROADMAP.md) now starts with review of the corrected transient result.
-An eligible external comparison remains a possible supporting route.
+The [roadmap](ROADMAP.md) orders prerequisites and completion evidence without
+a schedule. Owner decisions and qualified rig measurements come first, followed
+by identifiability and measurement capability, I1 at known airflow, registered
+field interventions, and withheld-design calibration/effort comparisons.
 
-The thermal co-location campaign has not run. Direction B remains the approved
-first-stage estimation-only scope. The owner has adopted the direction toward
-geometry/calibration transfer; PI agreement on designs or acceptance remains
-open. The
-[blocker record](docs/COLOCATION_OWNER_SESSION.md#current-blocker) holds current
-funding, rig and decision status. The [roadmap](ROADMAP.md) retains mandatory-first
-I1. Freeze the model and processing before outcomes; future measured weather
-will drive predictions under that procedure once it exists.
+The first stage remains estimation-only. A later skip-co-location claim needs
+an agreed application tolerance. The [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
+holds the pending inputs; neither this cleanup nor the merged numerical result
+closes physical gates. Total effort includes geometry/material/power acquisition,
+setup, calibration and deployment. External designs or exposure regimes are
+conditional extensions.
 
 ## Limits
 
@@ -150,7 +148,7 @@ will drive predictions under that procedure once it exists.
 | [Pilot protocol](docs/COLOCATION_PROTOCOL.md) | What the side-by-side test measures |
 | [Owner decisions](docs/OWNER_DECISIONS_2026-09-24.md) | Open questions for the pilot |
 | [Working manuscript](paper/manuscript_v1.md) | Literature and analysis written up |
-| [CAD/FEA plan](docs/cad_fea_plan.md) | Proposed geometry and higher-fidelity work |
+| [Geometry reference](docs/cad_geometry_reference.md) | Retained CAD inputs and geometry checks |
 
 ```text
 analysis/      thermal and reliability models, intake checks, tests and figures

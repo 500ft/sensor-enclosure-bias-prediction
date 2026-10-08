@@ -113,7 +113,7 @@ tolerance follows from this thermal calculation.
 | Deployment metrics and plots | Analysis of external field logs | Raw exports and confirmed deployment history are unavailable in the repository |
 | Thermal-bias sweep | First-order analytical simulation | Parameters require lab measurement and co-location comparison |
 | Literature brackets | Published measurements summarized from cited sources | Not measurements of this enclosure |
-| CAD/FEA plan | Proposed method | Solver pipeline and geometry are not yet complete |
+| [Retained CAD](../cad/enclosure/v0/README.md) | Geometric acceptance evidence | Does not establish the current rig or thermal performance; unused FEA stub removed |
 
 See [`data-and-figures.md`](data-and-figures.md) for the complete production path
 and [`figure-manifest.json`](figure-manifest.json) for the machine-readable map.

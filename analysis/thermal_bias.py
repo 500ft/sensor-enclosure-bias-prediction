@@ -3,8 +3,8 @@
 
 SIMULATION OUTPUT -- NOT A MEASUREMENT. Every number this script prints is a
 first-order analytical prediction, pending lab and co-location data. It is the
-analytical baseline that the later conjugate-heat-transfer (CHT) FEA in
-``docs/cad_fea_plan.md`` Section 3.2 will refine. It does not claim
+analytical baseline retained for the calibration/effort comparison in ROADMAP.md.
+Geometry inputs are described in ``docs/cad_geometry_reference.md``. It does not claim
 regulatory-grade or certified performance (see ``README.md`` honesty constraints).
 
 WHAT IT COMPUTES
@@ -29,7 +29,7 @@ and report the sensor temperature rise above true ambient, ``dT = T_s - T_air``.
 That delta-T is then mapped to the relative-humidity error the sensor would
 report (warm air at fixed water-vapor content reads low RH).
 
-VARIANTS (from ``docs/cad_fea_plan.md`` Section 2)
+VARIANTS (see ``docs/cad_geometry_reference.md``)
 --------------------------------------------------
   V0  Baseline closed box. Sensor effectively coupled to a solar-loaded wall;
       light internal electronics/battery self-heating; modest natural
@@ -688,8 +688,8 @@ def main() -> None:
         make_figure(res, variants, args.figure)
 
     print("NOTE: All values above are SIMULATION outputs and are the analytical")
-    print("baseline that the conjugate-heat-transfer FEA (docs/cad_fea_plan.md 3.2)")
-    print("will refine. They are predictions pending lab and co-location data; no")
+    print("baseline for the comparisons in ROADMAP.md. They remain predictions")
+    print("pending lab and co-location data; no")
     print("regulatory-grade or certified-performance claim is implied.")
 
 

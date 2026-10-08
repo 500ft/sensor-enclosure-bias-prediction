@@ -3,10 +3,10 @@
 **SIMULATION OUTPUT -- pending lab and co-location data. Not a measurement, not a
 certified or regulatory-grade result.** Every value below is a first-order
 analytical prediction produced by `analysis/thermal_bias.py`. This lumped
-steady-state result is the **analytical baseline that the later
-conjugate-heat-transfer (CHT) FEA (`docs/cad_fea_plan.md` Section 3.2) will
-refine**; it is reported as a prediction, consistent with the evidence labels
-in `README.md` and the CAD/FEA plan.
+steady-state result is retained as an analytical baseline for the comparisons
+in [the roadmap](../ROADMAP.md). Geometry/input definitions are in the
+[geometry reference](../docs/cad_geometry_reference.md); higher-fidelity
+modeling is conditional on a separately justified question.
 
 Regenerate with:
 
@@ -32,10 +32,9 @@ alpha * solar_factor * G * A_proj  +  Q_internal
 
 and report the sensor temperature rise above **true** ambient, `dT = T_s - T_air`,
 then map `dT` to the reported RH error (warm air at fixed water-vapor content
-reads low RH). The CHT FEA later refines this by resolving the internal
-convection field and giving a spatial sensor temperature (see
-`analysis/cad_fea/`); it is not needed to establish the bias ranking or
-magnitude.
+reads low RH). The former FEA stub performed no solve and has been removed.
+These outputs compare assumptions in the lumped model; the combined sensitivity
+screen below limits any design preference.
 
 ## 2. Bias-vs-variant table (analytical system comparison)
 
@@ -177,33 +176,27 @@ sensor temperature (Magnus/Tetens `e_s`). A warm sensor therefore reports a
 cares about (table 2): e.g. V0's ~19 degC rise reads about **-32 %RH**, while
 V1's ~3 degC rise reads about **-8 %RH** at low wind.
 
-## 6. Mapping each number to a paper claim / framework recommendation
+## 6. Use of the comparison
 
-| Result | Paper claim / framework recommendation it supports |
-|---|---|
-| V0 dT = 8-23 degC, RH_err down to -35 %RH | Core claim: the baseline enclosure adds a large solar self-heating warm/dry bias -- "the enclosure reads hot" -- so raw readings need this enclosure-bias caveat. |
-| V1 dT = 0.9-3.7 degC vs V0 8-23 degC | Core claim: a passive multi-plate shield substantially reduces solar-radiation error relative to the baseline (Botero-Valencia et al.; Tarara & Hoheisel). Magnitude of the win is quantified, not asserted. |
-| V0 and V1 dT both fall steeply with wind; V1/V2 cross ~3 m/s | Claim: the error is **ventilation-limited**, and aspiration helps mainly at low wind (Theisen et al.; Deford et al.). Feeds the venting analysis (`docs/cad_fea_plan.md` 3.3). |
-| V2 ~1.3 degC, ~wind-independent | Justifies the optional actively aspirated **reference** as a low-wind upper-bound benchmark, only if V0 shows strong low-wind bias (which it does). |
-| Sensitivity: alpha 0.90 -> 0.30 cuts V0 to ~4.5 degC | Framework rec.: prefer **high-reflectance, low-absorptance light-colored surfaces**; record surface optical properties as a design parameter, not just a photo. |
-| Two-zone internal load 0.8 -> 0.1 W (V0 vs V1) | Framework rec.: **separate ambient sensors from internal heat sources** (two-zone layout); self-heating is a second-order but real contributor in the single-zone baseline. |
-| RH_err column (-2 to -35 %RH) | Shows the thermal bias maps to a **measurable RH error**, the sensor metric the calibration/accuracy sections report against the reference instrument. |
+The tables above compare assumed systems. Their geometry, heat coupling and
+ventilation change together. The painted-control and combined-sensitivity
+results qualify the earlier design recommendations: no design preference is
+established by this comparison. Surface properties, independent airflow and
+sensor-coupled heat remain measurement inputs for the current research question.
+The aspirated model is a numerical comparator, not a calibrated instrument.
 
-## 7. Validation hook (how this gets checked)
+## 7. Validation dependency
 
-The predicted V0 dT range is to be compared against the **solar-heat-soak** test
-(`templates/ruggedization_test_matrix.md`, internal-temp-rise and sensor-bias
-rows) and against **co-location bias** vs. the reference instrument. Agreement,
-or the gap, will be reported. No value here is promoted from "prediction" to
-"finding" until that comparison is done. The gas-sensor knock-on is **not**
-quantified here: gas cross-sensitivity to T/RH is sensor-specific and is flagged
-as indicative pending sensor datasheets and co-location, per the CAD/FEA plan.
+The [roadmap](../ROADMAP.md) requires qualified measurements and identifiability
+before field comparisons. Predictions for the actual specimens must use the
+registered inputs, model and processing; comparison with a calibrated reference
+then estimates error and uncertainty. The earlier ruggedization/FEA proposal is
+not a prerequisite. Gas cross-sensitivity remains outside this thermal comparison.
 
 ---
 
-*This lumped analytical result is the baseline; the conjugate-heat-transfer FEA
-in `docs/cad_fea_plan.md` Section 3.2 (`analysis/cad_fea/`) will refine it. All
-numbers are SIMULATION, pending lab co-location data.*
+*This lumped analytical result remains reproducible. The retired FEA proposal
+supplied no additional result. All numbers are SIMULATION, pending lab data.*
 
 ## Night clear-sky case (EN-D02, 2026-09-09) — a conditional sign reversal
 

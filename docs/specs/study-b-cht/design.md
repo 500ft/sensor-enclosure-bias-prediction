@@ -1,12 +1,12 @@
 # Study B — CHT design and dimensionless extension contract (W1/W2, 2026-09-23)
 
-**Status: design document. No solver is installed, no geometry is modelled, no run was made.**
-Per the weekly plan and its Section 9 CAD amendment. Authority: [`cad_fea_plan.md`](../../cad_fea_plan.md)
-§3.1–3.3 (design), [`CAD_PLAN.md`](../../CAD_PLAN.md) and [`CAD_TASKS.csv`](../../CAD_TASKS.csv)
-(work orders, all still **deferred**), [`studyA_nondimensional.md`](../../studyA_nondimensional.md)
-(the lumped result this study extends), and the engineering-audit CAD briefing at
-`500ft/engineering-audit@cf56cdf:docs/cad_agent_briefing.md` (verified methods; read in full
-2026-09-23). Nothing here changes a deferred status or supplies a missing dimension.
+Historical methods reference, not an active workstream. No CHT result was
+produced. [ROADMAP.md](../../../ROADMAP.md) controls any future activation;
+[geometry inputs](../../cad_geometry_reference.md) and the
+[lumped result](../../studyA_nondimensional.md) remain useful. Sections below
+retain the original proposal plus its scientific corrections. The former
+work-order amendment in section 6 is superseded by removal of that work queue;
+it records no new tooling approval.
 
 ## 1. The question Study B answers — and the one it cannot
 
@@ -117,9 +117,9 @@ versioned baseline.
 tolerances, dependent-feature acceptance, any thermal solve, and a formal independent acceptance
 check on the structural FEA output.
 
-## 6. Proposed scoped update to `CAD_PLAN.md` / EN-CAD-09 (proposal — not applied)
+## 6. Retired CAD allocation proposal
 
-Current allocation: *CadQuery for parameter-driven families and STEP checks; Onshape for
+Historical allocation: *CadQuery for parameter-driven families and STEP checks; Onshape for
 hand-modelled fixtures.* Section 9 prefers assessing the native SOLIDWORKS-COM authoring route
 already proven in engineering-audit, with CadQuery as the **independent checker**.
 
@@ -128,7 +128,7 @@ route where a host is available; use CadQuery as the independent oracle and STEP
 checker in every case; Onshape only for fixtures the owner models interactively. Host availability
 is checked at execution time and recorded per run; no host, no authoring claim.* Statuses stay
 `deferred`; the geometry-verification contract in §5 becomes part of EN-CAD-01/03/04 acceptance.
-**Owner decision required** before this edits `CAD_PLAN.md` or `CAD_TASKS.csv`.
+This amendment is retired with the old work queue. A future tooling decision remains owner-held.
 
 ## 7. Dimensionless extension contract (W2)
 

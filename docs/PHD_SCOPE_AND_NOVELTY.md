@@ -1,5 +1,9 @@
 # PhD scope & novelty gate — 2026-09-16
 
+Historical scope review and scientific errata. It is retained for the corrected
+claims and source record. [ROADMAP.md](../ROADMAP.md) alone defines current work;
+older degree-scope judgments and work proposals below are not active milestones.
+
 **Purpose.** Resolve, before investing in Studies B–D, the question the proposal itself flags as
 exposed: is a dimensionless-collapse prediction of enclosure sensor bias a **PhD-scale open axis**,
 or an **MS-scale design study**? This document records the novelty check, the Study A theory result,

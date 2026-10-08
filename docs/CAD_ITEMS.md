@@ -2,11 +2,11 @@
 
 Prepared 2026-09-06 (America/New_York). **A list of planned parts and assemblies—not completed CAD, hardware or approval to fabricate/test.**
 
-Park this package until the actual lab-box inventory and owner promotion exist. Instantiate the existing CAD/FEA plan rather than create an unrelated enclosure redesign.
-
-## How to use this list
-
-This is a parts inventory, not another task-status ledger or additional scope/budget. Each row maps to the [work-order definitions](CAD_PLAN.md) and [sole task ledger](CAD_TASKS.csv); several parts can belong to one work order. Bought parts and existing models should be reused/imported when authorized, not redesigned merely to fill a CAD folder. One part may serve multiple listed interfaces; avoid duplicating it.
+This is a retained parts/interface checklist. The [roadmap](../ROADMAP.md)
+controls future work, and the [geometry reference](cad_geometry_reference.md)
+links existing CAD checks. The earlier work-order IDs below are historical
+cross-references, not active tasks, an actual rig inventory or fabrication approval.
+Reuse inspected models and sourced vendor geometry where applicable.
 
 ## After inventory: baseline and passive shield
 
