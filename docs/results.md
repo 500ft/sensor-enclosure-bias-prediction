@@ -72,6 +72,11 @@ after an agent inspection of the corrected integration loop. The prediction
 JSON's `status` field was written before that approval and still says HOLD; it
 changes at the next regeneration. [Original artifacts](history/README.md) remain available.
 
+![Predicted sensor-minus-air temperature for the four variants under archived hourly forcing, clear-sky scenario](../analysis/figures/thermal_transient_prediction.png)
+
+The figure shows the clear-sky scenario with 5–95% assumed-input sensitivity
+bands. It uses the same variant colours as the steady figure above.
+
 | Review item | Implemented correction and evidence |
 | --- | --- |
 | Initial state and integration | Save the initial state at its timestamp; integrate actual intervals with midpoint instantaneous forcing and a local exponential tangent step. Exact-RC, irregular-step, zero-loss and nonlinear-refinement checks exercise the actual solver. |
@@ -111,7 +116,9 @@ tolerance follows from this thermal calculation.
 | Output | Evidence type | Current limitation |
 | --- | --- | --- |
 | Deployment metrics and plots | Analysis of external field logs | Raw exports and confirmed deployment history are unavailable in the repository |
-| Thermal-bias sweep | First-order analytical simulation | Parameters require lab measurement and co-location comparison |
+| Thermal-bias sweep | First-order analytical simulation | Nominal point estimates without propagated input uncertainty; not yet compared with external or co-location measurements |
+| Transient prediction | Single-node transient simulation on archived hourly weather | Clear-sky and opaque-sky assumptions with assumed-input sensitivity bands; acquisition metadata unknown; no measured or held-out comparison |
+| [External-data suitability](../analysis/aqspec_feasibility.md) | Access probe of AQ-SPEC public sources | Reports only; no paired sensor/reference temperature series or reuse terms obtained |
 | Literature brackets | Published measurements summarized from cited sources | Not measurements of this enclosure |
 | [Retained CAD](../cad/enclosure/v0/README.md) | Geometric acceptance evidence | Does not establish the current rig or thermal performance; unused FEA stub removed |
 

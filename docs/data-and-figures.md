@@ -9,17 +9,29 @@ flowchart LR
     subgraph External inputs
       CSV[Two deployment CSV exports]
       PAPERS[Published literature]
+      AQSPEC[AQ-SPEC public pages and reports]
     end
     subgraph Repository inputs
       ASSUME[Thermal model assumptions]
+      WEATHER[Archived hourly weather]
       MATRIX[Literature matrix]
     end
     CSV --> AUDIT[analyze_deployment_logs.py]
     AUDIT --> FIELD[Field audit and plots]
     ASSUME --> MODEL[thermal_bias.py]
     MODEL --> THERMAL[Thermal-bias plot and tables]
+    ASSUME --> TRANSIENT[thermal_transient.py]
+    WEATHER --> TRANSIENT
+    TRANSIENT --> TPLOT[Transient plot, JSON and verification]
     PAPERS --> MATRIX
     MATRIX --> SYNTHESIS[Manuscript and design requirements]
+    AQSPEC --> PROBE[aqspec_availability_probe.py]
+    PROBE --> INVENTORY[Source inventory and suitability result]
+    INVENTORY -. no paired temperature series .-> EXTERNAL[External model comparison, not run]
+    THERMAL -.-> EXTERNAL
+    TPLOT -.-> CAMPAIGN[Co-location comparison, not run]
+    THERMAL -.-> CAMPAIGN
+    CAMPAIGN -.-> HELDOUT[Held-out error and effort comparison, not run]
 ```
 
 ## Evidence classes
@@ -27,8 +39,9 @@ flowchart LR
 | Class | Meaning in this repository |
 | --- | --- |
 | Field-log analysis | Calculations made from device exports collected during bench and outdoor operation |
-| Analytical simulation | A lumped steady-state heat-balance calculation, without a spatial mesh |
+| Analytical simulation | Lumped steady-state and single-node transient heat-balance calculations, without a spatial mesh |
 | Literature synthesis | Values extracted or summarized from cited publications |
+| External-data probe | Retrieval and inspection of public sources; no measurements extracted |
 | Planned analysis | CAD, FEA, calibration, or validation steps that do not yet produce results |
 
 ## Deployment-log plots
@@ -123,6 +136,21 @@ joint parameter corners under both sky assumptions. It does not check every
 parameter combination or establish physical accuracy. [Review status](results.md#transient-result)
 and [original artifacts](history/README.md) distinguish current and superseded outputs.
 
+## External-data suitability probe
+
+Generator: [`analysis/aqspec_availability_probe.py`](../analysis/aqspec_availability_probe.py)
+
+```bash
+python3 analysis/aqspec_availability_probe.py /absolute/external/aqspec-probe
+```
+
+The probe needs network access, `curl` and Poppler's `pdftotext`. It writes
+downloads and extracted text to the external directory. The committed
+[source inventory](../analysis/results/aqspec_source_inventory.json) and the
+[suitability result](../analysis/aqspec_feasibility.md) are its only outputs in
+git. No figure is produced: the probe found no paired sensor/reference
+temperature series to plot.
+
 ## Literature records and report visuals
 
 `literature/literature_matrix.csv`, the bibliography, the cross-source summary,
@@ -138,10 +166,12 @@ and are excluded from the figure manifest.
 
 ## Reproduction boundary
 
-The literature coverage check and thermal model run from repository-contained
-inputs. Deployment plots require the two external CSV exports. Accuracy,
-calibration, heat-soak, and spatial FEA plots cannot be regenerated because
-their planned input data or solver implementation do not yet exist.
+The literature coverage check and both thermal models run from
+repository-contained inputs. The AQ-SPEC probe re-downloads public sources, so
+its result depends on what those sites serve at the time. Deployment plots
+require the two external CSV exports. Accuracy, calibration, heat-soak, and
+spatial FEA plots cannot be regenerated because their planned input data or
+solver implementation do not yet exist.
 
 [`figure-manifest.json`](figure-manifest.json) provides the same figure lineage
 in a machine-readable form.

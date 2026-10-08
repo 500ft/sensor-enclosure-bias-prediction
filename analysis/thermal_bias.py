@@ -534,9 +534,11 @@ def make_figure(res: SweepResult, variants: list[Variant], out_path: str) -> Non
     ax.axhline(0, color="k", lw=0.6)
 
     fig.suptitle(
-        f"SIMULATION (pending lab data): solid = G={g_hi:.0f} W/m$^2$, "
-        f"dashed = G={g_lo:.0f} W/m$^2$",
-        fontsize=9, y=1.02,
+        f"SIMULATION, nominal point estimates: solid = G={g_hi:.0f} W/m$^2$, "
+        f"dashed = G={g_lo:.0f} W/m$^2$\n"
+        "Not yet compared with external or co-location measurements; "
+        "input uncertainty not propagated",
+        fontsize=9, y=1.04,
     )
     fig.tight_layout()
     fig.savefig(out_path, dpi=140, bbox_inches="tight")
