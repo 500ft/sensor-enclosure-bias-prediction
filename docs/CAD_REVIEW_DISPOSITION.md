@@ -10,7 +10,7 @@ The PR is retargeted to main with its prerequisite integrity work included. Orig
 
 Park CAD until the actual lab-box inventory and explicit owner promotion exist. Instantiate the existing section 3.1 contract instead of duplicating it; thermal/field verification remains separate.
 
-Code-CAD/CI is now an explicit selected workflow and separately estimated task, not an already implemented test. Cross-ledger prerequisites are recorded in [CAD_DEPENDENCIES.json](CAD_DEPENDENCIES.json); the embedded validator checks references and prevents a task entering todo/in_progress/done with unverified prerequisites. Checks establish metadata consistency, not authentic external approval.
+Code-CAD/CI is now an explicit selected workflow and separately estimated task, not an already implemented test. Cross-ledger prerequisites are recorded in [CAD_DEPENDENCIES.json](https://github.com/500ft/sensor-enclosure-thermal-design/blob/2beffdf412e57145062994e5626863de80438016/docs/CAD_DEPENDENCIES.json); the embedded validator checks references and prevents a task entering todo/in_progress/done with unverified prerequisites. Checks establish metadata consistency, not authentic external approval.
 
 ## Inputs and limits
 

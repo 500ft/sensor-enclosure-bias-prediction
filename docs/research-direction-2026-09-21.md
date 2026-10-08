@@ -5,8 +5,9 @@ calibration measured geometry, material and power data plus shared thermal laws
 can replace. [ENC-1](OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions)
 supersedes the earlier unresolved owner-adoption question. Direction B remains
 the first-stage estimation-only floor, and PI/physical decisions remain open.
-The [roadmap](../ROADMAP.md) is the active plan. The dated proposals below are
-history, not additional work authorization.
+The [roadmap](../ROADMAP.md) is the only active plan, with dependency order and
+completion evidence. The dated proposals below preserve history without adding
+work authorization.
 
 The [executed correction](results.md#transient-result) tests a single-node
 thermal step and weather integration. Later identifiability must cover plausible
@@ -21,7 +22,7 @@ cross-shield refitting claim remains unverified pending its actual source.
 
 Historical decision aid. Base:
 `main` at `84e0ef3`. Companion to the historical owner draft [PR #20](https://github.com/500ft/sensor-enclosure-thermal-design/pull/20)
-(`docs/research-question-draft.md`), which is *not* duplicated here. Authority: scope decision in
+(the retired question draft, available through [history](history/README.md)). Authority: scope decision in
 [PHD_SCOPE_AND_NOVELTY.md](PHD_SCOPE_AND_NOVELTY.md); result in [studyA_nondimensional.md](studyA_nondimensional.md).
 The analytical results below do not supply thermal co-location measurements;
 older deployment/electronics evidence remains separate.

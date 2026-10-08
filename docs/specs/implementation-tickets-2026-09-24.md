@@ -1,8 +1,11 @@
 # Implementation tickets (WP4, 2026-09-24)
 
-**Status: specifications, not implementations.** Each ticket gives affected files, an input/output
-contract, **meaningful failure cases** (a test that cannot fail is not a test), and the evidence that
-would close it. **None may be implemented without an approved PR**, and none closes an owner gate.
+Reference contracts retained from the earlier implementation tickets.
+[ROADMAP.md](../../ROADMAP.md) is the only work queue. Build campaign software
+only with its first qualified real data; no new checker task is authorized here.
+T2's linear covariance module is implemented in `analysis/uncertainty.py`.
+The other input/provenance contracts remain reference material, not completed
+software or evidence that physical acquisition can begin.
 
 Three tickets from the critique are **already done** and are recorded here for traceability:
 
@@ -158,9 +161,9 @@ a conditional prediction relabelled as a forecast must **refuse**.
 
 ---
 
-## Sequencing
+## Activation dependency
 
-T1 and T3 are prerequisites for handling any real campaign. T2 is needed before any bias is
-reported with an interval. T4 is needed before the first transfer claim. **None is on the critical
-path until the owner authorises a pilot** — they are specified now so the authorisation decision is
-not delayed by unwritten software.
+Apply these input and provenance requirements when the roadmap reaches actual
+campaign ingestion or a registered transfer comparison. Inspect existing work
+before implementing an adapter. The retained contracts do not require speculative
+checker construction or alter the owner-held physical gates.

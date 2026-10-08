@@ -1,5 +1,11 @@
 # Traceability index (2026-09-25)
 
+Historical claim/correction index. Status counts and owner rows below describe
+that review snapshot. Current decisions and blockers are in the
+[owner record](COLOCATION_OWNER_SESSION.md#current-blocker); [ROADMAP.md](../ROADMAP.md)
+is the only active plan. Keep the analytical corrections without treating old
+open tasks as a new work queue.
+
 Links only — **equations stay beside the decisions they support.** Each row answers: *what was
 decided, on what requirement, by what analysis, from which canonical inputs, and what would confirm
 it.* Canonical inputs are IDs in [`PARAMETER_REGISTER.csv`](PARAMETER_REGISTER.csv); provenance and

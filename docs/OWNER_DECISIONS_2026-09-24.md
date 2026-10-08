@@ -18,6 +18,17 @@ the [pilot protocol](COLOCATION_PROTOCOL.md).
 revisable until the protocol freeze). A request that has been *sent* is
 `pending`, never `accepted` — transmission is not receipt.
 
+## Dependency-plan adoption
+
+The owner authorized the date-free [roadmap](../ROADMAP.md) and removal of
+superseded active plans/code on 2026-10-07. This adopts dependency order and
+completion evidence, not proposed design counts, a longer campaign, a new
+application tolerance or physical readiness. ENC-1 remains selected; ENC-2's
+estimation-only disposition and unresolved ENC-3 through ENC-5 are unchanged.
+Old rows and task IDs below retain decision provenance. Retired work-order
+proposals do not create active tasks; any future CAD/tool choice needs the
+specific need and authorization in the roadmap.
+
 ## E. Switch-review decisions
 
 The owner explicitly authorized this existing session's reviewed v2 software
@@ -113,9 +124,9 @@ precedence over older open labels; ENC-1 above records the new owner-authorized 
 | 7 | Simultaneous, or paired-successive? | Count of instrumentable units from row 3 | Owner | pilot spec R1.2 | — | **open** | Default is **simultaneous**. Paired-successive requires explicit approval **and** labelling of weather/time confounding |
 | 8 | Is the optional **unpowered arm (V0-U)** authorised? | One spare enclosure + external logging | Owner | pilot spec R1.1 (D2) | — | **open** | The decisive solar-vs-self-heating separation is not measured; the project's `N_Q` axis stays inferential |
 | 9 | Should `EN-R03`'s dependency on `EN-S02` be separated for a **new** campaign? | A reviewed ledger amendment | Owner | `SPRINT_TASKS.csv`; `DAY_PLAN_2026-09-15.md` (A2/O2 ledger-dependency note) | — | **open** | A new, independently provenanced campaign stays blocked behind unrelated historical exports. **Do not bypass silently** |
-| 10 | Is CAD work actually needed before the first pilot? | A named geometry/fixture need | Owner | `CAD_TASKS.csv` (all deferred) | — | **open** | CAD stays deferred (the default). Existing apparatus may answer the first question |
-| 11 | Is solver/toolchain work funded and authorised? | Allocation for install + verification budget | Owner | `specs/study-b-cht/design.md` §8 | — | **open** | FEA stays a stub; Study B's CHT half cannot start |
-| 12 | Adopt the proposed **CAD tooling rewording**? | Owner sign-off | Owner | `specs/study-b-cht/design.md` §6 | — | **open** | `CAD_PLAN.md` keeps the CadQuery + Onshape allocation |
+| 10 | Is CAD work actually needed before the first pilot? | A named geometry/fixture need | Owner | [retired CAD ledger](https://github.com/500ft/sensor-enclosure-thermal-design/blob/2beffdf412e57145062994e5626863de80438016/docs/CAD_TASKS.csv) (historical) | — | **open** | CAD stays deferred (the default). Existing apparatus may answer the first question |
+| 11 | Is solver/toolchain work funded and authorised? | Allocation for install + verification budget | Owner | `specs/study-b-cht/design.md` §8 | — | **open** | Unused stub removed; any future CHT implementation still requires authorization |
+| 12 | Adopt the proposed **CAD tooling rewording**? | Owner sign-off | Owner | `specs/study-b-cht/design.md` §6 | — | **open** | Old allocation retired with its work queue; a future tooling choice remains unresolved |
 | 13 | Adopt Direction A or B? | Owner choice | Owner | [Direction selected](research-direction-2026-09-21.md) and A0 | 2026-09-25 | selected: B now, A conditional | The v2 direction is recorded in ENC-1; first-stage B and physical gates remain |
 | 14 | Re-register the **approximation-error threshold** from relative 3 % to **absolute °C**? *(reworded 2026-09-24: this is a threshold on linearisation error, not a scientific kill criterion — that framing is withdrawn)* | Owner choice, applied prospectively | Owner | `research-direction-2026-09-21.md` §3; `studyA_nondimensional.md` §5 | — | **open** | A relative band stays ill-conditioned near ΔT → 0 and mismatched to a `U95` acceptance |
 | 15 | Bump CI Python ≥ 3.12 to unblock dependabot #27/#28? | Owner choice | Owner | PRs #27, #28 | — | **open** | numpy/pandas bumps stay unmerged. **Caution:** a numerical-library change may alter the byte-exact thermal tables |

@@ -1,98 +1,159 @@
 # Roadmap
 
-This is the plan for finishing the project. The current blocker, with its
-owner statements, is kept in
-[docs/COLOCATION_OWNER_SESSION.md](docs/COLOCATION_OWNER_SESSION.md#current-blocker).
-The full decision table is [docs/OWNER_DECISIONS_2026-09-24.md](docs/OWNER_DECISIONS_2026-09-24.md);
-work history is in [docs/SPRINT_PROGRESS.md](docs/SPRINT_PROGRESS.md) and
-[docs/REVIEW_READY.md](docs/REVIEW_READY.md).
+This is the only active plan. The [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
+holds decisions and physical prerequisites; the [protocol](docs/COLOCATION_PROTOCOL.md)
+holds acquisition rules. [Results](docs/results.md) and [history](docs/history/README.md)
+separate executed evidence from retired proposals.
 
-## Finish line
+## Question and finish line
 
-The owner-authorized v2 direction asks how much target-design calibration
-measured geometry, material and power data plus shared thermal laws can replace.
-A transfer result will need a withheld enclosure, independent units or swaps,
-a future-period split, explicit calibration budgets and simpler physical and
-empirical baselines. Report error and interval coverage by exposure regime.
-Geometry transfer is an eventual result, not evidence supplied by the current
-single-node calculation.
+How much design-specific co-location can measured geometry, material and power
+data plus shared thermal laws replace, at comparable prediction error?
 
-The first-stage floor remains Direction B: measure temperature bias and
-uncertainty beside a calibrated reference over day and night, compare with the
-model and write up the result. Reporting remains estimation-only with no
-pass/fail verdict. A claim that co-location can be skipped would require a
-prospective application tolerance with Guibaud. The [decision record](docs/OWNER_DECISIONS_2026-09-24.md#e-switch-review-decisions)
-separates owner adoption of the direction from unresolved physical and PI gates.
+Finish with a reproducible comparison of held-out prediction error and total
+measurement/calibration effort, including cases where target fitting is still
+needed. The first-stage floor is an estimation-only report of temperature bias,
+uncertainty and model error beside a calibrated reference. No pass/fail verdict
+is required. A later claim that co-location can be skipped needs a prospective
+application tolerance agreed with the PI. Publication is a separate decision.
 
-The merged PR #56 correction does not launch the transfer study or a campaign.
-An I1 thermal step at known airflow identifies effective heat/conductance and
-capacity/conductance in the single-node limit. It cannot identify every physical
-parameter. Broader prediction identifiability needs plausible parameter/noise
-ranges and the actual I1/I2/ventilation interventions, not local Fisher
-information at one point. A simpler predictor remains an acceptable outcome.
+Total effort includes geometry, material and power characterization, equipment
+setup, calibration, co-location and deployment. Report the effort/error tradeoff
+when no application tolerance has been adopted. If target coefficients must be
+fitted, quantify the remaining calibration rather than claiming zero calibration.
 
-## Where it stands
+## Verified starting point
 
-- The [corrected transient result in PR #56](docs/results.md#transient-result)
-  has executed initial-state, exact-RC, interval-energy and refinement checks.
-  Current output uses explicit sky scenarios and sensitivity labels. The owner
-  approved the merge; missing acquisition provenance stays unknown.
+- **Done:** corrected transient integration, exact-RC and interval-energy checks,
+  refinement checks, explicit sky scenarios and assumed-input sensitivity.
+  [The merged result](docs/results.md#transient-result) retains missing acquisition
+  provenance as unknown; it is not a physical validation.
+- The [steady comparison](analysis/thermal_bias_results.md) and combined
+  sensitivity calculation remain reproducible. Their ranking reversal establishes
+  no design preference. The [uncertainty module](analysis/uncertainty.py) is
+  tested separately from those point estimates.
+- The [baseline CAD](cad/enclosure/v0/README.md) has recorded geometric checks.
+  It does not establish the new rig inventory or thermal performance.
+- The [external-data probe](analysis/aqspec_feasibility.md) obtained reports but
+  no qualified paired temperature series. That route is optional.
+- **Current blocker:** owner-held rig, calibration, design/replication and funding
+  inputs in the [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker).
+  The thermal campaign has not run. In-principle PI support is already recorded.
 
-- The executed [AQ-SPEC suitability probe](analysis/aqspec_feasibility.md) obtained
-  reports but no paired temperature series. Its source inventory and draft data
-  request are recorded with the result. External model comparison remains blocked
-  on usable channels, metadata and reuse terms.
+## Dependency order
 
-- The published [thermal predictions](analysis/output/thermal_bias_table.csv)
-  are point estimates. Input uncertainty has not been propagated to these
-  outputs; [analysis/uncertainty.py](analysis/uncertainty.py) is a separate,
-  tested module. The [parameter register](docs/PARAMETER_REGISTER.csv) records
-  the source review and unresolved inputs.
-- The shield-versus-painted-box ranking reverses under the documented combined
-  sensitivity settings for shading, convection and plate-air preheat. The
-  [sensitivity results](analysis/thermal_bias_results.md) establish no design
-  preference.
-- The baseline enclosure is parametric CAD, accepted against an independent
-  closed-form check.
-- The pilot protocol, intake checker and campaign validation exist as drafts.
-- The PI has given the go-ahead, with a test site and manufacturing help
-  (owner statement, 2026-09-29).
-- The thermal co-location campaign has not run. Earlier deployment and
-  electronics work remains recorded in the
-  [data guide](docs/data-and-figures.md#deployment-log-plots). Funding expectations,
-  rig readiness and the next owner action are recorded in the
-  [current blocker](docs/COLOCATION_OWNER_SESSION.md#current-blocker).
+```mermaid
+flowchart TD
+    A[Decisions and qualified rig] --> B[Measurement capability and identifiability]
+    B --> C[I1 at known airflow and airflow investigation]
+    C --> D[Frozen field protocol and reserved holdouts]
+    D --> E[Field interventions and qualified coverage]
+    E --> F[Held-out calibration and effort comparison]
+    F --> G[Optional external design or seasonal comparison]
+```
 
-- Decided 2026-09-30, before any data: estimation-only reporting, the I1
-  load test permitted with a resistive load, a 14-day maximum campaign window,
-  and the historical-log request deferred. What's still open needs the rig:
-  hardware, calibration records, site and data terms, fan decoupling and unit
-  count ([decision table](docs/OWNER_DECISIONS_2026-09-24.md#a00-decisions-recorded-2026-09-30)).
+### M1. Resolve decisions and qualify the rig
 
-## What's left
+Status: current, blocked on owner inputs.
 
-| # | Step | Who | Done when |
-|---|---|---|---|
-| 0 | Review the corrected PR #56 result | Owner | Done: owner approved and merged; source limitations remain recorded. |
-| A | Resolve external-data access after the completed AQ-SPEC probe | Owner reviews the draft request; data custodian supplies records and terms | A permitted paired sample and sufficient thermal/reference metadata, or a recorded inability to obtain them. Optional external-data route; no outreach authorized. |
-| B | Compare an eligible external dataset with the model, if feasible | Agent, after data suitability is established | Selection, independent-unit/day split and estimation metrics fixed before held-out evaluation; scoped result with uncertainty and exposure limits |
-| 1 | Set up the co-location rig at the test site: the enclosure variants, the reference thermometer in its shield, and the loggers | Owner, with the PI's manufacturing help | Rig installed; inventory recorded in the blocker record (enclosure IDs, sensors, reference and its calibration certificate). **Physical campaign step.** |
-| 2 | After model corrections and hardware readiness, freeze the protocol, model, processing, coefficients, parameter treatment and weather acquisition procedure with the approver and date | Agent drafts; owner and PI approve | Frozen protocol committed before any data |
-| 3 | Run at least 24 h with all arms and the reference side by side, with the I1 resistive-load test as the first mechanism experiment and I2 shading retained as optional mechanism work; stop at 14 days if coverage is still short | Owner runs it; agent checks intake | Raw files and campaign manifest committed; intake passes |
-| 4 | Compute bias and uncertainty per variant, day and night; drive the frozen model with independently collected weather under the registered procedure and compare with observations | Agent | Results and comparison merged |
-| 5 | Write up the first-stage estimation result in the manuscript and README | Agent | Reviewed result merged |
-| 6 | Register a geometry/calibration-transfer comparison after identifying usable parameters and resolving designs/replicates | Owner and PI approve; agent implements only after activation | Frozen holdouts, calibration budgets, baselines and regime-specific metrics before evaluation |
+Prerequisites: the recorded in-principle PI support and owner access to actual
+hardware, calibration records and site/data terms. The owner-authorized research
+question and estimation-only choice remain selected.
 
-The small Sensor.Community/DWD metadata pilot is a possible fallback, not an
-executed result. It requires actual data licences, construction metadata and
-checks of distance, elevation, land use and overlapping reference meteorology
-before modeling. Historical lab data requires PI data terms and matching hardware
-and exposure records. External exploration does not freeze the physical protocol.
+Tasks:
 
-## Not in this version
+- Confirm designs, independently built units or swaps, logging arrangement,
+  funding receipt and site/data permissions. Proposed design counts are targets
+  pending qualification, not a sample-size justification or an inventory.
+- Record enclosure/sensor IDs, reference thermometer and its shield/aspiration,
+  calibration certificate and uncertainty, loggers, electrical-power measurement
+  and airflow instrumentation. Check synchronization, positions and fan decoupling.
+- Preserve CAD and material records that describe the actual specimens. Use the
+  [geometry reference](docs/cad_geometry_reference.md) only where it applies.
 
-- Executing the eventual geometry-transfer study in this correction task.
-- CFD or conjugate heat-transfer runs, unless the pilot disagrees with the
-  lumped model by more than its uncertainty.
-- Verifying the historical deployment percentages, which needs raw exports
-  held outside this repository.
+Completion evidence: reviewed inventory and calibration/uncertainty records,
+verified logging/power/airflow capability, site/data terms and an explicit record
+of remaining unknowns. These qualify preparation; they do not freeze a campaign.
+
+### M2. Establish what the interventions can identify
+
+Status: future; depends on M1 and permission for the actual bench procedure.
+
+Before fitting, assess plausible parameter and noise ranges, measurement
+capability, confounding and independent input variation using development data
+only. Local sensitivity at one nominal point cannot establish practical
+identifiability. Choose measurements/interventions that distinguish the desired
+quantities, or reduce the model and claim.
+
+- Run I1 first: controlled resistive-power steps in dark conditions at documented
+  airflow, with measured power and temperatures and repeated/counterbalanced states.
+- In the single-node limit, the response identifies effective heat/conductance
+  and capacity/conductance. Supply power needs an identified heat path before
+  absolute material or convection parameters can be inferred.
+- Investigate airflow independently of power. Estimate a convection relation only
+  if geometry, effective area, heat coupling and measured airflow provide enough
+  independent information; otherwise report combinations and uncertainty.
+
+Completion evidence: qualified raw records, uncertainty and residual checks,
+repeatability, identified parameter combinations and their supported domain,
+and a documented choice of model. An unresolved combination or inadequate
+measurement is a useful scoped result; it is not evidence that the physics failed.
+
+### M3. Register and execute field comparisons
+
+Status: future; depends on M2, qualified reference measurements and owner/PI
+approval of the concrete protocol.
+
+Before acquisition or exposure to evaluation outcomes, freeze the protocol,
+model, coefficients, processing, weather-input procedure, metrics, calibration
+budgets and independent design/unit/period holdouts. Keep evaluation observations
+unseen during model choice. Distinguish independently measured deployment inputs
+from coefficients fitted using target outcomes.
+
+- Use approved designs and independent replicates or swaps. Specify comparisons
+  the available units can support; repeated samples are not independent units.
+- Acquire reference, sensor, power, airflow, irradiance and sky information under
+  the [protocol](docs/COLOCATION_PROTOCOL.md). Preserve I1 first and counterbalance
+  subsequent shading, including its airflow and long-wave confounding.
+- Judge coverage from measured day/night, irradiance, wind and intervention
+  conditions. Lamp spectra and climatology do not qualify outdoor solar coverage.
+- Respect the approved acquisition ceiling. Missing coverage at that ceiling is
+  incomplete acquisition; extending it requires a new owner/PI decision.
+
+Completion evidence: frozen registration, immutable raw files with provenance,
+calibration and state records, coverage/missingness report and evidence that the
+claimed contrasts have adequate independent variation. Passing intake alone does
+not validate the model. Write up the first-stage bias/uncertainty result even if
+transfer cannot yet be qualified.
+
+### M4. Compare withheld-design calibration and total effort
+
+Status: future; depends on qualified M3 data, an untouched evaluation set and
+prespecified calibration allocations and baselines.
+
+Compare shared thermal prediction with a constant correction, a limited
+co-location regression, a simpler thermal model and full target calibration.
+Keep evaluation observations outside every permitted fitting budget. Report
+bias, prediction error and interval coverage by exposure regime, with uncertainty
+that respects shared references, temporal dependence and independent units.
+
+Completion evidence: reproducible held-out comparisons and an effort/error
+accounting covering physical-input acquisition, setup, calibration and deployment.
+State which measured inputs or target fitting were still needed. Write up weak
+transfer or no effort saving as results; reserve a skip-co-location verdict for
+an approved application tolerance and adequate evidence.
+
+### M5. Optional external design or seasonal comparison
+
+Status: conditional; depends on M4, a distinct question, adequate resources and
+newly qualified data/permissions. It is not required to report the first-stage result.
+
+An external design, another exposure regime or a PurpleAir comparator needs
+reuse terms, matched reference channels, construction/exposure metadata and a
+split frozen before evaluation. The existing external-data probe does not meet
+those requirements. No author outreach is authorized by this roadmap.
+
+Completion evidence: a separately scoped, reproducible external comparison with
+its independence and limits stated. Cold-climate heating, PM-correction changes,
+CFD/CHT and structural qualification need separate evidence and authorization;
+they are not default branches of this work.
