@@ -62,6 +62,11 @@ question and estimation-only choice remain selected.
 
 Tasks:
 
+- Seek PI feedback in the owner's chosen in-person discussion on calibration
+  transfer and the application-tolerance requirement for any later
+  skip-co-location claim. Record feedback in the
+  [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker); the adopted
+  direction and estimation-only first stage remain selected.
 - Confirm designs, independently built units or swaps, logging arrangement,
   funding receipt and site/data permissions. Proposed design counts are targets
   pending qualification, not a sample-size justification or an inventory.
