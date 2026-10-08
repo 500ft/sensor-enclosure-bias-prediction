@@ -493,55 +493,47 @@ def make_figure(res: SweepResult, variants: list[Variant], out_path: str) -> Non
     markers = {"V0": "o", "V0P": "s", "V1": "^", "V2": "D"}
     name_by_id = {v.vid: v.name for v in variants}
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.4))
-
-    ax = axes[0]
-    for v in variants:
-        ax.plot(
-            res.wind, res.dT[v.vid][g_hi],
-            color=colors[v.vid], lw=2.2,
-            marker=markers[v.vid], markevery=10, markersize=3,
-            label=f"{v.vid} {name_by_id[v.vid]} (G={g_hi:.0f})",
-        )
-        ax.plot(
-            res.wind, res.dT[v.vid][g_lo],
-            color=colors[v.vid], lw=1.2, ls="--", alpha=0.7,
-        )
-    ax.set_xlabel("External wind speed [m/s]")
-    ax.set_ylabel("Sensor $\\Delta T$ above ambient [$^\\circ$C]")
-    ax.set_title("Solar self-heating bias vs variant")
-    ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=7, loc="upper right")
-    ax.axhline(0, color="k", lw=0.6)
-
-    ax = axes[1]
-    for v in variants:
-        ax.plot(
-            res.wind, res.rh_err[v.vid][g_hi],
-            color=colors[v.vid], lw=2.2,
-            marker=markers[v.vid], markevery=10, markersize=3,
-            label=f"{v.vid} {name_by_id[v.vid]}",
-        )
-        ax.plot(
-            res.wind, res.rh_err[v.vid][g_lo],
-            color=colors[v.vid], lw=1.2, ls="--", alpha=0.7,
-        )
-    ax.set_xlabel("External wind speed [m/s]")
-    ax.set_ylabel("Reported RH error [%RH] (negative = reads dry)")
-    ax.set_title("RH bias from self-heating vs variant")
-    ax.grid(True, alpha=0.3)
-    ax.legend(fontsize=7, loc="lower right")
-    ax.axhline(0, color="k", lw=0.6)
-
-    fig.suptitle(
-        f"SIMULATION, nominal point estimates: solid = G={g_hi:.0f} W/m$^2$, "
-        f"dashed = G={g_lo:.0f} W/m$^2$\n"
-        "Not yet compared with external or co-location measurements; "
-        "input uncertainty not propagated",
-        fontsize=9, y=1.04,
-    )
-    fig.tight_layout()
-    fig.savefig(out_path, dpi=140, bbox_inches="tight")
+    fig, axes = plt.subplots(1, 2, figsize=(11, 5.3))
+    # One shared key keeps long variant names outside the data panels.
+    ordered = sorted(variants, key=lambda v: ("V0", "V0P", "V1", "V2").index(v.vid))
+    for ax, values, title, ylabel in zip(
+        axes, (res.dT, res.rh_err),
+        ("A  Temperature bias", "B  Relative-humidity bias"),
+        ("Sensor minus ambient [°C]", "Reported minus true RH [percentage points]"),
+    ):
+        for v in ordered:
+            ax.plot(res.wind, values[v.vid][g_hi], color=colors[v.vid], lw=2,
+                    marker=markers[v.vid], markevery=10, markersize=4,
+                    label=f"{v.vid} {name_by_id[v.vid]}")
+            ax.plot(res.wind, values[v.vid][g_lo], color=colors[v.vid], lw=1.2,
+                    ls="--", alpha=0.8, marker=markers[v.vid],
+                    markevery=10, markersize=3, markerfacecolor="white")
+        ax.set_xlabel("External wind speed [m/s]")
+        ax.set_ylabel(ylabel)
+        ax.set_title(title, loc="left", fontsize=12, pad=10)
+        ax.set_axisbelow(True)
+        ax.grid(axis="y", color="#e5e7eb", lw=0.7)
+        ax.axhline(0, color="#555555", lw=0.8)
+        ax.spines[["top", "right"]].set_visible(False)
+    fig.suptitle("SIMULATION | Nominal model point estimates", fontsize=12, y=0.98)
+    fig.text(0.5, 0.91,
+             f"Solid: {g_hi:.0f} W/m² solar   ·   Dashed: {g_lo:.0f} W/m² solar",
+             ha="center", fontsize=10)
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.88),
+               ncol=2, fontsize=9, frameon=False, handlelength=3)
+    fig.text(0.5, 0.02,
+             "No propagated input uncertainty or measured comparison. Negative RH bias means reads dry.",
+             ha="center", fontsize=9)
+    fig.subplots_adjust(left=0.075, right=0.98, bottom=0.15, top=0.69, wspace=0.28)
+    from pathlib import Path
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=180, facecolor="white")
+    if out.suffix.lower() != ".svg":
+        fig.savefig(out.with_suffix(".svg"), facecolor="white", metadata={"Date": None})
+    svg = out.with_suffix(".svg")
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     plt.close(fig)
     print(f"[figure] wrote {out_path}")
 

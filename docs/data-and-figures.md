@@ -100,7 +100,9 @@ The script solves a lumped steady-state energy balance for absorbed solar and
 internal heat against convection and long-wave radiation. It converts predicted
 sensor temperature rise into relative-humidity error at fixed water-vapor
 partial pressure, sweeps solar loading and wind speed, and writes
-`analysis/figures/thermal_bias.png`.
+`analysis/figures/thermal_bias.png` and its SVG companion. The shared legend
+uses the same variant colors and markers as the transient plot; solid and dashed
+lines distinguish solar loading. RH differences are in percentage points.
 
 The assumptions are encoded in the script and tabulated in
 [`analysis/thermal_bias_results.md`](../analysis/thermal_bias_results.md). The
@@ -126,7 +128,9 @@ are constant over their preceding hours. Figure timestamps are UTC and the
 final partial day is excluded from mean daily peaks, while its intervals remain
 in duration-weighted means.
 
-The primary plot uses an explicit clear-sky assumption with uniform input
+The PNG and SVG separate solar and wind forcing into aligned panels. Median
+lines use both marker shapes and line patterns; neither markers nor lines
+subsample the calculation. The primary plot uses an explicit clear-sky assumption with uniform input
 sensitivity bands. The JSON also reports a nominal fully opaque sky scenario.
 Total cloud cover is not silently substituted for opaque cover. These are
 assumptions, not measured sky forcing or a calibrated prediction interval.
@@ -175,3 +179,27 @@ solver implementation do not yet exist.
 
 [`figure-manifest.json`](figure-manifest.json) provides the same figure lineage
 in a machine-readable form.
+
+## Visual revision and retained material
+
+The thermal figures retain the white background and variant palette of the
+[pinned visual reference](https://github.com/500ft/sensor-enclosure-thermal-design/tree/bad572fc0902437445a5446bb5bc43098cc6211f/analysis/figures).
+The changes move legends off data, separate forcing units and add SVG companions.
+No inputs, draws, exclusions, summaries or uncertainty interpretation changed.
+Steady Markdown tables group temperature and RH separately and retain CSV links.
+
+| Active visual or table | Treatment and reason |
+| --- | --- |
+| Steady thermal figure | Shared legend, panel labels, horizontal grids, marker redundancy at both solar loads; PNG and SVG |
+| Transient figure | Separate solar/wind panels, shared time axis, variant line/marker key outside data; PNG and SVG |
+| README prediction table and steady result tables | Units in headings, numeric alignment, consistent display precision and source CSV |
+| Deployment figures and historical metrics | Original images/values retained because source exports are unavailable; full-width summaries and evidence captions improved |
+| Overview diagram and roadmap dependency graph | Retained: conceptual dependencies, with no numerical axes to redesign |
+| Frozen manuscript, deliverables and archived evidence | Retained unchanged to preserve historical release and evidence provenance |
+
+Both plotting functions write a same-name SVG beside the requested image.
+Use temporary result paths in the commands above to preserve the committed
+numerical records and their original software hashes. The figure manifest lists
+the figure-only outputs and their result sources. The source-file hash in a
+historical result identifies that result's generator version, not the latest
+plotting-only revision.

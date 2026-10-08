@@ -12,11 +12,13 @@ still needs confirmation against the deployment record.
 
 For the provisional 22-day outdoor window in Log A, the manuscript reports:
 
-| Metric | Result |
-| --- | ---: |
-| Upload success | 95.7% |
-| Data completeness | 91.4% |
-| Brownout resets | 0 |
+| Historical metric | Reported value | Unit |
+| --- | ---: | --- |
+| Upload success | 95.7 | % of received records |
+| Data completeness | 91.4 | % under former estimator |
+| Brownout resets | 0 | count |
+
+Source: [retained manuscript](../paper/manuscript_v1.md); accounting qualification below.
 
 These values describe delivery and continuity, not measurement accuracy. A
 reference co-location dataset is still required for accuracy and calibration
@@ -33,11 +35,16 @@ end-to-end delivery probability or wall-clock uptime. See
 [metric definitions](RELIABILITY_METRICS.md) and the
 [prepared provenance request](DEPLOYMENT_PROVENANCE_REQUEST.md).
 
-| Deployment window | Battery voltage by record outcome |
-| --- | --- |
-| ![Internal temperature and provisional deployment window](../analysis/figures/deployment_temp_window.png) | ![Battery voltage distributions](../analysis/figures/deployment_battv_outcome.png) |
+![Historical internal-temperature traces with the provisional Log A deployment window shaded](../analysis/figures/deployment_temp_window.png)
 
-![Daily brownout-reset fraction](../analysis/figures/deployment_daily_brownout.png)
+![Historical Log A battery-voltage distributions by record outcome, with reported medians](../analysis/figures/deployment_battv_outcome.png)
+
+![Historical daily brownout-reset fraction among received records for Logs A and B](../analysis/figures/deployment_daily_brownout.png)
+
+These original plots are retained at full reading width. Source exports are
+unavailable, so this visual revision does not regenerate them. Straight lines
+across missing timestamps in the temperature plot do not establish observations
+or continuous operation during those gaps.
 
 The full audit script defines brownout rows, successful posts, missing-value
 sentinels, environmental QC flags, and the operational-row filter. Raw CSVs are
@@ -53,7 +60,9 @@ assumptions and the combined sensitivity settings that reverse the shield's
 nominal advantage over the painted box. Geometry, heat coupling and airflow
 differ across those systems, so this comparison establishes no design preference.
 
-![Predicted thermal and relative-humidity bias](../analysis/figures/thermal_bias.png)
+![Nominal temperature and RH bias panels with shared variant legend and explicit units](../analysis/figures/thermal_bias.png)
+
+[Vector figure](../analysis/figures/thermal_bias.svg).
 
 The table and figure omit propagated input uncertainty. The standalone
 [uncertainty module](../analysis/uncertainty.py) is not connected to them.
@@ -72,10 +81,12 @@ after an agent inspection of the corrected integration loop. The prediction
 JSON's `status` field was written before that approval and still says HOLD; it
 changes at the next regeneration. [Original artifacts](history/README.md) remain available.
 
-![Predicted sensor-minus-air temperature for the four variants under archived hourly forcing, clear-sky scenario](../analysis/figures/thermal_transient_prediction.png)
+![Separate solar and wind panels above four variant medians and assumed-input sensitivity bands; UTC axis retains the incomplete final day](../analysis/figures/thermal_transient_prediction.png)
 
 The figure shows the clear-sky scenario with 5–95% assumed-input sensitivity
-bands. It uses the same variant colours as the steady figure above.
+bands. It uses the same variant colours and markers as the steady figure above;
+line patterns also distinguish the transient medians. Solar and wind use separate
+axes. [Vector figure](../analysis/figures/thermal_transient_prediction.svg).
 
 | Review item | Implemented correction and evidence |
 | --- | --- |

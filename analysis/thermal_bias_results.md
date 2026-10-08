@@ -74,18 +74,41 @@ Ambient case: `T_air = 30 degC`, `RH_true = 50 %`, clear-sky `T_sky = 10 degC`
 (20 K depression). `dT` in degC (sensor rise above true ambient); `RH_err` in
 %RH (reported minus true; **negative = reads dry**).
 
-| G [W/m^2] | wind [m/s] | V0 dT | V0 RH_err | V1 dT | V1 RH_err | V2 dT | V2 RH_err |
-|---:|---:|---:|---:|---:|---:|---:|---:|
-| 800  | 0.0 | 17.6 | -30.7 | 3.0 | -7.7 | 1.1 | -3.0 |
-| 800  | 0.5 | 15.0 | -28.0 | 2.4 | -6.4 | 1.1 | -3.0 |
-| 800  | 1.0 | 13.1 | -25.6 | 2.0 | -5.4 | 1.1 | -3.0 |
-| 800  | 2.0 | 10.4 | -21.9 | 1.5 | -4.0 | 1.1 | -3.0 |
-| 800  | 5.0 |  6.4 | -15.1 | 0.7 | -2.0 | 1.1 | -3.0 |
-| 1000 | 0.0 | 22.7 | -35.0 | 3.7 | -9.4 | 1.3 | -3.7 |
-| 1000 | 0.5 | 19.4 | -32.4 | 3.0 | -7.8 | 1.3 | -3.7 |
-| 1000 | 1.0 | 17.0 | -30.0 | 2.5 | -6.6 | 1.3 | -3.7 |
-| 1000 | 2.0 | 13.5 | -26.1 | 1.8 | -4.9 | 1.3 | -3.7 |
-| 1000 | 5.0 |  8.3 | -18.6 | 0.9 | -2.5 | 1.3 | -3.7 |
+### Temperature bias
+
+| Solar [W/m²] | Wind [m/s] | V0 [°C] | V0P [°C] | V1 [°C] | V2 [°C] |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 800 | 0.0 | 17.6 | 3.5 | 3.0 | 1.1 |
+| 800 | 0.5 | 15.0 | 2.9 | 2.4 | 1.1 |
+| 800 | 1.0 | 13.1 | 2.5 | 2.0 | 1.1 |
+| 800 | 2.0 | 10.4 | 2.0 | 1.5 | 1.1 |
+| 800 | 5.0 | 6.4 | 1.2 | 0.7 | 1.1 |
+| 1000 | 0.0 | 22.7 | 5.3 | 3.7 | 1.3 |
+| 1000 | 0.5 | 19.4 | 4.5 | 3.0 | 1.3 |
+| 1000 | 1.0 | 17.0 | 3.9 | 2.5 | 1.3 |
+| 1000 | 2.0 | 13.5 | 3.1 | 1.8 | 1.3 |
+| 1000 | 5.0 | 8.3 | 1.9 | 0.9 | 1.3 |
+
+### Relative-humidity bias
+
+| Solar [W/m²] | Wind [m/s] | V0 [pp] | V0P [pp] | V1 [pp] | V2 [pp] |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 800 | 0.0 | -30.7 | -8.9 | -7.7 | -3.0 |
+| 800 | 0.5 | -28.0 | -7.7 | -6.4 | -3.0 |
+| 800 | 1.0 | -25.6 | -6.7 | -5.4 | -3.0 |
+| 800 | 2.0 | -21.9 | -5.4 | -4.0 | -3.0 |
+| 800 | 5.0 | -15.1 | -3.4 | -2.0 | -3.0 |
+| 1000 | 0.0 | -35.0 | -12.9 | -9.4 | -3.7 |
+| 1000 | 0.5 | -32.4 | -11.2 | -7.8 | -3.7 |
+| 1000 | 1.0 | -30.0 | -9.9 | -6.6 | -3.7 |
+| 1000 | 2.0 | -26.1 | -8.0 | -4.9 | -3.7 |
+| 1000 | 5.0 | -18.6 | -5.1 | -2.5 | -3.7 |
+
+RH differences use percentage points (pp).
+Source: [downloadable predictions](output/thermal_bias_table.csv). Displayed
+values use one decimal for comparison; the CSV retains computational precision.
+The extra digits in the painted-control difference table above permit checking
+its subtraction and do not imply measured accuracy.
 
 **Range across wind 0-5 m/s at G = 1000 W/m^2 (worst-case solar):**
 
@@ -112,7 +135,8 @@ Deford et al.).
 
 Figure: `analysis/figures/thermal_bias.png` (left: dT vs wind; right: RH_err vs
 wind; solid = 1000 W/m^2, dashed = 800 W/m^2; V0P is the painted control).
-Marker shapes distinguish variants on the 1000 W/m² curves as well as color.
+Marker shapes distinguish variants on both solar-load curves. The shared legend
+keeps labels outside the data panels. [Vector figure](figures/thermal_bias.svg).
 
 ## 3. Assumptions block (every input, with status)
 
@@ -149,7 +173,7 @@ assumed (consistent with `paper/manuscript_v1.md` 2.3 and the CAD/FEA plan).
 
 One-at-a-time perturbations at G = 1000 W/m^2, wind = 0.5 m/s (`dT` in degC):
 
-| Perturbation | V0 dT | V1 dT |
+| Perturbation | V0 ΔT [°C] | V1 ΔT [°C] |
 |---|---:|---:|
 | baseline | 19.4 | 3.0 |
 | V0 surface painted white (alpha 0.90 -> 0.30) | **4.5** | - |
@@ -158,6 +182,8 @@ One-at-a-time perturbations at G = 1000 W/m^2, wind = 0.5 m/s (`dT` in degC):
 | V1 shading worse (solar_factor 0.18 -> 0.30) | - | 4.4 |
 | V1 no convection boost (1.4 -> 1.0) | - | 3.4 |
 | V1 plate air pre-heat doubled (1.2 -> 2.4 K calm) | - | 3.9 |
+
+A dash marks the variant whose perturbed output was not reported.
 
 Takeaways: V0 bias is driven hardest by **surface optical properties** -- solar
 absorptance and IR emissivity -- not by internal load. Painting the baseline

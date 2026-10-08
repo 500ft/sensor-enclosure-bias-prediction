@@ -278,32 +278,55 @@ def make_figure(weather, runs, path):
     start = np.searchsorted(weather["t_s"], SPIN_UP_H * 3600)
     dates = [datetime.fromisoformat(weather["start_utc"]) + timedelta(seconds=float(t))
              for t in weather["t_s"][start:]]
-    fig, (ax0, ax1) = plt.subplots(2, 1, figsize=(10, 6.5), sharex=True,
-                                   gridspec_kw={"height_ratios": [1, 2]})
-    ax0.step(dates, weather["ghi"][start:], where="pre", color="#d08c00", lw=1, label="Solar, global horizontal [W/m²]")
-    ax0b = ax0.twinx()
-    ax0b.plot(dates, weather["wind10"][start:], color="#4a6fa5", lw=1, label="Wind at 10 m [m/s]")
-    ax0.set_ylabel("Solar [W/m²]", color="#d08c00"); ax0b.set_ylabel("Wind, 10 m [m/s]", color="#4a6fa5")
-    ax0.set_title("Preserved Open-Meteo forcing; acquisition product/date unknown", fontsize=10, loc="left")
-    # Same variant colours as analysis/thermal_bias.py so the two README figures read alike.
+    fig, (solar_ax, wind_ax, bias_ax) = plt.subplots(
+        3, 1, figsize=(11, 8.5), sharex=True,
+        gridspec_kw={"height_ratios": [1, 1, 2.4]})
+    solar_ax.step(dates, weather["ghi"][start:], where="pre", color="#d08c00", lw=1.2)
+    wind_ax.plot(dates, weather["wind10"][start:], color="#4a6fa5", lw=1.2)
+    solar_ax.set_ylabel("Solar [W/m²]")
+    wind_ax.set_ylabel("Wind, 10 m [m/s]")
+    solar_ax.set_title("A  Global horizontal irradiance | preceding-hour means", fontsize=11, loc="left")
+    wind_ax.set_title("B  Wind speed | instantaneous forcing", fontsize=11, loc="left")
+    # Variant colours and markers match the steady figure; lines add redundancy.
     colors = {"V0": "#c0392b", "V0P": "#7d3c98", "V1": "#2980b9", "V2": "#27ae60"}
+    markers = {"V0": "o", "V0P": "s", "V1": "^", "V2": "D"}
+    styles = {"V0": "-", "V0P": "--", "V1": "-.", "V2": ":"}
     names = {v.vid: v.name for v in build_variants()}
-    for vid, temp in runs.items():
+    for i, (vid, temp) in enumerate(runs.items()):
         bias = temp[start:] - weather["t_air"][start:, None]
         lo, mid, hi = np.percentile(bias, [5, 50, 95], axis=1)
-        ax1.fill_between(dates, lo, hi, color=colors[vid], alpha=0.18, lw=0)
-        ax1.plot(dates, mid, color=colors[vid], lw=1.1, label=f"{vid} {names[vid]}")
-    ax1.axhline(0, color="#999", lw=0.6)
-    ax1.set_ylabel("Predicted sensor minus air [°C]")
-    ax1.set_xlabel("Timestamp [UTC]; hourly forcing, final day incomplete")
-    ax1.xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
-    ax1.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
-    ax1.set_title("SIMULATION, clear-sky scenario: median and 5–95% assumed-input sensitivity; "
-                  "no measured comparison yet", fontsize=10, loc="left")
-    ax1.legend(fontsize=8, ncol=2, loc="upper left")
-    fig.tight_layout()
-    Path(path).parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(path, dpi=140)
+        bias_ax.fill_between(dates, lo, hi, color=colors[vid], alpha=0.16, lw=0)
+        bias_ax.plot(dates, mid, color=colors[vid], lw=1.2, ls=styles[vid],
+                     marker=markers[vid], markersize=3, markevery=(i * 180, 720),
+                     label=f"{vid} {names[vid]}")
+    for ax in (solar_ax, wind_ax, bias_ax):
+        ax.set_axisbelow(True)
+        ax.grid(axis="y", color="#e5e7eb", lw=0.7)
+        ax.spines[["top", "right"]].set_visible(False)
+    solar_ax.set_ylim(bottom=0)
+    wind_ax.set_ylim(bottom=0)
+    bias_ax.axhline(0, color="#555555", lw=0.8)
+    bias_ax.set_ylabel("Sensor minus air [°C]")
+    bias_ax.set_xlabel("Timestamp [UTC]; final day incomplete")
+    bias_ax.xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
+    bias_ax.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
+    bias_ax.set_title("C  SIMULATION | Clear-sky assumption, median and 5–95% input sensitivity",
+                      fontsize=11, loc="left", pad=49)
+    bias_ax.legend(fontsize=9, ncol=2, loc="lower left", bbox_to_anchor=(0, 1.015),
+                   borderaxespad=0, frameon=False, handlelength=3)
+    fig.suptitle("Preserved hourly Open-Meteo forcing and thermal response", fontsize=13, y=0.985)
+    fig.text(0.5, 0.95, "Acquisition request, product and retrieval date unknown; sky forcing unmeasured.",
+             ha="center", fontsize=10)
+    fig.text(0.5, 0.015, "Bands: assumed-input sensitivity, not confidence intervals. No measured comparison.",
+             ha="center", fontsize=10)
+    fig.subplots_adjust(left=0.09, right=0.98, bottom=0.09, top=0.88, hspace=0.75)
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=180, facecolor="white")
+    if out.suffix.lower() != ".svg":
+        fig.savefig(out.with_suffix(".svg"), facecolor="white", metadata={"Date": None})
+    svg = out.with_suffix(".svg")
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     plt.close(fig)
 
 
