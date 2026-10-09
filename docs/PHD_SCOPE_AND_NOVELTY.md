@@ -161,3 +161,45 @@ measurements instead.
 corrected verdict in [studyA_nondimensional.md](studyA_nondimensional.md). The exact nonlinear
 dimensionless balance holds to solver tolerance (max residual 5.478e-9 over 1,944 points), so
 **dimensionless similarity was never falsified**; what exceeded threshold was linearisation error.
+
+## Prior-work update (2026-10-09)
+
+Source: a 2026-10-09 literature review for this repository (abstract level, web search only,
+forward citations not searched). One source was added to the bibliography as `jin2026sensors`
+with an [assessment](../ProConsList/jin2026sensors.md) that attributes nothing beyond the title
+and the review's description. It has not been read in full.
+
+**Jin, Liu, Dai, Hong, Cao and Sun 2026 (Sensors 26(12):3853) is a direct prior for
+physics-derived bias correction.** It reports an optimized naturally ventilated air temperature
+sensor with a radiation error correction trained on CFD of the shield's geometry and material.
+The correction is derived from physical inputs rather than fitted to field data alone. This is a
+second 2026 paper from the same group; `jin2026` (Atmosphere 17:272) is the shield-design paper
+already in the matrix. The claim that bias can be predicted from physics is therefore established
+and must be cited as such. The §1 wording that CFD corrections are single-geometry curves and the
+§3 predict-before-build framing read narrower in that light.
+
+**What this repository can still claim.** Two items were not found in the 2026-10-09 review
+(abstract-level, web search only, forward citations not searched):
+
+1. Predicting the bias of an enclosure design held out of all fitting, with the holdout fixed
+   before evaluation.
+2. Reporting the measurement and calibration effort behind each correction beside its error, so
+   the physics route and the co-location route are compared on cost as well as accuracy.
+
+Both are already the [roadmap](../ROADMAP.md) finish line (M4). This update adds no claim.
+
+**Expected outcome.** In the nearest prior work the physics quantity carries most of the
+predictive signal: the [competitor matrix](COMPETITOR_MATRIX_2026-09-22.csv) records that one
+forcing ratio (Nakamura and Mahrt) or two energy-balance coefficients (Bernard) already explain
+most of the shield error, and Jin's correction is physics-derived from the start. A null result
+against the physics baseline, where the held-out error of the full route is no smaller than the
+baseline's, is the likely outcome. It is a reportable result when the comparison was adequately
+measured.
+
+What separates "no added value" from "inadequate measurement": the comparison is adequate only
+when the gap between the two routes' predictions on the held-out design is larger than the
+combined uncertainty of the reference thermometer and the repeatability of the measured bias on
+the same unit under repeated exposure. If the two predictions agree within that uncertainty, the
+data cannot tell the routes apart and the result is an inadequate measurement. If the predictions
+differ by more than that uncertainty and the held-out error does not improve, the result is no
+added value. Both outcomes carry the same effort accounting.
