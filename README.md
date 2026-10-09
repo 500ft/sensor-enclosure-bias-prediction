@@ -13,10 +13,11 @@ to a withheld enclosure is the research direction; it has not been demonstrated.
 [Results](#results) · [Roadmap](ROADMAP.md) · [Quick start](#quick-start) ·
 [Pilot protocol](docs/COLOCATION_PROTOCOL.md)
 
-![Modelled temperature and relative-humidity bias for the dark box, painted box and passive shield under solar loading](analysis/figures/thermal_bias.png)
+![Two panels of nominal temperature and RH bias for dark box, painted box, passive shield and aspirated model; markers identify variants and dashes identify lower solar loading](analysis/figures/thermal_bias.png)
 
-*Model output, not a field measurement.
-[Figure inputs](docs/data-and-figures.md#thermal-bias-plot).*
+*Nominal model point estimates without propagated input uncertainty.
+[Figure inputs](docs/data-and-figures.md#thermal-bias-plot) ·
+[Vector figure](analysis/figures/thermal_bias.svg).*
 
 ## About
 
@@ -36,11 +37,11 @@ site and manufacturing help.
 At 1000 W/m² of sun and 0.5 m/s of wind, the model gives these nominal point
 estimates of temperature rise above ambient:
 
-| Enclosure | Predicted rise |
-| --- | --- |
-| Dark closed box | 19.4 °C |
-| Same box, painted white | 4.5 °C |
-| Passive radiation shield | 3.0 °C |
+| Enclosure | Predicted rise [°C] |
+| --- | ---: |
+| Dark closed box | 19.4 |
+| Same box, painted white | 4.5 |
+| Passive radiation shield | 3.0 |
 
 At this operating point, changing the dark box's absorptance to the white-paint
 assumption accounts for most of the predicted reduction. The shield's nominal
@@ -63,10 +64,12 @@ passes exact thermal-step and timestep-refinement checks. Its figure shows a
 clear-sky assumption and sensitivity to declared inputs. Missing acquisition
 metadata and actual sky forcing limit interpretation. No physical accuracy or design-transfer result has been obtained.
 
-![Corrected thermal sensitivity under the clear-sky assumption](analysis/figures/thermal_transient_prediction.png)
+![Separate solar and wind forcing panels above model temperature bias; variant medians and 5–95% assumed-input sensitivity under an unmeasured clear-sky assumption](analysis/figures/thermal_transient_prediction.png)
 
-*Archived hourly forcing with a stated sky scenario, not rig measurements.
-[Inputs, method and reproduction](docs/data-and-figures.md#transient-prediction-plot).*
+*Archived hourly forcing with unknown acquisition details and an unmeasured sky scenario.
+Bands show assumed-input sensitivity. The final day is incomplete.
+[Inputs, method and reproduction](docs/data-and-figures.md#transient-prediction-plot) ·
+[Vector figure](analysis/figures/thermal_transient_prediction.svg).*
 
 Other work in the repository:
 
