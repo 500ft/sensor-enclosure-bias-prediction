@@ -1,4 +1,4 @@
-# Sensor Enclosure Thermal Design
+# Sensor Enclosure Bias Prediction
 
 How much design-specific co-location can measured geometry, material and power
 data plus shared thermal laws replace, at comparable prediction error? This
@@ -6,7 +6,7 @@ repository has a heat-balance model, an executed numerical correction, a literat
 and a planned first-stage comparison against a reference thermometer. Transfer
 to a withheld enclosure is the research direction; it has not been demonstrated.
 
-[![CI](https://github.com/500ft/sensor-enclosure-thermal-design/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/500ft/sensor-enclosure-thermal-design/actions/workflows/ci.yml)
+[![CI](https://github.com/500ft/sensor-enclosure-bias-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/500ft/sensor-enclosure-bias-prediction/actions/workflows/ci.yml)
 [![Evidence: analytical model](https://img.shields.io/badge/evidence-analytical_model-475569)](docs/results.md)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](.github/workflows/ci.yml)
 
@@ -88,8 +88,8 @@ Other work in the repository:
 Python 3.12, the CI version. These checks use only files in the repository.
 
 ```bash
-git clone https://github.com/500ft/sensor-enclosure-thermal-design.git
-cd sensor-enclosure-thermal-design
+git clone https://github.com/500ft/sensor-enclosure-bias-prediction.git
+cd sensor-enclosure-bias-prediction
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt

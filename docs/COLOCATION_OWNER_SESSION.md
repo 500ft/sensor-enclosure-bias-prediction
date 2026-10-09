@@ -2,6 +2,16 @@
 
 ## Current blocker
 
+Owner communication update, 2026-10-08 (this project session): "the guibaud
+email has not been sent because i will meet him in person soon". The Guibaud
+draft remains unsent; the owner will discuss it in person. No meeting date was
+provided, and the agent must not send the draft.
+
+The discussion seeks PI feedback on calibration transfer and whether a later
+skip-co-location claim needs an application tolerance. The owner-adopted
+research direction and estimation-only first stage remain selected. This update
+records no new PI agreement, funding receipt, calibration or physical readiness.
+
 Dependency-plan adoption and cleanup, 2026-10-07: the owner explicitly asked
 this existing session to replace scheduled roadmaps with prerequisites and
 completion evidence and remove obsolete active material. PR #56 is verified
@@ -34,11 +44,11 @@ review its draft data request; no outreach has been sent. External comparison
 needs a permitted sample and thermal/reference metadata from the data custodian.
 This does not close `EN-R03` or establish a transferable design ranking.
 
-**Physical next action:** the owner books the PI date and sets up the
-co-location rig at the test site: the enclosure variants, the reference
-thermometer in its shield, and the
-loggers. No pilot data is collected until the rig exists and the
-[protocol](COLOCATION_PROTOCOL.md) is frozen.
+**Owner next action:** discuss those two items with Guibaud in person and record
+his feedback here, and supply the rig inventory, reference calibration,
+site/data terms, fan-independence information and funding status. Physical setup
+remains the owner's step. No pilot data is collected until the rig exists and
+the [protocol](COLOCATION_PROTOCOL.md) is frozen.
 
 **Owner statement, 2026-09-30:** "for enclosure there are currently no
 co-location logs at all. but they will be setup in the future, thus the data

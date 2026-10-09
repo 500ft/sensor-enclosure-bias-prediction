@@ -1,4 +1,4 @@
-# Start here — Sensor Enclosure Thermal Design
+# Start here — Sensor Enclosure Bias Prediction
 
 The [README](../README.md) is the overview and the [roadmap](../ROADMAP.md) is
 the only plan. It states prerequisites and completion evidence without a

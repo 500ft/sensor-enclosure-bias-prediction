@@ -1,8 +1,9 @@
 # Repository identity and reading conventions
 
-Updated September 10, 2026. The project is now **Sensor Enclosure Thermal Design**, at
-[`500ft/sensor-enclosure-thermal-design`](https://github.com/500ft/sensor-enclosure-thermal-design).
-Its previous repository name was `Enclosure-Research`; this is a rename of the same
+Updated October 8, 2026. The project is now **Sensor Enclosure Bias Prediction**, at
+[`500ft/sensor-enclosure-bias-prediction`](https://github.com/500ft/sensor-enclosure-bias-prediction). The name states the
+current research question in the [roadmap](../ROADMAP.md). Its previous
+repository names were `sensor-enclosure-thermal-design` and `Enclosure-Research`; each is a rename of the same
 repository, not a new project or release.
 
 ## What the rename changes
@@ -16,7 +17,7 @@ rename an import or command-line API.
 To update an existing clone without moving its files:
 
 ```sh
-git remote set-url origin https://github.com/500ft/sensor-enclosure-thermal-design.git
+git remote set-url origin https://github.com/500ft/sensor-enclosure-bias-prediction.git
 git remote -v
 ```
 
@@ -58,7 +59,7 @@ description for screen readers.
 From the repository root:
 
 ```sh
-python tools/check_presentation.py . "Sensor Enclosure Thermal Design" sensor-enclosure-thermal-design
+python tools/check_presentation.py . "Sensor Enclosure Bias Prediction" sensor-enclosure-bias-prediction
 python tools/test_presentation.py
 ```
 
