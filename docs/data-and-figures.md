@@ -182,22 +182,28 @@ in a machine-readable form.
 
 ## Visual revision and retained material
 
-The thermal figures retain the white background and variant palette of the
-[pinned visual reference](https://github.com/500ft/sensor-enclosure-thermal-design/tree/bad572fc0902437445a5446bb5bc43098cc6211f/analysis/figures).
-The changes move legends off data, separate forcing units and add SVG companions.
-No inputs, draws, exclusions, summaries or uncertainty interpretation changed.
-Steady Markdown tables group temperature and RH separately and retain CSV links.
+Both thermal figures take their colours, markers and text sizes from
+[`analysis/figure_style.py`](../analysis/figure_style.py). Each variant has one
+colour and marker in both plots. Every pair of variant colours stays distinct in
+a deuteranopia and protanopia simulation; the baseline box stays red and the
+shield blue. Weather inputs are black and the zero line light grey, so no
+neutral mark matches a variant colour. Panel titles state each panel's result and are computed from the plotted
+values. No inputs, draws, exclusions, summaries or uncertainty interpretation
+changed. Steady Markdown tables name each variant with its code in parentheses,
+put units in headings and keep their CSV links.
 
 | Active visual or table | Treatment and reason |
 | --- | --- |
-| Steady thermal figure | Shared legend, panel labels, horizontal grids, marker redundancy at both solar loads; PNG and SVG |
-| Transient figure | Separate solar/wind panels, shared time axis, variant line/marker key outside data; PNG and SVG |
-| README prediction table and steady result tables | Units in headings, numeric alignment, consistent display precision and source CSV |
+| Steady thermal figure | Result titles, variant key and solar-load key above the panels, in-panel sign cues, panel letters; PNG and SVG |
+| Transient figure | Result titles, black forcing traces on a shared UTC axis, variant and band key below the data, draw count in the key; PNG and SVG |
+| README prediction table and steady result tables | Variant names with codes, units in headings, numeric alignment, consistent display precision and source CSV |
 | Deployment figures and historical metrics | Original images/values retained because source exports are unavailable; full-width summaries and evidence captions improved |
 | Overview diagram and roadmap dependency graph | Retained: conceptual dependencies, with no numerical axes to redesign |
 | Frozen manuscript, deliverables and archived evidence | Retained unchanged to preserve historical release and evidence provenance |
 
-Both plotting functions write a same-name SVG beside the requested image.
+Both plotting functions write the requested image at 300 dpi and a same-name
+SVG beside it. The SVG has no date stamp and fixed element ids, so a rerun in
+the same environment gives the same files.
 Use temporary result paths in the commands above to preserve the committed
 numerical records and their original software hashes. The figure manifest lists
 the figure-only outputs and their result sources. The source-file hash in a
