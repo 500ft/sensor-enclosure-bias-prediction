@@ -8,13 +8,14 @@
    "generator": "analysis/thermal_bias.py",
    "command": "python analysis/thermal_bias.py --table /tmp/enclosure-day.csv --night-table /tmp/enclosure-night.csv",
    "inputs": [
-    "analysis/thermal_bias.py"
+    "analysis/thermal_bias.py",
+    "analysis/figure_style.py"
    ],
    "outputs": [
     "analysis/figures/thermal_bias.png",
     "analysis/figures/thermal_bias.svg"
    ],
-   "notes": "Lumped steady-state heat balance and RH conversion; assumptions are encoded in the generator and documented in analysis/thermal_bias_results.md. Nominal point estimates; no propagated input uncertainty. RH error is a percentage-point difference.",
+   "notes": "Lumped steady-state heat balance and RH conversion; assumptions are encoded in the generator and documented in analysis/thermal_bias_results.md. Nominal point estimates; no propagated input uncertainty. RH error is a percentage-point difference. Colours, markers and text sizes come from analysis/figure_style.py.",
    "result_sources": [
     "analysis/output/thermal_bias_table.csv",
     "analysis/output/thermal_bias_night_table.csv"
@@ -44,13 +45,14 @@
    "inputs": [
     "analysis/thermal_transient.py",
     "analysis/thermal_bias.py",
+    "analysis/figure_style.py",
     "analysis/input/openmeteo_brooklyn_20260901_20260914.json"
    ],
    "outputs": [
     "analysis/figures/thermal_transient_prediction.png",
     "analysis/figures/thermal_transient_prediction.svg"
    ],
-   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer. Solar and wind use separate aligned panels; variant medians use line and marker redundancy. Committed result JSON retains its original generator hash and historical status.",
+   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer. Solar and wind use separate aligned panels with black traces; variant medians use line and marker redundancy; colours, markers and text sizes come from analysis/figure_style.py. Committed result JSON retains its original generator hash and historical status.",
    "result_sources": [
     "analysis/output/thermal_transient_prediction.json",
     "analysis/output/thermal_transient_verification.json"

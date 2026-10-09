@@ -51,8 +51,8 @@ modeling assumption, not a measured property of a paint or filament. The main
 [CSV](output/thermal_bias_table.csv) contains all four variants at every reported
 operating point; the existing V0/V1/V2 values are unchanged.
 
-| G [W/m²] | wind [m/s] | V0P dT [°C] | V0P RH error [%RH] | V0P minus V1 dT [°C] |
-|---:|---:|---:|---:|---:|
+| Solar [W/m²] | Wind [m/s] | Painted box (V0P) rise [°C] | Painted box (V0P) RH error [percentage points] | Painted box minus shield (V0P − V1) [°C] |
+| ---: | ---: | ---: | ---: | ---: |
 | 800 | 0.0 | 3.4679 | -8.9307 | 0.5156 |
 | 800 | 0.5 | 2.9290 | -7.6692 | 0.5265 |
 | 800 | 1.0 | 2.5343 | -6.7176 | 0.5353 |
@@ -76,7 +76,7 @@ Ambient case: `T_air = 30 degC`, `RH_true = 50 %`, clear-sky `T_sky = 10 degC`
 
 ### Temperature bias
 
-| Solar [W/m²] | Wind [m/s] | V0 [°C] | V0P [°C] | V1 [°C] | V2 [°C] |
+| Solar [W/m²] | Wind [m/s] | Baseline closed box (V0) [°C] | Painted closed-box control (V0P) [°C] | Passive multi-plate shield (V1) [°C] | Actively aspirated reference (V2) [°C] |
 | ---: | ---: | ---: | ---: | ---: | ---: |
 | 800 | 0.0 | 17.6 | 3.5 | 3.0 | 1.1 |
 | 800 | 0.5 | 15.0 | 2.9 | 2.4 | 1.1 |
@@ -91,7 +91,7 @@ Ambient case: `T_air = 30 degC`, `RH_true = 50 %`, clear-sky `T_sky = 10 degC`
 
 ### Relative-humidity bias
 
-| Solar [W/m²] | Wind [m/s] | V0 [pp] | V0P [pp] | V1 [pp] | V2 [pp] |
+| Solar [W/m²] | Wind [m/s] | Baseline closed box (V0) [pp] | Painted closed-box control (V0P) [pp] | Passive multi-plate shield (V1) [pp] | Actively aspirated reference (V2) [pp] |
 | ---: | ---: | ---: | ---: | ---: | ---: |
 | 800 | 0.0 | -30.7 | -8.9 | -7.7 | -3.0 |
 | 800 | 0.5 | -28.0 | -7.7 | -6.4 | -3.0 |
@@ -112,11 +112,11 @@ its subtraction and do not imply measured accuracy.
 
 **Range across wind 0-5 m/s at G = 1000 W/m^2 (worst-case solar):**
 
-| Variant | dT calm -> windy [degC] | RH_err [%RH] | Dominant contributor |
-|---|---|---|---|
-| V0 Baseline closed box | **22.7 -> 8.3** | -35.0 -> -18.6 | Solar on dark wall + self-heating; ventilation-limited |
-| V1 Passive multi-plate shield | **3.7 -> 0.9** | -9.4 -> -2.5 | Residual plate-to-air pre-heat; flushes with wind |
-| V2 Actively aspirated reference | **~1.3 (flat)** | ~-3.7 | Forced convection dominates; wind-independent |
+| Variant | Rise, calm → 5 m/s [°C] | RH error, calm → 5 m/s [pp] | Dominant contributor |
+| --- | ---: | ---: | --- |
+| Baseline closed box (V0) | 22.7 → 8.3 | -35.0 → -18.6 | Solar on dark wall + self-heating; ventilation-limited |
+| Passive multi-plate shield (V1) | 3.7 → 0.9 | -9.4 → -2.5 | Residual plate-to-air pre-heat; flushes with wind |
+| Actively aspirated reference (V2) | 1.3 → 1.3 | -3.7 → -3.7 | Forced convection dominates; wind-independent |
 
 **Bracketing against measured values in the source literature** (predictions vs.
 published *measurements*; all model values remain predictions):
@@ -133,10 +133,10 @@ match or beat forced aspiration once natural convection is strong, which is exac
 the literature finding that aspiration helps **mainly at low wind** (Theisen et al.;
 Deford et al.).
 
-Figure: `analysis/figures/thermal_bias.png` (left: dT vs wind; right: RH_err vs
-wind; solid = 1000 W/m^2, dashed = 800 W/m^2; V0P is the painted control).
-Marker shapes distinguish variants on both solar-load curves. The shared legend
-keeps labels outside the data panels. [Vector figure](figures/thermal_bias.svg).
+Figure: `analysis/figures/thermal_bias.png`. Panel A plots temperature rise and
+panel B RH error against wind. Solid lines are 1000 W/m² and dashed lines with
+open markers are 800 W/m². Colour and marker shape identify the variant; V0P is
+the painted control. [Vector figure](figures/thermal_bias.svg).
 
 ## 3. Assumptions block (every input, with status)
 
@@ -145,25 +145,25 @@ Status: `bounded` = bounded engineering assumption to be measured/refined;
 `physics` = standard correlation/constant; `swept` = varied in the sweep.
 
 | Input | Value | Units | Status |
-|---|---|---|---|
-| Clear-sky solar G | 800-1000 | W/m^2 | swept |
-| Ambient air T_air | 30 | degC | bounded |
+| --- | ---: | --- | --- |
+| Clear-sky solar G | 800–1000 | W/m² | swept |
+| Ambient air T_air | 30 | °C | bounded |
 | True ambient RH | 50 | % | bounded |
 | Clear-sky depression (T_air - T_sky) | 20 | K | bounded |
-| alpha, baseline box surface (dark) | 0.90 | - | bounded |
-| alpha, light/white shield surface | 0.30 | - | bounded |
-| Long-wave emissivity eps | 0.90 | - | bounded |
-| f_sky, baseline (area seeing cold sky) | 0.50 | - | bounded |
-| f_sky, shield (sensor sees cold sky) | 0.05 | - | bounded |
-| A_proj baseline / shield | 0.030 / 0.012 | m^2 | geometry/TODO-from-lab |
-| A_conv baseline / shield element | 0.090 / 0.020 | m^2 | geometry/TODO-from-lab |
-| shield_solar_factor (flux reaching sensor) | 0.18 | - | bounded |
+| alpha, baseline box surface (dark) | 0.90 | dimensionless | bounded |
+| alpha, light/white shield surface | 0.30 | dimensionless | bounded |
+| Long-wave emissivity eps | 0.90 | dimensionless | bounded |
+| f_sky, baseline (area seeing cold sky) | 0.50 | dimensionless | bounded |
+| f_sky, shield (sensor sees cold sky) | 0.05 | dimensionless | bounded |
+| A_proj baseline / shield | 0.030 / 0.012 | m² | geometry/TODO-from-lab |
+| A_conv baseline / shield element | 0.090 / 0.020 | m² | geometry/TODO-from-lab |
+| shield_solar_factor (flux reaching sensor) | 0.18 | dimensionless | bounded |
 | Internal self-heat: single-zone / two-zone | 0.8 / 0.1 | W | bounded/TODO-from-lab |
-| h_ext = 5.0 + 4.0*wind | -- | W/m^2K | physics |
-| shield natural-convection boost | 1.4 | - | bounded |
+| h_ext = 5.0 + 4.0*wind | — | W/(m²·K) | physics |
+| shield natural-convection boost | 1.4 | dimensionless | bounded |
 | shield air pre-heat (calm) | 1.2 | K | bounded |
 | pre-heat wind half-life | 1.5 | m/s | bounded |
-| h_fan (V2 forced convection) | 25 | W/m^2K | bounded |
+| h_fan (V2 forced convection) | 25 | W/(m²·K) | bounded |
 
 Optical properties (alpha, eps) are color/finish dependent and are **not** on
 filament datasheets; they are model inputs to be measured or bounded, not
@@ -173,15 +173,15 @@ assumed (consistent with `paper/manuscript_v1.md` 2.3 and the CAD/FEA plan).
 
 One-at-a-time perturbations at G = 1000 W/m^2, wind = 0.5 m/s (`dT` in degC):
 
-| Perturbation | V0 ΔT [°C] | V1 ΔT [°C] |
-|---|---:|---:|
-| baseline | 19.4 | 3.0 |
-| V0 surface painted white (alpha 0.90 -> 0.30) | **4.5** | - |
-| V0 internal load doubled (0.8 -> 1.6 W) | 20.1 | - |
-| V0 low emissivity (0.90 -> 0.50) | **26.4** | - |
-| V1 shading worse (solar_factor 0.18 -> 0.30) | - | 4.4 |
-| V1 no convection boost (1.4 -> 1.0) | - | 3.4 |
-| V1 plate air pre-heat doubled (1.2 -> 2.4 K calm) | - | 3.9 |
+| Perturbation | Baseline closed box (V0) rise [°C] | Passive multi-plate shield (V1) rise [°C] |
+| --- | ---: | ---: |
+| Nominal inputs | 19.4 | 3.0 |
+| V0 surface painted white (alpha 0.90 → 0.30) | 4.5 | — |
+| V0 internal load doubled (0.8 → 1.6 W) | 20.1 | — |
+| V0 low emissivity (0.90 → 0.50) | 26.4 | — |
+| V1 shading worse (solar_factor 0.18 → 0.30) | — | 4.4 |
+| V1 no convection boost (1.4 → 1.0) | — | 3.4 |
+| V1 plate air pre-heat doubled (1.2 → 2.4 K calm) | — | 3.9 |
 
 A dash marks the variant whose perturbed output was not reported.
 
@@ -232,11 +232,13 @@ dominates and a sky-exposed enclosure reads *below* ambient. From
 [`analysis/output/thermal_bias_night_table.csv`](output/thermal_bias_night_table.csv), regenerated
 by `python analysis/thermal_bias.py` (assumptions unchanged; G = 0 W/m²):
 
-| variant | ΔT, calm | ΔT, 5 m/s | RH error, calm |
+| Variant | Sensor minus air, calm [°C] | Sensor minus air, 5 m/s [°C] | RH error, calm [pp] |
 | --- | ---: | ---: | ---: |
-| V0 baseline closed box | -4.03 °C | -1.39 °C | +13.2 %RH |
-| V1 passive multi-plate shield | -0.012 °C | — | +0.03 %RH |
-| V2 aspirated reference | -0.005 °C | — | +0.01 %RH |
+| Baseline closed box (V0) | -4.028 | -1.390 | +13.24 |
+| Passive multi-plate shield (V1) | -0.012 | — | +0.03 |
+| Actively aspirated reference (V2) | -0.005 | — | +0.01 |
+
+A dash marks a value not shown here; the night CSV has every operating point.
 
 Against the daytime V0 warm bias of +22.7 °C at 1000 W/m² and calm, these two
 steady-state scenarios exhibit opposite signs. They motivate sampling both day

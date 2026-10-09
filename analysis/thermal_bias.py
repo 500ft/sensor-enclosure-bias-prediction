@@ -486,54 +486,76 @@ def make_figure(res: SweepResult, variants: list[Variant], out_path: str) -> Non
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.lines import Line2D
+    try:
+        from analysis import figure_style as fs
+    except ImportError:  # run as a script, with analysis/ on sys.path
+        import figure_style as fs
 
     g_hi = max(res.g_values)
     g_lo = min(res.g_values)
-    colors = {"V0": "#c0392b", "V0P": "#7d3c98", "V1": "#2980b9", "V2": "#27ae60"}
-    markers = {"V0": "o", "V0P": "s", "V1": "^", "V2": "D"}
     name_by_id = {v.vid: v.name for v in variants}
+    ordered = sorted(variants, key=lambda v: fs.VARIANT_ORDER.index(v.vid))
+    others = [v.vid for v in ordered if v.vid != "V0"]
 
-    fig, axes = plt.subplots(1, 2, figsize=(11, 5.3))
-    # One shared key keeps long variant names outside the data panels.
-    ordered = sorted(variants, key=lambda v: ("V0", "V0P", "V1", "V2").index(v.vid))
-    for ax, values, title, ylabel in zip(
-        axes, (res.dT, res.rh_err),
-        ("A  Temperature bias", "B  Relative-humidity bias"),
-        ("Sensor minus ambient [°C]", "Reported minus true RH [percentage points]"),
-    ):
-        for v in ordered:
-            ax.plot(res.wind, values[v.vid][g_hi], color=colors[v.vid], lw=2,
-                    marker=markers[v.vid], markevery=10, markersize=4,
-                    label=f"{v.vid} {name_by_id[v.vid]}")
-            ax.plot(res.wind, values[v.vid][g_lo], color=colors[v.vid], lw=1.2,
-                    ls="--", alpha=0.8, marker=markers[v.vid],
-                    markevery=10, markersize=3, markerfacecolor="white")
-        ax.set_xlabel("External wind speed [m/s]")
-        ax.set_ylabel(ylabel)
-        ax.set_title(title, loc="left", fontsize=12, pad=10)
-        ax.set_axisbelow(True)
-        ax.grid(axis="y", color="#e5e7eb", lw=0.7)
-        ax.axhline(0, color="#555555", lw=0.8)
-        ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("SIMULATION | Nominal model point estimates", fontsize=12, y=0.98)
-    fig.text(0.5, 0.91,
-             f"Solid: {g_hi:.0f} W/m² solar   ·   Dashed: {g_lo:.0f} W/m² solar",
-             ha="center", fontsize=10)
-    handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.88),
-               ncol=2, fontsize=9, frameon=False, handlelength=3)
-    fig.text(0.5, 0.02,
-             "No propagated input uncertainty or measured comparison. Negative RH bias means reads dry.",
-             ha="center", fontsize=9)
-    fig.subplots_adjust(left=0.075, right=0.98, bottom=0.15, top=0.69, wspace=0.28)
-    from pathlib import Path
-    out = Path(out_path)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=180, facecolor="white")
-    if out.suffix.lower() != ".svg":
-        fig.savefig(out.with_suffix(".svg"), facecolor="white", metadata={"Date": None})
-    svg = out.with_suffix(".svg")
-    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
+    def span(values, vids):
+        both = np.concatenate([values[vid][g] for vid in vids for g in res.g_values])
+        return float(np.min(both)), float(np.max(both))
+
+    # Titles are built from the plotted data so they stay true if inputs change.
+    v0_dt, rest_dt = span(res.dT, ["V0"]), span(res.dT, others)
+    v0_rh, rest_rh = span(res.rh_err, ["V0"]), span(res.rh_err, others)
+    titles = (
+        f"The baseline box reads {v0_dt[0]:.0f}–{v0_dt[1]:.0f} °C warm;\n"
+        f"the other three read {rest_dt[0]:.1f}–{rest_dt[1]:.1f} °C warm",
+        f"The baseline box reads {-v0_rh[1]:.0f}–{-v0_rh[0]:.0f} points dry;\n"
+        f"the other three read {-rest_rh[1]:.0f}–{-rest_rh[0]:.0f} points dry",
+    )
+    ylabels = ("Sensor minus air temperature [°C]",
+               "Reported minus true RH\n[percentage points]")
+    cues = (("Above 0: sensor reads warm", 0.97, 0.97, "top"),
+            ("Below 0: sensor reads dry", 0.97, 0.11, "bottom"))
+
+    with fs.style():
+        fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.9))
+        for ax, values, title, ylabel, letter, cue in zip(
+                axes, (res.dT, res.rh_err), titles, ylabels, "AB", cues):
+            ax.axhline(0, color=fs.ZERO_COLOR, lw=0.7, zorder=1)
+            for v in ordered:
+                color, marker = fs.VARIANT_COLORS[v.vid], fs.VARIANT_MARKERS[v.vid]
+                ax.plot(res.wind, values[v.vid][g_hi], color=color, lw=1.6,
+                        marker=marker, markevery=10, markersize=4, zorder=3)
+                ax.plot(res.wind, values[v.vid][g_lo], color=color, lw=1.0, ls="--",
+                        marker=marker, markevery=10, markersize=3.5,
+                        markerfacecolor="white", zorder=2)
+            ax.set_xlabel("External wind speed [m/s]")
+            ax.set_ylabel(ylabel)
+            ax.set_title(title, pad=6)
+            ax.margins(x=0.03, y=0.05)
+            fs.grid_y(ax)
+            fs.panel_letter(ax, letter)
+            text, x, y, va = cue
+            ax.text(x, y, text, transform=ax.transAxes, ha="right", va=va,
+                    fontsize=fs.SMALL, color="#333333")
+
+        variant_keys = [Line2D([], [], color=fs.VARIANT_COLORS[v.vid], lw=1.6,
+                               marker=fs.VARIANT_MARKERS[v.vid], markersize=4,
+                               label=fs.variant_label(v.vid, name_by_id[v.vid]))
+                        for v in ordered]
+        load_keys = [Line2D([], [], color=fs.KEY_COLOR, lw=1.6, marker="o", markersize=4,
+                            label=f"{g_hi:.0f} W/m² sun"),
+                     Line2D([], [], color=fs.KEY_COLOR, lw=1.0, ls="--", marker="o", markersize=3.5,
+                            markerfacecolor="white", label=f"{g_lo:.0f} W/m² sun")]
+        fig.text(0.012, 0.975,
+                 "SIMULATION | Nominal steady-state bias; air 30 °C, RH 50 %, "
+                 "clear sky 20 K below air; no input uncertainty",
+                 ha="left", va="top")
+        fig.legend(handles=variant_keys, loc="upper left", bbox_to_anchor=(0.06, 0.915),
+                   ncol=2, handlelength=2.6, columnspacing=1.4)
+        fig.legend(handles=load_keys, loc="upper left", bbox_to_anchor=(0.76, 0.915),
+                   ncol=1, handlelength=2.6)
+        fig.subplots_adjust(left=0.085, right=0.985, bottom=0.12, top=0.70, wspace=0.32)
+        fs.save(fig, out_path)
     plt.close(fig)
     print(f"[figure] wrote {out_path}")
 

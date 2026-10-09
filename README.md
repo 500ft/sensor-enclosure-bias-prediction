@@ -39,9 +39,9 @@ estimates of temperature rise above ambient:
 
 | Enclosure | Predicted rise [°C] |
 | --- | ---: |
-| Dark closed box | 19.4 |
-| Same box, painted white | 4.5 |
-| Passive radiation shield | 3.0 |
+| Dark closed box (V0) | 19.4 |
+| Same box, painted white (V0P) | 4.5 |
+| Passive radiation shield (V1) | 3.0 |
 
 At this operating point, changing the dark box's absorptance to the white-paint
 assumption accounts for most of the predicted reduction. The shield's nominal
