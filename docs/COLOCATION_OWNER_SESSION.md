@@ -2,6 +2,14 @@
 
 ## Current blocker
 
+Prior-work correction, 2026-10-11: the owner-authorized
+[Jin full-text assessment](../ProConsList/jin2026sensors.md) replaces the
+abstract-only entry. It distinguishes CFD training from the authors' reported
+same-design field evaluation and leaves cross-design transfer unestablished.
+The physical blocker is unchanged. Guibaud's in-person discussion, ENC-2 through
+ENC-5, rig inventory, calibration and physical access remain owner supplied;
+this source review supplies no new approval or rig measurement.
+
 Owner communication update, 2026-10-08 (this project session): "the guibaud
 email has not been sent because i will meet him in person soon". The Guibaud
 draft remains unsent; the owner will discuss it in person. No meeting date was

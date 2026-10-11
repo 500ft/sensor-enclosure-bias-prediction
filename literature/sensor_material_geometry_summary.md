@@ -395,15 +395,15 @@ model-input provenance table.
 | JCGM 100:2008 (GUM) | n/a (metrology guide) | n/a | Uncertainty budget incl. the shared-reference correlation case |
 | Arlot and Celisse (2010) | n/a (statistics survey) | n/a | Hold-out estimator and complexity penalisation for the K2 benchmark |
 
-## Prior-Work Source Added October 2026 (abstract level, full read pending)
+## CFD-trained correction: full-text assessment
 
-One source from the 2026-10-09 literature review (abstract level, web search only, forward
-citations not searched). Nothing beyond the title and the review's one-line description is
-attributed. See `docs/PHD_SCOPE_AND_NOVELTY.md`, 2026-10-09 update.
+[The Jin Sensors assessment](../ProConsList/jin2026sensors.md) records the exact
+training, geometry, field design, errors and uncertainty limits. It replaces
+the abstract-only entry; numerical details stay in that assessment.
 
-| Paper | Sensors | Reported material / geometry | Experimental contribution |
-|---|---|---|---|
-| Jin et al. (2026, Sensors) | Naturally ventilated air temperature sensor; **full-read pending** | Not read | Radiation error correction trained on CFD of the shield's geometry and material; direct prior for physics-derived bias correction |
+| Paper | Sensor | Material / geometry | Contribution and transfer limit |
+| --- | --- | --- | --- |
+| Jin et al. (Sensors) | Calibrated thin-film Pt100 | Copper sphere, white plastic guides, dual aluminum shields with reflective outer and black inner surfaces | CFD-trained correction evaluated outdoors on the proposed design without field refitting; no withheld-design or total-effort comparison |
 
 ## Sources
 
@@ -462,4 +462,4 @@ attributed. See `docs/PHD_SCOPE_AND_NOVELTY.md`, 2026-10-09 update.
 - Bar-Cohen and Rohsenow (1984), full-read pending: https://doi.org/10.1115/1.3246622
 - JCGM 100:2008 (GUM): https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf
 - Arlot and Celisse (2010): https://doi.org/10.1214/09-SS054
-- Jin et al. (2026, Sensors), full-read pending: https://doi.org/10.3390/s26123853
+- Jin et al. (2026, Sensors), full text assessed: https://doi.org/10.3390/s26123853

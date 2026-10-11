@@ -32,6 +32,10 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
   sensitivity calculation remain reproducible. Their ranking reversal establishes
   no design preference. The [uncertainty module](analysis/uncertainty.py) is
   tested separately from those point estimates.
+- The [full-text prior-work assessment](ProConsList/jin2026sensors.md) confirms a
+  CFD-trained correction evaluated outdoors on its own design without field
+  refitting. It leaves held-out-design transfer and total effort untested; those
+  remain our evaluation question, without an established novelty or success claim.
 - The [baseline CAD](cad/enclosure/v0/README.md) has recorded geometric checks.
   It does not establish the new rig inventory or thermal performance.
 - The [external-data probe](analysis/aqspec_feasibility.md) obtained reports but

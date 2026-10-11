@@ -43,6 +43,7 @@ When adding a paper:
 | `deford2025` | 3D-printed aspirated shield | `deford2025.md` |
 | `winter2025` | Three-year electrochemical-sensor performance | `winter2025.md` |
 | `jin2026` | High-accuracy naturally ventilated shield | `jin2026.md` |
+| `jin2026sensors` | CFD-trained correction and same-design field evaluation | [Full-text assessment](jin2026sensors.md) |
 | `duvall2021` | EPA PM2.5 sensor performance protocols (EPA/600/R-20/280) | `duvall2021.md` |
 | `wmo2023no8` | WMO-No. 8 instruments and observation methods guide | `wmo2023no8.md` |
 | `astm2022d8406` | ASTM D8406-22 outdoor sensor evaluation practice | `astm2022d8406.md` |

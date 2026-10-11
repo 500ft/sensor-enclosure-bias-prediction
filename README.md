@@ -19,6 +19,10 @@ to a withheld enclosure is the research direction; it has not been demonstrated.
 [Figure inputs](docs/data-and-figures.md#thermal-bias-plot) ·
 [Vector figure](analysis/figures/thermal_bias.svg).*
 
+The [full-text prior-work assessment](ProConsList/jin2026sensors.md) documents
+CFD-trained correction with separate outdoor evaluation on the developed shield.
+The adopted question compares held-out-design transfer and total effort.
+
 ## About
 
 An outdoor sensor can end up measuring its own enclosure instead of the air.
