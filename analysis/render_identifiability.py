@@ -55,7 +55,7 @@ def export(checkpoint, refinement, output):
     result['complete']=len(cells)==len(cfg['tau_s'])*len(cfg['duration_s'])*len(cfg['schedules'])*len(cfg['scenarios'])
     output.write_text(json.dumps(result,separators=(',',':'),allow_nan=False)+'\n')
     with output.with_suffix('.csv').open('w') as f:
-        writer=csv.DictWriter(f,fieldnames=run['summary'][0].keys());writer.writeheader();writer.writerows(run['summary'])
+        writer=csv.DictWriter(f,fieldnames=run['summary'][0].keys(),lineterminator='\n');writer.writeheader();writer.writerows(run['summary'])
     return result
 
 
