@@ -75,6 +75,8 @@ Tasks:
   and airflow instrumentation. Check synchronization, positions and fan decoupling.
 - Preserve CAD and material records that describe the actual specimens. Use the
   [geometry reference](docs/cad_geometry_reference.md) only where it applies.
+  The necessary and recommended CAD items are listed in
+  [CAD_ITEMS.md](docs/CAD_ITEMS.md#necessary-and-recommended-cad-owner-instruction-2026-10-11).
 
 Completion evidence: reviewed inventory and calibration/uncertainty records,
 verified logging/power/airflow capability, site/data terms and an explicit record
