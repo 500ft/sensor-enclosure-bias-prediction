@@ -2,34 +2,101 @@
   "status": "development-only assumptions registered before simulation; no rig specifications supplied",
   "seed": 20261011,
   "replicates_per_cell": 40,
-  "dt_s": 30,
-  "tau_s": [300, 1200, 4800],
-  "duration_s": [1800, 7200, 21600],
+  "dt_s": 15,
+  "tau_s": [
+    300,
+    1200,
+    4800
+  ],
+  "duration_s": [
+    1800,
+    7200,
+    21600
+  ],
   "power_w": 0.5,
-  "schedules": {"single_step": [0, 0, 1, 1, 1, 1, 0, 0], "repeated_steps": [0, 1, 0, 1, 1, 0, 1, 0]},
+  "schedules": {
+    "single_step": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      0,
+      0
+    ],
+    "repeated_steps": [
+      0,
+      1,
+      0,
+      1,
+      1,
+      0,
+      1,
+      0
+    ]
+  },
   "conductance_w_per_k": 0.2,
-  "coupling_uniform": [0.4, 0.8],
+  "coupling_uniform": [
+    0.4,
+    0.8
+  ],
   "initial_offset_sd_k": 0.15,
   "calibration_offset_sd_k": 0.1,
   "ambient_ramp_k_per_hour": 0.2,
   "scenarios": {
-    "matched": {"sigma_k": 0.04, "rho": 0.8, "quantum_k": 0.01, "unobserved_ambient_k": 0, "probe_lag_fraction": 0},
-    "noisy": {"sigma_k": 0.12, "rho": 0.95, "quantum_k": 0.05, "unobserved_ambient_k": 0, "probe_lag_fraction": 0},
-    "ambient_mismatch": {"sigma_k": 0.04, "rho": 0.8, "quantum_k": 0.01, "unobserved_ambient_k": 0.4, "probe_lag_fraction": 0},
-    "probe_lag": {"sigma_k": 0.04, "rho": 0.8, "quantum_k": 0.01, "unobserved_ambient_k": 0, "probe_lag_fraction": 0.5}
+    "matched": {
+      "sigma_k": 0.04,
+      "rho": 0.8,
+      "quantum_k": 0.01,
+      "unobserved_ambient_k": 0,
+      "probe_lag_fraction": 0
+    },
+    "noisy": {
+      "sigma_k": 0.12,
+      "rho": 0.95,
+      "quantum_k": 0.05,
+      "unobserved_ambient_k": 0,
+      "probe_lag_fraction": 0
+    },
+    "ambient_mismatch": {
+      "sigma_k": 0.04,
+      "rho": 0.8,
+      "quantum_k": 0.01,
+      "unobserved_ambient_k": 0.4,
+      "probe_lag_fraction": 0
+    },
+    "probe_lag": {
+      "sigma_k": 0.04,
+      "rho": 0.8,
+      "quantum_k": 0.01,
+      "unobserved_ambient_k": 0,
+      "probe_lag_fraction": 0.5
+    }
   },
-  "tau_search_s": [30, 30000],
+  "tau_search_s": [
+    30,
+    30000
+  ],
   "tau_grid_count": 1601,
-  "gain_search_k_per_w": [0, 15],
+  "gain_search_k_per_w": [
+    0,
+    15
+  ],
   "profile_delta_chi2": 3.841458820694124,
   "profile_level": 0.95,
   "profile_source": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda3674.htm",
-  "multiple_start_tau_s": [60, 1200, 20000],
+  "multiple_start_tau_s": [
+    60,
+    1200,
+    20000
+  ],
   "maximum_runtime_s": 14400,
   "maximum_artifact_bytes": 5368709120,
   "exposure": "All draws are synthetic development data. No field, external multi-shield or reserved outcome data are accessed. Common replicate draws across schedules/durations within each tau/scenario enable paired comparisons, not independent physical units.",
   "likelihood": "Stationary Gaussian AR(1), scenario sigma/rho treated as known; quantization omitted from covariance. Profile gain eta/G and tau C/G with unrestricted calibration offset, initial condition and linear residual drift as nuisance terms. Nominal marginal likelihood-ratio sets are asymptotic; Monte Carlo coverage is tested, not assumed.",
   "metrics": "Marginal interval coverage and open/boundary rates, median relative parameter error, profile-set log width and width-ratio information gain versus shortest same-schedule duration; paired schedule differences. Misspecified tau coverage is only inclusion of the generating heater time constant, not coverage of a true one-node parameter.",
   "stopping": "Execute all registered cells and replicates, no outcome-driven exclusions. Small validation and measured smoke batch first. Stop on failed independent numerical validation, runtime or artifact ceiling; retain completed cells and resumable checkpoint. No physical acceptance or detection threshold.",
-  "source_status": "All physical and noise numbers here are scenario assumptions, not instrument specifications, priors learned from data or owner approvals. Actual heater coupling, noise, ambient behavior, calibration and power metrology remain unknown. Existing I1 procedure supplies the fixed-airflow/dark intervention concept only."
+  "source_status": "All physical and noise numbers here are scenario assumptions, not instrument specifications, priors learned from data or owner approvals. Actual heater coupling, noise, ambient behavior, calibration and power metrology remain unknown. Existing I1 procedure supplies the fixed-airflow/dark intervention concept only.",
+  "registration_amendment": "Before any result: initial smoke validation found schedule transitions off the original sampling cadence. Halve cadence so all registered transitions coincide with samples and AR(1) whitening has uniform intervals."
 }
