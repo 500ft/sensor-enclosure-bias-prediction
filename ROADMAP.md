@@ -40,6 +40,10 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
   It does not establish the new rig inventory or thermal performance.
 - The [external-data probe](analysis/aqspec_feasibility.md) obtained reports but
   no qualified paired temperature series. That route is optional.
+- **Done:** the [synthetic I1 design aid](analysis/output/synthetic_identifiability_report.md)
+  derives the power-only scaling ambiguity and executes profile, coverage and
+  schedule comparisons under declared assumptions. It identifies failure regimes
+  from short records, ambient mismatch and probe lag without qualifying a rig.
 - **Current blocker:** owner-held rig, calibration, design/replication and funding
   inputs in the [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker).
   The thermal campaign has not run. In-principle PI support is already recorded.
@@ -88,7 +92,14 @@ of remaining unknowns. These qualify preparation; they do not freeze a campaign.
 
 ### M2. Establish what the interventions can identify
 
-Status: future; depends on M1 and permission for the actual bench procedure.
+Status: synthetic design aid completed under owner authorization. Physical M2
+still depends on M1 and permission for the actual bench procedure.
+
+The [executed study](analysis/output/synthetic_identifiability_report.md) profiles
+capacity/conductance and coupling/conductance. Its finite-domain intervals and
+schedule comparison are conditional on assumed noise and heat paths. Use actual
+rig specifications to revisit the design before acquisition; a longer record
+alone does not cure structural ambiguity or model error.
 
 Before fitting, assess plausible parameter and noise ranges, measurement
 capability, confounding and independent input variation using development data

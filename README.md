@@ -23,6 +23,11 @@ The [full-text prior-work assessment](ProConsList/jin2026sensors.md) documents
 CFD-trained correction with separate outdoor evaluation on the developed shield.
 The adopted question compares held-out-design transfer and total effort.
 
+The [executed synthetic I1 design study](analysis/output/synthetic_identifiability_report.md)
+shows why power steps estimate capacity/conductance and coupling/conductance,
+and how ambient mismatch can defeat interval coverage. It is a development
+design aid; the physical rig and held-out-design comparison remain pending.
+
 ## About
 
 An outdoor sensor can end up measuring its own enclosure instead of the air.

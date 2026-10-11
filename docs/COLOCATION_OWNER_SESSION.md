@@ -2,6 +2,16 @@
 
 ## Current blocker
 
+Synthetic compute authorization, 2026-10-11 (owner's compute-task handoff): the
+[executed design aid](../analysis/output/synthetic_identifiability_report.md)
+uses declared development scenarios while inventory is pending. It completes
+that software study only. Physical M1/M2, real I1 and protocol freeze remain
+pending. The owner permits considering self-funded apparatus and independently
+arranged space; no specific budget, inventory, funding receipt, site/data terms
+or measurement was supplied. Guibaud feedback, calibration, heat-path/power
+measurement and fan independence remain owner-held inputs. The selected research
+direction and estimation-only stage are unchanged.
+
 Prior-work correction, 2026-10-11: the owner-authorized
 [Jin full-text assessment](../ProConsList/jin2026sensors.md) replaces the
 abstract-only entry. It distinguishes CFD training from the authors' reported

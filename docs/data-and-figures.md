@@ -209,3 +209,36 @@ numerical records and their original software hashes. The figure manifest lists
 the figure-only outputs and their result sources. The source-file hash in a
 historical result identifies that result's generator version, not the latest
 plotting-only revision.
+
+## Synthetic I1 design aid
+
+[Registration and derivation](../analysis/identifiability_design.md) specify the
+assumed domains and structural ambiguity before results. Reproduce the full
+synthetic matrix, its grid-resolution check and generated report/figures with:
+
+```bash
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
+python -m analysis.synthetic_identifiability --out /tmp/enclosure-design --raw /tmp/enclosure-design/raw
+python -m analysis.verify_synthetic_identifiability /tmp/enclosure-design/identifiability_checkpoint.json --out /tmp/enclosure-design/refinement.json
+python -m analysis.render_identifiability --checkpoint /tmp/enclosure-design/identifiability_checkpoint.json --refinement /tmp/enclosure-design/refinement.json
+```
+
+Use an empty output directory for a new run. A stopped matrix resumes with the
+same first command plus `--resume`; the configuration and generator hashes must
+match. The checkpoint is written after every cell. Source hashes identify the
+executed versions, and cell keys plus seed sequences regenerate individual
+examples. The raw NPZ arrays remain outside git, with hashes in the compact
+[result](../analysis/output/synthetic_identifiability.json). No external dataset
+or field measurement enters this calculation.
+
+To redraw without repeating computation:
+
+```bash
+python -m analysis.render_identifiability
+```
+
+The renderer reads the result and compressed profile arrays, writes PNG/SVG
+companions and a Markdown report. The all-cell CSV is generated on export;
+missing finite log widths are empty cells. Runtime and peak memory are machine
+observations, so regenerated resource fields and byte hashes may differ across
+environments. Scientific comparisons should use numeric arrays and tolerances.

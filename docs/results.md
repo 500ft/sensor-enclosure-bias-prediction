@@ -122,6 +122,22 @@ empirical PM correction trained on internal RH cannot automatically substitute
 ambient RH without revalidation. No universal PM benefit or binding application
 tolerance follows from this thermal calculation.
 
+## Synthetic protocol-identifiability result
+
+The [executed design aid](../analysis/output/synthetic_identifiability_report.md)
+compares power schedules and observation durations under declared correlated
+noise, calibration offset, quantization, ambient mismatch and probe lag.
+It estimates capacity/conductance and coupling/conductance after proving why
+power alone cannot separate the original physical parameters. Longer records
+can reduce open profiles while model error defeats interval coverage.
+
+[Numeric results and all per-draw profile sets](../analysis/output/synthetic_identifiability.json),
+[summary CSV](../analysis/output/synthetic_identifiability.csv) and
+[registration/derivation](../analysis/identifiability_design.md) retain assumptions,
+search boundaries and the Monte Carlo interpretation. The result includes
+independent numerical checks and profile-grid refinement. This completes an
+owner-authorized synthetic design study; physical M1/M2 and real I1 remain pending.
+
 ## Reading the evidence
 
 | Output | Evidence type | Current limitation |
