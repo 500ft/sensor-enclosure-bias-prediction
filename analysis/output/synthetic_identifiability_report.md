@@ -57,7 +57,7 @@ The JSON duration_information entries give paired log width reduction relative t
 
 ## Numerical validation and resource use
 
-The refinement doubled profile-grid resolution to 3201 points on the same draws. Time-constant coverage changed in 0 fits and gain coverage in 0 fits. Maximum relative estimate changes were 0.22% for time constant and 4.32% for gain. Grid agreement on coverage does not prove continuous optimization accuracy or calibrated uncertainty.
+The refinement doubled profile-grid resolution to 3201 points on the same draws. Time-constant coverage changed in 0 fits and gain coverage in 0 fits. Maximum relative estimate changes were 0.22% for time constant and 4.32% for gain. The discrete grid includes each generating time constant to avoid an off-grid truth; this favors recovery slightly compared with an unknown physical parameter. Grid agreement on coverage does not prove continuous optimization accuracy or calibrated uncertainty.
 
 Discrete profile descent from the registered starts reached inferior minima in 7 first-draw cells. The largest excess likelihood-ratio statistic was 14.91. Published fits instead use the minimum across the entire registered grid. The per-cell multiple_starts records preserve these failures; each key and seed regenerates its input.
 

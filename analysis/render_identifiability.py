@@ -144,7 +144,7 @@ def report(result, path):
               f"The refinement doubled profile-grid resolution to {ref['refined_grid_count']} points on the same draws. "
               f"Time-constant coverage changed in {ref['tau_coverage_changes']} fits and gain coverage in {ref['gain_coverage_changes']} fits. "
               f"Maximum relative estimate changes were {100*ref['max_tau_hat_relative_change']:.2f}% for time constant and {100*ref['max_gain_hat_relative_change']:.2f}% for gain. "
-              "Grid agreement on coverage does not prove continuous optimization accuracy or calibrated uncertainty.", "",
+              "The discrete grid includes each generating time constant to avoid an off-grid truth; this favors recovery slightly compared with an unknown physical parameter. Grid agreement on coverage does not prove continuous optimization accuracy or calibrated uncertainty.", "",
               f"Discrete profile descent from the registered starts reached inferior minima in {len(failures)} first-draw cells. "
               f"The largest excess likelihood-ratio statistic was {ref['max_start_excess_sse']:.2f}. "
               "Published fits instead use the minimum across the entire registered grid. "

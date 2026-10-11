@@ -56,6 +56,9 @@ simulation checks coverage rather than calling the sets calibrated intervals.
 Search-edge sets are explicitly open within the registered domain. Disconnected
 sets must be retained rather than collapsed into an apparently precise interval.
 Multiple starts and a refined profile grid check numerical search sensitivity.
+The implemented grid also includes the generating time constant. This is a
+synthetic benchmarking convenience and must not be mistaken for an available
+input when fitting physical data.
 
 This is an estimation-only design aid. Physical M1/M2, real I1 and held-out-design
 transfer remain pending. Any useful schedule depends on actual response times,
