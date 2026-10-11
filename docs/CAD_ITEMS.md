@@ -8,6 +8,36 @@ links existing CAD checks. The earlier work-order IDs below are historical
 cross-references, not active tasks, an actual rig inventory or fabrication approval.
 Reuse inspected models and sourced vendor geometry where applicable.
 
+## Necessary and recommended CAD (owner instruction 2026-10-11)
+
+The requirement is a repeatable, qualified apparatus and a measured record of
+what was tested. CAD is one way to provide it, not the requirement itself.
+
+Necessary:
+
+- An as-built geometry and material record for every design that enters a
+  comparison: inspected outer dimensions, wall thickness, vent open area,
+  finish, heater and probe positions. The provisional V0 model is not that
+  record and must not be presented as measured construction or effective
+  thermal area.
+- Repeatable heater and probe placement for the I1 power steps. Design a
+  heater carrier or probe mount only if the enclosure cannot hold those
+  positions repeatably on its own; the fixture earns its CAD by that need.
+
+Recommended, conditional:
+
+- A co-location mounting bracket with recorded datums, once a reference
+  thermometer exists.
+- A parametric passive plate stack, only if the PI approves it as a campaign
+  design.
+
+Not needed for the current claim: a Fluent conjugate heat transfer model
+(conditional on an unresolved spatial mechanism after instrumentation,
+airflow and heater-coupling checks and a small thermal network test; a dark
+step response identifies only C/G and eta/G, so added geometry does not
+resolve that by itself), solar-load CHT, the aspirated V2 housing, and any
+structural, modal or ingress-protection analysis.
+
 ## After inventory: baseline and passive shield
 
 | Item to model or import | Existing work order | Purpose / boundary |
