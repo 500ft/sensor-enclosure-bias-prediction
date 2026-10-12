@@ -20,7 +20,8 @@ A literature check (2015–2026, cross-checked against the repo's 26-source matr
   ASTM D8406-22, CEN/TS 17660-1:2021.
 - **Energy-balance shelter models already reduce error to a few coefficients** — Bernard et al.
   2019 (*Climate* 7(2):26): the direct methodological competitor.
-- CFD-fitted per-geometry correction curves — repo's Liu 2023, Jin 2026.
+- CFD-derived per-geometry correction, including a surrogate evaluated on separate
+  field records: see the [full-text correction](#prior-work-update-full-text-correction).
 - Low-cost AQ enclosure self-heating T/RH bias (~2.6 °C) — Barkjohn 2021, Couzo 2024 (*Atmosphere*
   15:415) — documented and empirically corrected post-hoc.
 - Dimensionless heat-transfer framework (Biot/Nusselt/Reynolds) — textbook.
@@ -33,8 +34,9 @@ A literature check (2015–2026, cross-checked against the repo's 26-source matr
 - **Internal-dissipation ratio as a design axis** — classical shields have ~no internal power; AQ
   enclosures have watts. No source combines self-heating + vent geometry + surface optics in one
   predictive scaling.
-- **Predict-before-build** — no validated forward model from material/finish/vent geometry to bias
-  prior to fabrication.
+- The blanket **predict-before-build** novelty claim is withdrawn by the
+  [full-text correction](#prior-work-update-full-text-correction). Held-out-design
+  transfer remains an evaluation question.
 - **3D-print-specific effects** (filament, finish, layer-induced emissivity; and low-k wall
   conduction — see Study A Biot gate) tied to a scaling model.
 
@@ -162,44 +164,32 @@ corrected verdict in [studyA_nondimensional.md](studyA_nondimensional.md). The e
 dimensionless balance holds to solver tolerance (max residual 5.478e-9 over 1,944 points), so
 **dimensionless similarity was never falsified**; what exceeded threshold was linearisation error.
 
-## Prior-work update (2026-10-09)
+## Prior-work update (full-text correction)
 
-Source: a 2026-10-09 literature review for this repository (abstract level, web search only,
-forward citations not searched). One source was added to the bibliography as `jin2026sensors`
-with an [assessment](../ProConsList/jin2026sensors.md) that attributes nothing beyond the title
-and the review's description. It has not been read in full.
+The [full-text Jin assessment](../ProConsList/jin2026sensors.md) supersedes the
+abstract-only interpretation recorded in the earlier review. It is the sole
+home for this paper's geometry, training domain, split, numerical errors and
+uncertainty limitations, with section/table support.
 
-**Jin, Liu, Dai, Hong, Cao and Sun 2026 (Sensors 26(12):3853) is a direct prior for
-physics-derived bias correction.** It reports an optimized naturally ventilated air temperature
-sensor with a radiation error correction trained on CFD of the shield's geometry and material.
-The correction is derived from physical inputs rather than fitted to field data alone. This is a
-second 2026 paper from the same group; `jin2026` (Atmosphere 17:272) is the shield-design paper
-already in the matrix. The claim that bias can be predicted from physics is therefore established
-and must be cited as such. The §1 wording that CFD corrections are single-geometry curves and the
-§3 predict-before-build framing read narrower in that light.
+The Sensors paper trains an environmental-input surrogate on CFD of its
+optimized shield and reports a separate outdoor comparison without field
+refitting. Probe calibration and auxiliary environmental inputs are still
+required. This is direct prior work for physics-derived correction before field
+fitting; the earlier blanket predict-before-build novelty claim is withdrawn.
+The full text also supports a narrower scope than the abstract-only assertion
+that geometry/material prediction is generally established: neither a design
+withheld from development nor a total-effort comparison is demonstrated.
 
-**What this repository can still claim.** Two items were not found in the 2026-10-09 review
-(abstract-level, web search only, forward citations not searched):
+The adopted question about held-out-design error and calibration/measurement
+effort remains selected. These distinctions describe the gap in this paper,
+without claiming global novelty. A later skip-co-location claim still needs a
+prospective PI-agreed application tolerance; the first stage stays estimation-only.
 
-1. Predicting the bias of an enclosure design held out of all fitting, with the holdout fixed
-   before evaluation.
-2. Reporting the measurement and calibration effort behind each correction beside its error, so
-   the physics route and the co-location route are compared on cost as well as accuracy.
-
-Both are already the [roadmap](../ROADMAP.md) finish line (M4). This update adds no claim.
-
-**Expected outcome.** In the nearest prior work the physics quantity carries most of the
-predictive signal: the [competitor matrix](COMPETITOR_MATRIX_2026-09-22.csv) records that one
-forcing ratio (Nakamura and Mahrt) or two energy-balance coefficients (Bernard) already explain
-most of the shield error, and Jin's correction is physics-derived from the start. A null result
-against the physics baseline, where the held-out error of the full route is no smaller than the
-baseline's, is the likely outcome. It is a reportable result when the comparison was adequately
-measured.
-
-What separates "no added value" from "inadequate measurement": the comparison is adequate only
-when the gap between the two routes' predictions on the held-out design is larger than the
-combined uncertainty of the reference thermometer and the repeatability of the measured bias on
-the same unit under repeated exposure. If the two predictions agree within that uncertainty, the
-data cannot tell the routes apart and the result is an inadequate measurement. If the predictions
-differ by more than that uncertainty and the held-out error does not improve, the result is no
-added value. Both outcomes carry the same effort accounting.
+The earlier claim that a null result against the physics baseline is the likely
+outcome is unsupported by this paper. Its internal model selection and same-design
+field comparison do not determine the winner of a cross-design effort comparison.
+Likewise, comparing a prediction gap with instrument uncertainty alone is not a
+complete discrimination rule: error contrasts need an uncertainty analysis that
+accounts for dependence, reference error and independent experimental units.
+Inconclusive separation and no useful gain must be distinguished under the
+registered comparison, not decided from these prior-work summary statistics.
