@@ -57,6 +57,25 @@
     "analysis/output/thermal_transient_prediction.json",
     "analysis/output/thermal_transient_verification.json"
    ]
+  },
+  {
+   "id": "synthetic-protocol-identifiability",
+   "evidence_type": "synthetic development design aid; no physical qualification",
+   "generator": "analysis/render_identifiability.py",
+   "command": "python -m analysis.render_identifiability",
+   "inputs": [
+    "analysis/input/identifiability_design.json",
+    "analysis/output/synthetic_identifiability.json",
+    "analysis/output/synthetic_identifiability_profiles.npz",
+    "analysis/figure_style.py"
+   ],
+   "outputs": [
+    "analysis/figures/synthetic_identifiability_profiles.png",
+    "analysis/figures/synthetic_identifiability_profiles.svg",
+    "analysis/figures/synthetic_identifiability_tradeoffs.png",
+    "analysis/figures/synthetic_identifiability_tradeoffs.svg"
+   ],
+   "notes": "Marginal nominal likelihood-ratio profiles and Monte Carlo coverage under declared assumptions. Open search boundaries remain explicit; physical M1/M2, I1 and transfer pending. Full compute commands in docs/data-and-figures.md."
   }
  ]
 }
