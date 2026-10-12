@@ -76,19 +76,27 @@ Tasks:
   [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker); the adopted
   direction and estimation-only first stage remain selected.
 - Confirm designs, independently built units or swaps, logging arrangement,
-  funding receipt and site/data permissions. Proposed design counts are targets
-  pending qualification, not a sample-size justification or an inventory.
+  usable resource budget and site/data permissions. Proposed design counts are
+  targets pending qualification, not a sample-size justification or an inventory.
 - Record enclosure/sensor IDs, reference thermometer and its shield/aspiration,
   calibration certificate and uncertainty, loggers, electrical-power measurement
-  and airflow instrumentation. Check synchronization, positions and fan decoupling.
+  and airflow instrumentation. Check synchronization, positions and whether
+  input power can vary with airflow fixed.
+- Decide from the real apparatus whether absolute `C`, `G` or `eta` is needed.
+  If so, identify an independent, qualified coupling, capacity or conductance
+  measurement. Otherwise retain the identifiable `C/G` and `eta/G` model.
+  Qualify the actual instruments and heat path before selecting an I1 schedule.
+- Record usable equipment and space, permitted purchases and a spending ceiling.
+  Self-funded apparatus and independently arranged space can satisfy the access
+  route when qualified for the measurements.
 - Preserve CAD and material records that describe the actual specimens. Use the
   [geometry reference](docs/cad_geometry_reference.md) only where it applies.
   The necessary and recommended CAD items are listed in
   [CAD_ITEMS.md](docs/CAD_ITEMS.md#necessary-and-recommended-cad-owner-instruction-2026-10-11).
 
 Completion evidence: reviewed inventory and calibration/uncertainty records,
-verified logging/power/airflow capability, site/data terms and an explicit record
-of remaining unknowns. These qualify preparation; they do not freeze a campaign.
+verified logging/power/airflow capability, a qualified resource route, site/data
+terms and an explicit record of remaining unknowns. These qualify preparation; they do not freeze a campaign.
 
 ### M2. Establish what the interventions can identify
 
@@ -109,9 +117,10 @@ quantities, or reduce the model and claim.
 
 - Run I1 first: controlled resistive-power steps in dark conditions at documented
   airflow, with measured power and temperatures and repeated/counterbalanced states.
-- In the single-node limit, the response identifies effective heat/conductance
-  and capacity/conductance. Supply power needs an identified heat path before
-  absolute material or convection parameters can be inferred.
+- In the single-node limit, measured power and temperature identify `C/G`
+  and `eta/G` under the stated heat-path model. Absolute `C`, `G` and `eta`
+  require an independently qualified scale input if needed. Measured electrical
+  power alone does not supply it.
 - Investigate airflow independently of power. Estimate a convection relation only
   if geometry, effective area, heat coupling and measured airflow provide enough
   independent information; otherwise report combinations and uncertainty.
