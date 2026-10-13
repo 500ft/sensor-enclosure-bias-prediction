@@ -129,7 +129,10 @@ compares power schedules and observation durations under declared correlated
 noise, calibration offset, quantization, ambient mismatch and probe lag.
 It estimates capacity/conductance and coupling/conductance after proving why
 power alone cannot separate the original physical parameters. Longer records
-can reduce open profiles while model error defeats interval coverage.
+can reduce open profiles while model error defeats interval coverage. These
+source-box ratios do not establish the geometry, material and heat-path relation
+needed for a withheld enclosure; measuring that relation belongs in the total
+effort comparison.
 
 [Numeric results and all per-draw profile sets](../analysis/output/synthetic_identifiability.json),
 [summary CSV](../analysis/output/synthetic_identifiability.csv) and

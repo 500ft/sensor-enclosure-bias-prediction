@@ -84,8 +84,10 @@ Tasks:
   input power can vary with airflow fixed.
 - Decide from the real apparatus whether absolute `C`, `G` or `eta` is needed.
   If so, identify an independent, qualified coupling, capacity or conductance
-  measurement. Otherwise retain the identifiable `C/G` and `eta/G` model.
-  Qualify the actual instruments and heat path before selecting an I1 schedule.
+  measurement for this single-node model. Otherwise retain the identifiable
+  `C/G` and `eta/G` model. Qualify the actual instruments and heat path before
+  selecting an I1 schedule. An absolute anchor alone does not establish
+  practical identifiability or prediction for another enclosure.
 - Record usable equipment and space, permitted purchases and a spending ceiling.
   Self-funded apparatus and independently arranged space can satisfy the access
   route when qualified for the measurements.
@@ -164,6 +166,10 @@ prespecified calibration allocations and baselines.
 
 Compare shared thermal prediction with a constant correction, a limited
 co-location regression, a simpler thermal model and full target calibration.
+For each withheld design, specify how as-built geometry, material properties,
+airflow and the heat-source-to-probe path supply the model inputs or effective
+coefficients. Count the equipment, calibration and time needed to measure them.
+Fit no target coefficient outside its prespecified calibration budget.
 Keep evaluation observations outside every permitted fitting budget. Report
 bias, prediction error and interval coverage by exposure regime, with uncertainty
 that respects shared references, temporal dependence and independent units.

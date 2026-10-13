@@ -8,6 +8,11 @@ is now in the owner's in-person Guibaud brief. The meeting asks whether absolute
 `C`, `G` or `eta` is needed; power-only records identify `C/G` and `eta/G` under
 the single-node model. If absolute parameters are needed, qualify an independent
 measurement of heat coupling, capacity or conductance on the actual apparatus.
+That anchor removes the common scale ambiguity only in the stated single-node
+model. It does not establish practical identifiability or transfer to another
+enclosure: the relation from as-built geometry, material and heat path to its
+effective `C`, `G` and `eta` still needs measurement and a held-out check.
+Record the time, equipment and calibration cost of obtaining those inputs.
 Ask whether resistive input can change while airflow stays fixed. Select a
 schedule only after inventory and instrument specifications are reviewed. No
 meeting response, apparatus qualification, funding route or new PI decision has
@@ -75,9 +80,9 @@ This does not close `EN-R03` or establish a transferable design ranking.
 
 **Owner next action:** discuss calibration transfer, the possible later
 tolerance and the I1 scale question with Guibaud in person; record his feedback.
-Supply the actual rig inventory, calibrated reference and logging/power/airflow
-specifications, fan independence, site/data terms and resource budget. Physical
-setup remains the owner's step. No pilot data is collected until the rig exists
+Supply the actual designs and rig inventory, calibrated reference and
+logging/power/airflow specifications, fan independence, site/data terms and
+resource budget. Physical setup remains the owner's step. No pilot data is collected until the rig exists
 and the [protocol](COLOCATION_PROTOCOL.md) is frozen.
 
 **Owner statement, 2026-09-30:** "for enclosure there are currently no

@@ -280,13 +280,22 @@ references, in a later campaign.
 | Whole-design ranking (V0, V0P, V1) | matched exposure, characterised reference, geometry by direct inspection | `alpha`, `eps` |
 | Finish effect (I4) | documented finish change on matched hardware | measured `alpha` and `eps` (paint changes both) |
 | Dissipation (I1) | measured V·I, fixed airflow | heat-path model |
-| Parameterised or transfer prediction | `alpha`, `eps`, wall conductivity and thickness, vent open area | — |
+| Parameterised or transfer prediction | As-built geometry and probe/heat-source placement; `alpha`, `eps`, wall conductivity and thickness, vent open area and measured airflow; a justified relation to effective heat capacity, conductance and coupling | Claim-dependent |
 
 Missing CAD is not a reason to skip usable hardware; measure the existing
 enclosures directly. A controlled heater gives the response to that imposed
 heat path; mapping it back to distributed electronics heat needs an explicit
 check. A drawing can't close a `measurement` field, and changing how a
 parameter is obtained needs a written amendment made in advance.
+
+The [synthetic I1 result](../analysis/output/synthetic_identifiability_report.md)
+profiles `C/G` and `eta/G` for one assumed heat path. An independent absolute
+anchor can fix the scale in that single-node parameterization if the anchor is
+independent and the electrical input and heat-path interpretation are valid. The target design still needs a supported
+mapping from its geometry, materials, airflow and heater/probe layout to those
+effective quantities. Record the instruments, calibration and labor needed for
+that mapping in the effort comparison. A fitted source-box ratio or one absolute
+measurement cannot by itself establish held-out-design prediction.
 
 ---
 
