@@ -2,6 +2,22 @@
 
 ## Current blocker
 
+Owner adoption, 2026-10-12 (owner's adopted-next-steps instruction): the
+[executed synthetic I1 study](../analysis/output/synthetic_identifiability_report.md)
+is now in the owner's in-person Guibaud brief. The meeting asks whether absolute
+`C`, `G` or `eta` is needed; power-only records identify `C/G` and `eta/G` under
+the single-node model. If absolute parameters are needed, qualify an independent
+measurement of heat coupling, capacity or conductance on the actual apparatus.
+That anchor removes the common scale ambiguity only in the stated single-node
+model. It does not establish practical identifiability or transfer to another
+enclosure: the relation from as-built geometry, material and heat path to its
+effective `C`, `G` and `eta` still needs measurement and a held-out check.
+Record the time, equipment and calibration cost of obtaining those inputs.
+Ask whether resistive input can change while airflow stays fixed. Select a
+schedule only after inventory and instrument specifications are reviewed. No
+meeting response, apparatus qualification, funding route or new PI decision has
+been received. Estimation-only reporting remains selected.
+
 Synthetic compute authorization, 2026-10-11 (owner's compute-task handoff): the
 [executed design aid](../analysis/output/synthetic_identifiability_report.md)
 uses declared development scenarios while inventory is pending. It completes
@@ -62,11 +78,12 @@ review its draft data request; no outreach has been sent. External comparison
 needs a permitted sample and thermal/reference metadata from the data custodian.
 This does not close `EN-R03` or establish a transferable design ranking.
 
-**Owner next action:** discuss those two items with Guibaud in person and record
-his feedback here, and supply the rig inventory, reference calibration,
-site/data terms, fan-independence information and funding status. Physical setup
-remains the owner's step. No pilot data is collected until the rig exists and
-the [protocol](COLOCATION_PROTOCOL.md) is frozen.
+**Owner next action:** discuss calibration transfer, the possible later
+tolerance and the I1 scale question with Guibaud in person; record his feedback.
+Supply the actual designs and rig inventory, calibrated reference and
+logging/power/airflow specifications, fan independence, site/data terms and
+resource budget. Physical setup remains the owner's step. No pilot data is collected until the rig exists
+and the [protocol](COLOCATION_PROTOCOL.md) is frozen.
 
 **Owner statement, 2026-09-30:** "for enclosure there are currently no
 co-location logs at all. but they will be setup in the future, thus the data
@@ -118,8 +135,10 @@ source for each answer; leave missing answers explicitly unknown.
 | --- | --- | --- |
 | PI permission in principle | Owner confirmation of PI go-ahead | Resolved; source and scope recorded above |
 | Site, manufacturing and data terms | Site/mounting details, manufacturing contact/capability, data-use and retention terms | Site and manufacturing support confirmed above; details and data terms not yet supplied |
-| Actual equipment and controls | Box/reference IDs, finish/geometry, sensor placement, firmware and heat load | Rig not built yet (owner, 2026-09-30); inventory is recorded when it is |
+| Actual equipment and controls | Enclosure/probe IDs, finish/geometry, sensor placement, measured voltage/current and power-meter calibration, logger timing, airflow instrument and independent fan control | Rig not built yet (owner, 2026-09-30); inventory and instrument specifications are recorded when available |
 | Reference quality | Current calibration, aspiration/shield characterization, uncertainty budget and pre/post check method | Blocked; no calibration verified |
+| I1 thermal scale | If absolute parameters are needed, an independently qualified heat-coupling, capacity or conductance measurement on the actual apparatus; otherwise report `C/G` and `eta/G` | Choice and measurement pending inventory and Guibaud feedback; no coupling value or fixed-airflow capability supplied |
+| Resource route | Actual usable equipment and space, site/data terms, spending ceiling and permitted purchases; sponsored funds verified if that route is used | Self-funded apparatus and independent space may be considered; no route or amount confirmed |
 | Prospective protocol freeze | Approved version/commit, positions and pairing, intended UTC start/end, cadence, interventions and uncertainty method recorded before acquisition | Draft only; not frozen |
 | Acquisition and custody | Authorized operator, raw export location, raw-byte SHA-256, omissions and separate sky/intervention records | No acquisition yet, and none before the rig exists and the protocol is frozen |
 | Physical interpretation | Provenance review, corrected as-built model and declared uncertainty treatment; application tolerance only for a later fit-for-purpose verdict | Estimation-only comparison pending physical data; no model-agreement band or frozen prediction exists |

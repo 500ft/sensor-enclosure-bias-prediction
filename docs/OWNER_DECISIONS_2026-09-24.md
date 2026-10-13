@@ -43,7 +43,7 @@ The earlier documentation-only E1 disposition is superseded only to this extent.
 | ENC-2 | Application acceptance tolerance | Estimation-only remains selected; a skip-co-location verdict would need a new prospective PI-agreed tolerance |
 | ENC-3 / E2 | Designs, withheld geometry, replicates or swaps | Unanswered; no new count or inventory supplied |
 | ENC-4 / E3 | Actual rig and reference calibration | Unresolved; see current blocker |
-| ENC-5 / E4 | Funding received | Unconfirmed; expectation is not receipt |
+| ENC-5 / E4 | Resource route and permitted spending | Unanswered; sponsored funding needs a receipt, while a self-funded route needs the available amount and allowed purchases. Independent space must support the measurements |
 
 ## A00. Decisions recorded 2026-09-30
 
