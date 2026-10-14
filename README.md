@@ -1,5 +1,16 @@
 # Sensor Enclosure Bias Prediction
 
+Designed and built four printed air-quality enclosure revisions, including an
+outdoor prototype. The work combined CAD, sensor and power integration, airflow
+and rain-path packaging, mounting, and service access.
+
+![Printed enclosure prototype installed outdoors](docs/hardware/physical-prototype.jpg)
+
+[Build photographs and CAD](docs/hardware/README.md) ·
+[Portfolio case study](https://www.mergenulziibayar.com/projects/sensor-enclosure-bias-prediction)
+
+## Thermal analysis
+
 How much design-specific co-location can measured geometry, material and power
 data plus shared thermal laws replace, at comparable prediction error? This
 repository has a heat-balance model, an executed numerical correction, a literature review of its assumptions,
