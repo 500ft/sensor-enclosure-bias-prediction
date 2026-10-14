@@ -1,0 +1,30 @@
+[
+  {
+    "path": "physical-prototype.jpg",
+    "sha256": "742eb2b807e998710b9174ef259b6b6f5eed3dea3f26aaac918c652df29f667b",
+    "source": "500ft/Portfolio",
+    "commit": "9ecef2596cc078366325cac99261b3b4eba1fdbb",
+    "sourcePath": "public/projects/sensor-enclosure-bias-prediction/physical-prototype.jpg"
+  },
+  {
+    "path": "v4-cad-assembly.png",
+    "sha256": "ed2afd1e28885f31d6779db7f30f9899ef66f9be9b108b4ed7db755c54372f18",
+    "source": "500ft/Portfolio",
+    "commit": "9ecef2596cc078366325cac99261b3b4eba1fdbb",
+    "sourcePath": "public/projects/sensor-enclosure-bias-prediction/v4-cad-assembly.png"
+  },
+  {
+    "path": "sectioned-cad-view.png",
+    "sha256": "c257691d348b68066f1628b9ff8159d8bf2f3d122841eec2ef029ee7a2c94f59",
+    "source": "500ft/Portfolio",
+    "commit": "9ecef2596cc078366325cac99261b3b4eba1fdbb",
+    "sourcePath": "public/projects/sensor-enclosure-bias-prediction/sectioned-cad-view.png"
+  },
+  {
+    "path": "internal-housing-v1.jpg",
+    "sha256": "60519881c4fa00dd000f3b814a3ac6241946da987d68aa02e6e7507a724f397c",
+    "source": "500ft/Portfolio",
+    "commit": "9ecef2596cc078366325cac99261b3b4eba1fdbb",
+    "sourcePath": "public/projects/sensor-enclosure-bias-prediction/internal-housing-v1.jpg"
+  }
+]
