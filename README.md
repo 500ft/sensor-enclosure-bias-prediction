@@ -24,11 +24,13 @@ to a withheld enclosure is the research direction; it has not been demonstrated.
 [Results](#results) · [Roadmap](ROADMAP.md) · [Quick start](#quick-start) ·
 [Pilot protocol](docs/COLOCATION_PROTOCOL.md)
 
-![Two panels of nominal temperature and RH bias for dark box, painted box, passive shield and aspirated model; markers identify variants and dashes identify lower solar loading](analysis/figures/thermal_bias.png)
+![Eight panels of nominal temperature and RH bias against wind, one column per enclosure variant; marker shape identifies the variant and dashes the lower solar load](analysis/figures/thermal_bias.png)
 
-*Nominal model point estimates without propagated input uncertainty.
+Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0, circles; (a) and (e)), painted closed-box control (V0P, squares; (b) and (f)), passive multi-plate shield (V1, triangles; (c) and (g)), and actively aspirated reference (V2, diamonds; (d) and (h)). Solid lines are 1000 W/m² of sun and dashed lines 800 W/m². Panels in a row share axes. The thin line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`.
+
+[Caption](analysis/figures/thermal_bias.caption.md) ·
 [Figure inputs](docs/data-and-figures.md#thermal-bias-plot) ·
-[Vector figure](analysis/figures/thermal_bias.svg).*
+[Vector figure](analysis/figures/thermal_bias.svg).
 
 The [full-text prior-work assessment](ProConsList/jin2026sensors.md) documents
 CFD-trained correction with separate outdoor evaluation on the developed shield.

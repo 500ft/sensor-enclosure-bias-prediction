@@ -60,8 +60,11 @@ assumptions and the combined sensitivity settings that reverse the shield's
 nominal advantage over the painted box. Geometry, heat coupling and airflow
 differ across those systems, so this comparison establishes no design preference.
 
-![Nominal temperature and RH bias panels with shared variant legend and explicit units](../analysis/figures/thermal_bias.png)
+![Eight panels of nominal temperature and RH bias against wind, one column per enclosure variant](../analysis/figures/thermal_bias.png)
 
+Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0, circles; (a) and (e)), painted closed-box control (V0P, squares; (b) and (f)), passive multi-plate shield (V1, triangles; (c) and (g)), and actively aspirated reference (V2, diamonds; (d) and (h)). Solid lines are 1000 W/m² of sun and dashed lines 800 W/m². Panels in a row share axes. The thin line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`.
+
+[Caption](../analysis/figures/thermal_bias.caption.md) ·
 [Vector figure](../analysis/figures/thermal_bias.svg).
 
 The table and figure omit propagated input uncertainty. The standalone

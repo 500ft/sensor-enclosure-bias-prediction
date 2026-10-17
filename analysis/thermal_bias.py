@@ -482,9 +482,81 @@ def write_bias_table(res: SweepResult, variants: list[Variant], wind_marks: list
     print(f"[table] wrote {out_path}")
 
 
-def make_figure(res: SweepResult, variants: list[Variant], out_path: str) -> None:
+MARKER_NAMES = {"o": "circles", "s": "squares", "^": "triangles", "D": "diamonds"}
+
+
+def _figure_facts(res: SweepResult, variants: list[Variant], fs):
+    """Validated values shared by the figure and its caption."""
+    g_hi, g_lo = max(res.g_values), min(res.g_values)
+    assert len(res.g_values) == 2, res.g_values
+    ordered = sorted(variants, key=lambda v: fs.VARIANT_ORDER.index(v.vid))
+
+    def span(values, vids):
+        both = np.concatenate([values[vid][g] for vid in vids for g in res.g_values])
+        return float(np.min(both)), float(np.max(both))
+
+    others = [v.vid for v in ordered if v.vid != "V0"]
+    spans = {"v0_dt": span(res.dT, ["V0"]), "rest_dt": span(res.dT, others),
+             "v0_rh": span(res.rh_err, ["V0"]), "rest_rh": span(res.rh_err, others)}
+    # The caption says "warm" and "dry" for every plotted day point.
+    assert spans["v0_dt"][0] > 0 and spans["rest_dt"][0] > 0, spans
+    assert spans["v0_rh"][1] < 0 and spans["rest_rh"][1] < 0, spans
+    return g_hi, g_lo, ordered, spans
+
+
+def figure_caption(res: SweepResult, variants: list[Variant], t_air_c: float, rh_true_pct: float) -> str:
+    try:
+        from analysis import figure_style as fs
+    except ImportError:  # run as a script, with analysis/ on sys.path
+        import figure_style as fs
+    g_hi, g_lo, ordered, s = _figure_facts(res, variants, fs)
+    n = len(ordered)
+    who = ", ".join(
+        f"{'and ' if i == n - 1 else ''}{v.name[0].lower() + v.name[1:]} ({v.vid}, "
+        f"{MARKER_NAMES[fs.VARIANT_MARKERS[v.vid]]}; ({fs.LETTERS[i]}) and ({fs.LETTERS[n + i]}))"
+        for i, v in enumerate(ordered))
+    return (
+        "Simulation: nominal steady-state bias from the lumped heat-balance model, without "
+        f"propagated input uncertainty. Air {t_air_c:g} °C, true RH {rh_true_pct:g} %, clear sky "
+        f"{float(_a('T_sky_offset')):g} K below air. Panels ({fs.LETTERS[0]}) to ({fs.LETTERS[n - 1]}) "
+        "show sensor minus air temperature and panels "
+        f"({fs.LETTERS[n]}) to ({fs.LETTERS[2 * n - 1]}) reported minus true relative humidity in "
+        f"percentage points, against external wind speed from {res.wind.min():g} to "
+        f"{res.wind.max():g} m/s, for the {who}. Solid lines are {g_hi:.0f} W/m² of sun and dashed "
+        f"lines {g_lo:.0f} W/m². Panels in a row share axes. The thin line marks zero: above it "
+        "the sensor reads warm, below it the sensor reads dry. Across both solar loads the "
+        f"baseline box reads {s['v0_dt'][0]:.0f} to {s['v0_dt'][1]:.0f} °C warm and "
+        f"{-s['v0_rh'][1]:.0f} to {-s['v0_rh'][0]:.0f} points dry; the other three read "
+        f"{s['rest_dt'][0]:.1f} to {s['rest_dt'][1]:.1f} °C warm and {-s['rest_rh'][1]:.0f} to "
+        f"{-s['rest_rh'][0]:.0f} points dry. Values at five wind speeds: "
+        "`analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`."
+    )
+
+
+def make_figure(res: SweepResult, variants: list[Variant], out_path: str,
+                t_air_c: float | None = None, rh_true_pct: float | None = None):
+    """Write the figure, its SVG and its caption file; return the open figure's caption."""
     import matplotlib
     matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    try:
+        from analysis import figure_style as fs
+    except ImportError:  # run as a script, with analysis/ on sys.path
+        import figure_style as fs
+
+    t_air_c = float(_a("T_air")) if t_air_c is None else t_air_c
+    rh_true_pct = float(_a("RH_air")) if rh_true_pct is None else rh_true_pct
+    fig = build_figure(res, variants)
+    fs.save(fig, out_path)
+    plt.close(fig)
+    text = figure_caption(res, variants, t_air_c, rh_true_pct)
+    fs.caption_path(out_path).write_text(text + "\n")
+    print(f"[figure] wrote {out_path}")
+    return text
+
+
+def build_figure(res: SweepResult, variants: list[Variant]):
+    """Two rows (temperature, RH) by one column per variant; rows share axes."""
     import matplotlib.pyplot as plt
     from matplotlib.lines import Line2D
     try:
@@ -492,72 +564,34 @@ def make_figure(res: SweepResult, variants: list[Variant], out_path: str) -> Non
     except ImportError:  # run as a script, with analysis/ on sys.path
         import figure_style as fs
 
-    g_hi = max(res.g_values)
-    g_lo = min(res.g_values)
-    name_by_id = {v.vid: v.name for v in variants}
-    ordered = sorted(variants, key=lambda v: fs.VARIANT_ORDER.index(v.vid))
-    others = [v.vid for v in ordered if v.vid != "V0"]
-
-    def span(values, vids):
-        both = np.concatenate([values[vid][g] for vid in vids for g in res.g_values])
-        return float(np.min(both)), float(np.max(both))
-
-    # Titles are built from the plotted data so they stay true if inputs change.
-    v0_dt, rest_dt = span(res.dT, ["V0"]), span(res.dT, others)
-    v0_rh, rest_rh = span(res.rh_err, ["V0"]), span(res.rh_err, others)
-    titles = (
-        f"The baseline box reads {v0_dt[0]:.0f}–{v0_dt[1]:.0f} °C warm;\n"
-        f"the other three read {rest_dt[0]:.1f}–{rest_dt[1]:.1f} °C warm",
-        f"The baseline box reads {-v0_rh[1]:.0f}–{-v0_rh[0]:.0f} points dry;\n"
-        f"the other three read {-rest_rh[1]:.0f}–{-rest_rh[0]:.0f} points dry",
-    )
-    ylabels = ("Sensor minus air temperature [°C]",
-               "Reported minus true RH\n[percentage points]")
-    cues = (("Above 0: sensor reads warm", 0.97, 0.97, "top"),
-            ("Below 0: sensor reads dry", 0.97, 0.11, "bottom"))
-
+    g_hi, g_lo, ordered, _ = _figure_facts(res, variants, fs)
+    loads = ((g_hi, "-"), (g_lo, "--"))
+    ylabels = ("Sensor minus air\ntemperature [$^\\circ$C]", "Reported minus true\nRH [percentage points]")
+    n = len(ordered)
     with fs.style():
-        fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.9))
-        for ax, values, title, ylabel, letter, cue in zip(
-                axes, (res.dT, res.rh_err), titles, ylabels, "AB", cues):
-            ax.axhline(0, color=fs.ZERO_COLOR, lw=0.7, zorder=1)
-            for v in ordered:
-                color, marker = fs.VARIANT_COLORS[v.vid], fs.VARIANT_MARKERS[v.vid]
-                ax.plot(res.wind, values[v.vid][g_hi], color=color, lw=1.6,
-                        marker=marker, markevery=10, markersize=4, zorder=3)
-                ax.plot(res.wind, values[v.vid][g_lo], color=color, lw=1.0, ls="--",
-                        marker=marker, markevery=10, markersize=3.5,
-                        markerfacecolor="white", zorder=2)
-            ax.set_xlabel("External wind speed [m/s]")
-            ax.set_ylabel(ylabel)
-            ax.set_title(title, pad=6)
-            ax.margins(x=0.03, y=0.05)
-            fs.grid_y(ax)
-            fs.panel_letter(ax, letter)
-            text, x, y, va = cue
-            ax.text(x, y, text, transform=ax.transAxes, ha="right", va=va,
-                    fontsize=fs.SMALL, color="#333333")
-
-        variant_keys = [Line2D([], [], color=fs.VARIANT_COLORS[v.vid], lw=1.6,
-                               marker=fs.VARIANT_MARKERS[v.vid], markersize=4,
-                               label=fs.variant_label(v.vid, name_by_id[v.vid]))
-                        for v in ordered]
-        load_keys = [Line2D([], [], color=fs.KEY_COLOR, lw=1.6, marker="o", markersize=4,
-                            label=f"{g_hi:.0f} W/m² sun"),
-                     Line2D([], [], color=fs.KEY_COLOR, lw=1.0, ls="--", marker="o", markersize=3.5,
-                            markerfacecolor="white", label=f"{g_lo:.0f} W/m² sun")]
-        fig.text(0.012, 0.975,
-                 "SIMULATION | Nominal steady-state bias; air 30 °C, RH 50 %, "
-                 "clear sky 20 K below air; no input uncertainty",
-                 ha="left", va="top")
-        fig.legend(handles=variant_keys, loc="upper left", bbox_to_anchor=(0.06, 0.915),
-                   ncol=2, handlelength=2.6, columnspacing=1.4)
-        fig.legend(handles=load_keys, loc="upper left", bbox_to_anchor=(0.76, 0.915),
-                   ncol=1, handlelength=2.6)
-        fig.subplots_adjust(left=0.085, right=0.985, bottom=0.12, top=0.70, wspace=0.32)
-        fs.save(fig, out_path)
-    plt.close(fig)
-    print(f"[figure] wrote {out_path}")
+        fig, axes = plt.subplots(2, n, figsize=(7.2, 4.6), sharex=True, sharey="row")
+        for row, (values, ylabel) in enumerate(zip((res.dT, res.rh_err), ylabels)):
+            for col, v in enumerate(ordered):
+                ax = axes[row, col]
+                ax.axhline(0, zorder=1, **fs.REFERENCE)
+                for g, ls in loads:
+                    ax.plot(res.wind, values[v.vid][g], color=fs.INK, lw=1.0, ls=ls,
+                            marker=fs.VARIANT_MARKERS[v.vid], markevery=10, ms=3.5,
+                            mfc=fs.INK, mew=0.8, zorder=3)
+                ax.margins(x=0.05, y=0.06)
+                ax.tick_params(length=3)
+                fs.panel_letter(ax, row * n + col)
+            axes[row, 0].set_ylabel(ylabel)
+        fig.supxlabel("External wind speed [m/s]", y=0.015, size=fs.LABEL_SIZE)
+        keys = [Line2D([], [], color=fs.INK, ls="none", marker=fs.VARIANT_MARKERS[v.vid], ms=4,
+                       label=fs.variant_label(v.vid, v.name)) for v in ordered]
+        keys += [Line2D([], [], color=fs.INK, lw=1.0, ls=ls, label=f"{g:.0f} W/m$^2$ sun")
+                 for g, ls in loads]
+        fig.legend(handles=keys, loc="upper center", bbox_to_anchor=(0.5, 0.995), ncol=3,
+                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
+        fig.subplots_adjust(left=0.10, right=0.99, bottom=0.115, top=0.84,
+                            wspace=0.28, hspace=0.30)
+    return fig
 
 
 def sensitivity_block(
@@ -701,7 +735,7 @@ def main() -> None:
     if not args.no_figure and args.figure:
         import os
         os.makedirs(os.path.dirname(args.figure) or ".", exist_ok=True)
-        make_figure(res, variants, args.figure)
+        make_figure(res, variants, args.figure, args.t_air, args.rh_air)
 
     print("NOTE: All values above are SIMULATION outputs and are the analytical")
     print("baseline for the comparisons in ROADMAP.md. They remain predictions")
