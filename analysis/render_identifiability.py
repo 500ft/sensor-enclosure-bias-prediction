@@ -7,6 +7,7 @@ import numpy as np
 from analysis import figure_style as fs
 from analysis import synthetic_identifiability as study
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from matplotlib.ticker import NullFormatter
 
 
@@ -59,46 +60,171 @@ def export(checkpoint, refinement, output):
     return result
 
 
-def plot(result, output, figures):
-    cfg=json.loads(study.CONFIG.read_text()); profiles=np.load(output.with_name(result['profile_file']))
-    scenario_titles={'matched':'Matched dynamics + quantization','noisy':'Higher noise + coarser quantization',
-                     'ambient_mismatch':'Unobserved ambient excursion','probe_lag':'Additional probe lag'}
-    colors=['#2980b9','#e69f00','#882255'];markers=['o','s','^'];styles=['-','--',':']
+# Scenario order and the words the profile caption uses for each panel.
+SCENARIOS = (('matched', 'matched dynamics with quantization'),
+             ('noisy', 'higher noise with coarser quantization'),
+             ('ambient_mismatch', 'an unobserved ambient excursion'),
+             ('probe_lag', 'additional probe lag'))
+MARKERS = ('o', 's', '^'); STYLES = ('-', '--', ':')
+MARKER_NAMES = {'o': 'circles', 's': 'squares', '^': 'triangles'}
+STYLE_NAMES = {'-': 'solid', '--': 'dashed', ':': 'dotted'}
+PROFILE_YMAX = 12
+GENERATING = {'color': fs.INK, 'lw': 0.7, 'ls': '-.'}
+DURATION_SOURCES = ('`analysis/output/synthetic_identifiability.json`, '
+                    '`analysis/output/synthetic_identifiability_profiles.npz` and '
+                    '`analysis/input/identifiability_design.json`')
+
+
+def profile_cells(result, cfg):
+    """Cell index per (scenario, duration): slowest heater, repeated steps."""
+    return {(s, d): next(i for i, c in enumerate(result['cells'])
+                         if c['scenario'] == s and c['tau_s'] == max(cfg['tau_s'])
+                         and c['duration_s'] == d and c['schedule'] == 'repeated_steps')
+            for s, _ in SCENARIOS for d in cfg['duration_s']}
+
+
+def tradeoff_rows(result, cfg):
+    """(row, tau, schedule) -> summary rows sorted by duration; row 0 matched, row 1 mismatch."""
+    out = {}
+    for row, scenario in enumerate(('matched', 'ambient_mismatch')):
+        for tau in cfg['tau_s']:
+            for sch in cfg['schedules']:
+                out[row, tau, sch] = sorted([r for r in result['summary'] if r['scenario'] == scenario
+                                             and r['tau_s'] == tau and r['schedule'] == sch],
+                                            key=lambda r: r['duration_s'])
+    return out
+
+
+def styles_phrase(labels):
+    """'circles with solid lines, A; squares with dashed lines, B.' in plotting order."""
+    return '; '.join(f'{MARKER_NAMES[m]} with {STYLE_NAMES[ls]} lines, {label}'
+                     for m, ls, label in zip(MARKERS, STYLES, labels)) + '.'
+
+
+def profiles_caption(result, cfg):
+    hours = [f"{d / 3600:g}" for d in cfg['duration_s']]
+    panels = '; '.join(f"({fs.LETTERS[i]}) {words}" for i, (_, words) in enumerate(SCENARIOS))
+    return (
+        "Synthetic development example, not physical data. Profile likelihood-ratio statistic against "
+        "candidate C/G for the first registered draw of each scenario, with the slowest generating heater "
+        f"time constant ({max(cfg['tau_s']) / 60:g} min) and repeated power steps: {panels}. "
+        f"Record length: {styles_phrase([h + ' h' for h in hours])} Panels share axes. The thin horizontal line "
+        f"is the nominal likelihood-ratio cutoff, {cfg['profile_delta_chi2']:.2f}. The dash-dot vertical "
+        "line marks the generating heater time constant; in the probe-lag case there is no true "
+        f"single-node time constant. Curves are clipped above {PROFILE_YMAX}; the full-range profiles are "
+        f"retained. Sources: {DURATION_SOURCES}."
+    )
+
+
+def tradeoffs_caption(result, cfg):
+    rows = tradeoff_rows(result, cfg)
+    schedules = list(cfg['schedules'])
+    longest = max(cfg['duration_s'])
+    open_long = max(r['gain_open_fraction'] for (row, _, _), rs in rows.items() if row == 0
+                    for r in rs if r['duration_s'] == longest)
+    cover_long = max(r['gain_coverage'] for (row, _, _), rs in rows.items() if row == 1
+                     for r in rs if r['duration_s'] == longest)
+    n_tau = len(cfg['tau_s'])
+    fields = ('gain_open_fraction', 'gain_coverage')
+    series = {(row, tau): [tuple(r[fields[row]] for r in rows[row, tau, s]) for s in schedules]
+              for row in range(2) for tau in cfg['tau_s']}
+    letter = {key: f"({fs.LETTERS[row * n_tau + col]})"
+              for col, tau in enumerate(cfg['tau_s']) for row in range(2) for key in [(row, tau)]}
+    same = [letter[key] for key, (a, b) in series.items() if a == b]
+    touching = any(x == y for a, b in series.values() for x, y in zip(a, b))
+    coincide = ((" Where both schedules give the same value, the square covers the circle"
+                 + (f"; in {' and '.join(same)} that holds at every duration" if same else "") + ".")
+                if touching else "")
+    first = 'no' if open_long == 0 else f'at most {100 * open_long:g} % of'
+    return (
+        "Synthetic development example, not physical data. Each point is the fraction of "
+        f"{cfg['replicates_per_cell']} draws in one cell at equal input energy. Columns are generating C/G of "
+        f"{', '.join(f'{t / 60:g}' for t in cfg['tau_s'][:-1])} and {cfg['tau_s'][-1] / 60:g} min. "
+        f"Panels (a) to ({fs.LETTERS[n_tau - 1]}), matched dynamics: the fraction of gain (eta/G) profile "
+        f"sets that reach the registered search edge. Panels ({fs.LETTERS[n_tau]}) to "
+        f"({fs.LETTERS[2 * n_tau - 1]}), unobserved ambient excursion: the fraction of gain sets that "
+        f"contain the true eta/G; the thin horizontal line is the nominal {100 * cfg['profile_level']:g} % "
+        "level, not a measured performance target. "
+        f"Schedule: {styles_phrase([s.replace('_', ' ') for s in schedules])} Lines connect the discrete durations "
+        f"{', '.join(f'{d / 3600:g}' for d in cfg['duration_s'][:-1])} and {longest / 3600:g} h and do not "
+        f"establish interpolation to an untested schedule.{coincide} Longer observations can narrow sets "
+        f"while unmodeled drift defeats coverage: at {longest / 3600:g} h {first} matched gain sets reach "
+        f"the search edge, and ambient-excursion coverage is at most {100 * cover_long:g} %. Sources: "
+        "`analysis/output/synthetic_identifiability.csv` and `analysis/input/identifiability_design.json`."
+    )
+
+
+def profiles_figure(result, profiles, cfg):
+    cells = profile_cells(result, cfg)
     with fs.style():
-        fig,axs=plt.subplots(2,2,figsize=(8.6,6.5),layout='constrained')
-        for ax,(scenario,title) in zip(axs.flat,scenario_titles.items()):
-            for j,duration in enumerate(cfg['duration_s']):
-                idx=next(i for i,c in enumerate(result['cells']) if c['scenario']==scenario and c['tau_s']==max(cfg['tau_s']) and c['duration_s']==duration and c['schedule']=='repeated_steps')
-                ax.plot(profiles[f'cell{idx}_tau_s']/60,profiles[f'cell{idx}_delta_sse'],color=colors[j],ls=styles[j],marker=markers[j],markevery=130,ms=3,label=f'{duration/3600:g} h')
-            ax.axhline(cfg['profile_delta_chi2'],color='black',ls='--',lw=.8,label='Nominal LR cutoff')
-            ax.axvline(max(cfg['tau_s'])/60,color=fs.ZERO_COLOR,ls=':',lw=.8)
-            ax.set(xscale='log',ylim=(0,12),xlabel='Candidate C/G [min]',ylabel='Profile likelihood-ratio statistic',title=title)
-            fs.grid_y(ax)
-        handles,labels=axs.flat[0].get_legend_handles_labels()
-        fig.legend(handles,labels,loc='outside lower center',ncol=4)
-        fig.suptitle('Synthetic profiles: repeated steps, first registered draw\nDotted vertical line: generating heater time constant; curves clipped above display range',fontsize=10)
-        fs.save(fig,figures/'synthetic_identifiability_profiles.png');plt.close(fig)
-        fig,axs=plt.subplots(2,3,figsize=(9.5,6),layout='constrained')
-        for col,tau in enumerate(cfg['tau_s']):
-            for j,sch in enumerate(cfg['schedules']):
-                matched=sorted([r for r in result['summary'] if r['scenario']=='matched' and r['tau_s']==tau and r['schedule']==sch],key=lambda r:r['duration_s'])
-                mismatch=sorted([r for r in result['summary'] if r['scenario']=='ambient_mismatch' and r['tau_s']==tau and r['schedule']==sch],key=lambda r:r['duration_s'])
-                x=[r['duration_s']/3600 for r in matched]
-                # Bounded domain widths can look precise when a set reaches its search edge.
-                # Plot openness directly instead of hiding it in a finite width.
-                axs[0,col].plot(x,[r['gain_open_fraction'] for r in matched],marker=markers[j],ls=styles[j],color=colors[j],label=sch.replace('_',' '))
-                axs[1,col].plot(x,[r['gain_coverage'] for r in mismatch],marker=markers[j],ls=styles[j],color=colors[j])
-            axs[0,col].set_title(f'Generating C/G = {tau/60:g} min')
-            axs[1,col].axhline(cfg['profile_level'],color=fs.ZERO_COLOR,ls=':',lw=.9)
-            for row in range(2):
-                axs[row,col].set(xscale='log',xticks=x,xticklabels=[f'{v:g}' for v in x],ylim=(-.03,1.03),xlabel='Observation duration [h]')
-                axs[row,col].xaxis.set_minor_formatter(NullFormatter())
-                fs.grid_y(axs[row,col])
-        axs[0,0].set_ylabel('Gain sets reaching search edge\nMatched dynamics [fraction]')
-        axs[1,0].set_ylabel('Gain sets containing true eta/G\nAmbient mismatch [fraction]')
-        fig.legend(*axs[0,0].get_legend_handles_labels(),loc='outside lower center',ncol=2)
-        fig.suptitle('Synthetic schedule tradeoff at equal energy\nLonger observations can narrow sets while unmodeled drift defeats coverage',fontsize=10)
-        fs.save(fig,figures/'synthetic_identifiability_tradeoffs.png');plt.close(fig)
+        fig, axs = plt.subplots(2, 2, figsize=(7.2, 5.4), sharex=True, sharey=True)
+        for k, (ax, (scenario, _)) in enumerate(zip(axs.flat, SCENARIOS)):
+            for j, duration in enumerate(cfg['duration_s']):
+                idx = cells[scenario, duration]
+                ax.plot(profiles[f'cell{idx}_tau_s'] / 60, profiles[f'cell{idx}_delta_sse'], color=fs.INK,
+                        lw=1.0, ls=STYLES[j], marker=MARKERS[j], markevery=130, ms=3.5)
+            ax.axhline(cfg['profile_delta_chi2'], zorder=1, **fs.REFERENCE)
+            ax.axvline(max(cfg['tau_s']) / 60, zorder=1, **GENERATING)
+            ax.set(xscale='log', ylim=(0, PROFILE_YMAX))
+            ax.tick_params(length=3, which='both')
+            fs.panel_letter(ax, k)
+        for ax in axs[1]:
+            ax.set_xlabel('Candidate $C/G$ [min]')
+        for ax in axs[:, 0]:
+            ax.set_ylabel('Profile likelihood-ratio\nstatistic')
+        keys = [Line2D([], [], color=fs.INK, lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=3.5,
+                       label=f'{d / 3600:g} h') for j, d in enumerate(cfg['duration_s'])]
+        keys += [Line2D([], [], label='Nominal cutoff', **fs.REFERENCE),
+                 Line2D([], [], label='Generating $C/G$', **GENERATING)]
+        fig.legend(handles=keys, loc='upper center', bbox_to_anchor=(0.5, 0.995), ncol=len(keys),
+                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
+        fig.subplots_adjust(left=0.095, right=0.985, bottom=0.09, top=0.89, wspace=0.12, hspace=0.25)
+    return fig
+
+
+def tradeoffs_figure(result, cfg):
+    rows = tradeoff_rows(result, cfg)
+    n_tau = len(cfg['tau_s'])
+    with fs.style():
+        fig, axs = plt.subplots(2, n_tau, figsize=(7.2, 4.8), sharex=True, sharey=True)
+        for col, tau in enumerate(cfg['tau_s']):
+            for j, sch in enumerate(cfg['schedules']):
+                for row, field in enumerate(('gain_open_fraction', 'gain_coverage')):
+                    rs = rows[row, tau, sch]
+                    axs[row, col].plot([r['duration_s'] / 3600 for r in rs], [r[field] for r in rs], color=fs.INK,
+                                       lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=4)
+            axs[1, col].axhline(cfg['profile_level'], zorder=1, **fs.REFERENCE)
+        hours = [d / 3600 for d in cfg['duration_s']]
+        for k, ax in enumerate(axs.flat):
+            ax.set(xscale='log', ylim=(-.04, 1.04))
+            ax.set_xticks(hours, [f'{v:g}' for v in hours])
+            ax.xaxis.set_minor_formatter(NullFormatter())
+            ax.tick_params(length=3, which='both')
+            fs.panel_letter(ax, k)
+        for ax in axs[1]:
+            ax.set_xlabel('Observation duration [h]')
+        axs[0, 0].set_ylabel('Gain sets at search\nedge [fraction]')
+        axs[1, 0].set_ylabel('Gain sets containing\ntrue $\\eta/G$ [fraction]')
+        keys = [Line2D([], [], color=fs.INK, lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=4,
+                       label=sch.replace('_', ' ').capitalize()) for j, sch in enumerate(cfg['schedules'])]
+        keys.append(Line2D([], [], label='Nominal coverage level', **fs.REFERENCE))
+        fig.legend(handles=keys, loc='upper center', bbox_to_anchor=(0.5, 0.995), ncol=len(keys),
+                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
+        fig.subplots_adjust(left=0.105, right=0.985, bottom=0.10, top=0.88, wspace=0.12, hspace=0.25)
+    return fig
+
+
+def plot(result, output, figures):
+    cfg = json.loads(study.CONFIG.read_text())
+    profiles = np.load(output.with_name(result['profile_file']))
+    for name, fig, text in (
+            ('synthetic_identifiability_profiles.png', profiles_figure(result, profiles, cfg),
+             profiles_caption(result, cfg)),
+            ('synthetic_identifiability_tradeoffs.png', tradeoffs_figure(result, cfg),
+             tradeoffs_caption(result, cfg))):
+        fs.save(fig, figures / name)
+        plt.close(fig)
+        fs.caption_path(figures / name).write_text(text + '\n')
 
 
 def report(result, path):
@@ -129,13 +255,14 @@ def report(result, path):
         if r['tau_s']==max(cfg['tau_s']):
             lines.append(f"| {r['scenario'].replace('_',' ')} | {r['duration_s']/3600:g} | {r['schedule'].replace('_',' ')} | {100*r['gain_coverage']:.1f} | {100*r['gain_open_fraction']:.1f} | {100*r['tau_open_fraction']:.1f} |")
     lines += ["", "## Profiles and schedule tradeoffs", "",
-              "![Profile likelihood curves by assumed duration for each noise and model scenario](../figures/synthetic_identifiability_profiles.png)", "",
-              "[Vector profiles](../figures/synthetic_identifiability_profiles.svg). First registered draw, slow-response case and repeated steps throughout. "
-              "The vertical line marks the generating heater constant. In the probe-lag case there is no true single-node time constant. "
-              "All full-range profiles are retained; the figure clips high likelihood-ratio values for readability.", "",
-              "![Matched-model gain openness and ambient-mismatch gain coverage by observation duration and schedule](../figures/synthetic_identifiability_tradeoffs.png)", "",
-              "[Vector tradeoffs](../figures/synthetic_identifiability_tradeoffs.svg). The dotted coverage reference is nominal, not a measured performance target. "
-              "Lines connect discrete scenarios and do not establish interpolation to an untested schedule.", "",
+              "![Profile likelihood-ratio curves for 0.5, 2 and 6 h records in four synthetic scenarios, with the nominal cutoff and generating time constant](../figures/synthetic_identifiability_profiles.png)", "",
+              profiles_caption(result, cfg), "",
+              "[Caption](../figures/synthetic_identifiability_profiles.caption.md) · "
+              "[Vector profiles](../figures/synthetic_identifiability_profiles.svg).", "",
+              "![Gain-set openness under matched dynamics and gain coverage under an ambient excursion, by observation duration and schedule](../figures/synthetic_identifiability_tradeoffs.png)", "",
+              tradeoffs_caption(result, cfg), "",
+              "[Caption](../figures/synthetic_identifiability_tradeoffs.caption.md) · "
+              "[Vector tradeoffs](../figures/synthetic_identifiability_tradeoffs.svg).", "",
               "The JSON duration_information entries give paired log width reduction relative to the shortest same-schedule record. "
               "paired_schedule_widths compares single versus repeated steps. Positive values mean narrower repeated-step sets. "
               "These are descriptive information proxies, not Bayesian information or entropy. Only pairs with both sets closed contribute; their counts are reported. "

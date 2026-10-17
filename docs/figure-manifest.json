@@ -13,9 +13,10 @@
    ],
    "outputs": [
     "analysis/figures/thermal_bias.png",
-    "analysis/figures/thermal_bias.svg"
+    "analysis/figures/thermal_bias.svg",
+    "analysis/figures/thermal_bias.caption.md"
    ],
-   "notes": "Lumped steady-state heat balance and RH conversion; assumptions are encoded in the generator and documented in analysis/thermal_bias_results.md. Nominal point estimates; no propagated input uncertainty. RH error is a percentage-point difference. Colours, markers and text sizes come from analysis/figure_style.py.",
+   "notes": "Lumped steady-state heat balance and RH conversion; assumptions are encoded in the generator and documented in analysis/thermal_bias_results.md. Nominal point estimates; no propagated input uncertainty. RH error is a percentage-point difference. Markers, type and layout come from analysis/figure_style.py; titles and results are in the caption file.",
    "result_sources": [
     "analysis/output/thermal_bias_table.csv",
     "analysis/output/thermal_bias_night_table.csv"
@@ -50,9 +51,10 @@
    ],
    "outputs": [
     "analysis/figures/thermal_transient_prediction.png",
-    "analysis/figures/thermal_transient_prediction.svg"
+    "analysis/figures/thermal_transient_prediction.svg",
+    "analysis/figures/thermal_transient_prediction.caption.md"
    ],
-   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer. Solar and wind use separate aligned panels with black traces; variant medians use line and marker redundancy; colours, markers and text sizes come from analysis/figure_style.py. Committed result JSON retains its original generator hash and historical status.",
+   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer. Solar and wind panels above one bias panel per variant; markers, type and layout come from analysis/figure_style.py; titles and results are in the caption file. Committed result JSON retains its original generator hash and historical status.",
    "result_sources": [
     "analysis/output/thermal_transient_prediction.json",
     "analysis/output/thermal_transient_verification.json"
@@ -73,7 +75,9 @@
     "analysis/figures/synthetic_identifiability_profiles.png",
     "analysis/figures/synthetic_identifiability_profiles.svg",
     "analysis/figures/synthetic_identifiability_tradeoffs.png",
-    "analysis/figures/synthetic_identifiability_tradeoffs.svg"
+    "analysis/figures/synthetic_identifiability_tradeoffs.svg",
+    "analysis/figures/synthetic_identifiability_profiles.caption.md",
+    "analysis/figures/synthetic_identifiability_tradeoffs.caption.md"
    ],
    "notes": "Marginal nominal likelihood-ratio profiles and Monte Carlo coverage under declared assumptions. Open search boundaries remain explicit; physical M1/M2, I1 and transfer pending. Full compute commands in docs/data-and-figures.md."
   }

@@ -100,9 +100,10 @@ The script solves a lumped steady-state energy balance for absorbed solar and
 internal heat against convection and long-wave radiation. It converts predicted
 sensor temperature rise into relative-humidity error at fixed water-vapor
 partial pressure, sweeps solar loading and wind speed, and writes
-`analysis/figures/thermal_bias.png` and its SVG companion. The shared legend
-uses the same variant colors and markers as the transient plot; solid and dashed
-lines distinguish solar loading. RH differences are in percentage points.
+`analysis/figures/thermal_bias.png`, its SVG companion and the caption file
+`analysis/figures/thermal_bias.caption.md`. Each variant has the same marker
+shape as in the transient plot; solid and dashed lines distinguish solar loading.
+RH differences are in percentage points.
 
 The assumptions are encoded in the script and tabulated in
 [`analysis/thermal_bias_results.md`](../analysis/thermal_bias_results.md). The
@@ -128,9 +129,9 @@ are constant over their preceding hours. Figure timestamps are UTC and the
 final partial day is excluded from mean daily peaks, while its intervals remain
 in duration-weighted means.
 
-The PNG and SVG separate solar and wind forcing into aligned panels. Median
-lines use both marker shapes and line patterns; neither markers nor lines
-subsample the calculation. The primary plot uses an explicit clear-sky assumption with uniform input
+The PNG and SVG separate solar and wind forcing into aligned panels above one
+bias panel per variant. Markers identify the variant and do not subsample the
+calculation. The primary plot uses an explicit clear-sky assumption with uniform input
 sensitivity bands. The JSON also reports a nominal fully opaque sky scenario.
 Total cloud cover is not silently substituted for opaque cover. These are
 assumptions, not measured sky forcing or a calibrated prediction interval.
@@ -182,27 +183,30 @@ in a machine-readable form.
 
 ## Visual revision and retained material
 
-Both thermal figures take their colours, markers and text sizes from
-[`analysis/figure_style.py`](../analysis/figure_style.py). Each variant has one
-colour and marker in both plots. Every pair of variant colours stays distinct in
-a deuteranopia and protanopia simulation; the baseline box stays red and the
-shield blue. Weather inputs are black and the zero line light grey, so no
-neutral mark matches a variant colour. Panel titles state each panel's result and are computed from the plotted
-values. No inputs, draws, exclusions, summaries or uncertainty interpretation
-changed. Steady Markdown tables name each variant with its code in parentheses,
+All four committed analysis figures take their markers, type and layout rules from
+[`analysis/figure_style.py`](../analysis/figure_style.py). The canvas holds only
+data, axes, tick and axis labels, panel letters and one framed legend, in black.
+Marker shape carries the variant and line style the other condition, so no
+meaning depends on colour. Variants that would overlap in one panel get their own
+panels with shared axes. Titles, notes and results moved to a caption file
+written next to each image, `<name>.caption.md`, with every number computed from
+the plotted values; the documents under each image repeat it. The style module's
+overlap audit refuses to save a figure in which any printed item touches another.
+No inputs, draws, exclusions, summaries or uncertainty interpretation changed. Steady Markdown tables name each variant with its code in parentheses,
 put units in headings and keep their CSV links.
 
 | Active visual or table | Treatment and reason |
 | --- | --- |
-| Steady thermal figure | Result titles, variant key and solar-load key above the panels, in-panel sign cues, panel letters; PNG and SVG |
-| Transient figure | Result titles, black forcing traces on a shared UTC axis, variant and band key below the data, draw count in the key; PNG and SVG |
+| Steady thermal figure | One column per variant, temperature and RH rows with shared axes, framed key above, results and sign cues in the caption; PNG, SVG and caption |
+| Transient figure | Forcing panels above one bias panel per variant on a shared UTC axis, framed key above, results and draw count in the caption; PNG, SVG and caption |
+| Synthetic I1 figures | Black profiles and tradeoffs with marker and line-style keys, scenario and column titles in the caption; PNG, SVG and caption |
 | README prediction table and steady result tables | Variant names with codes, units in headings, numeric alignment, consistent display precision and source CSV |
 | Deployment figures and historical metrics | Original images/values retained because source exports are unavailable; full-width summaries and evidence captions improved |
 | Overview diagram and roadmap dependency graph | Retained: conceptual dependencies, with no numerical axes to redesign |
 | Frozen manuscript, deliverables and archived evidence | Retained unchanged to preserve historical release and evidence provenance |
 
-Both plotting functions write the requested image at 300 dpi and a same-name
-SVG beside it. The SVG has no date stamp and fixed element ids, so a rerun in
+Every plotting function writes the requested image at 600 dpi, a same-name
+SVG and the caption file beside it. The SVG has no date stamp and fixed element ids, so a rerun in
 the same environment gives the same files.
 Use temporary result paths in the commands above to preserve the committed
 numerical records and their original software hashes. The figure manifest lists
@@ -238,7 +242,7 @@ python -m analysis.render_identifiability
 ```
 
 The renderer reads the result and compressed profile arrays, writes PNG/SVG
-companions and a Markdown report. The all-cell CSV is generated on export;
+companions, caption files and a Markdown report that repeats the captions. The all-cell CSV is generated on export;
 missing finite log widths are empty cells. Runtime and peak memory are machine
 observations, so regenerated resource fields and byte hashes may differ across
 environments. Scientific comparisons should use numeric arrays and tolerances.
