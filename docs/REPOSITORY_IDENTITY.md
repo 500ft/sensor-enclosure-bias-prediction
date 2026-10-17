@@ -44,7 +44,7 @@ comparison or the pilot produces measured bias, a plot of that should replace it
 The README also shows the transient sensitivity plot,
 [`analysis/figures/thermal_transient_prediction.png`](../analysis/figures/thermal_transient_prediction.png),
 with its lineage in the [figure guide](data-and-figures.md#transient-prediction-plot).
-Both plots use the same colour for each enclosure variant.
+Both plots use the same marker shape for each enclosure variant.
 
 [`media/project-overview.svg`](media/project-overview.svg) is an editable
 diagram of the study's five stages in roadmap order: literature, the steady and

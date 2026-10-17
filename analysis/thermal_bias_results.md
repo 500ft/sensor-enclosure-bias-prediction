@@ -133,10 +133,11 @@ match or beat forced aspiration once natural convection is strong, which is exac
 the literature finding that aspiration helps **mainly at low wind** (Theisen et al.;
 Deford et al.).
 
-Figure: `analysis/figures/thermal_bias.png`. Panel A plots temperature rise and
-panel B RH error against wind. Solid lines are 1000 W/m² and dashed lines with
-open markers are 800 W/m². Colour and marker shape identify the variant; V0P is
-the painted control. [Vector figure](figures/thermal_bias.svg).
+Figure: `analysis/figures/thermal_bias.png`. The top row plots temperature rise
+and the bottom row RH error against wind, one column per variant. Solid lines are
+1000 W/m² and dashed lines 800 W/m²; marker shape identifies the variant, and V0P
+is the painted control. [Caption](figures/thermal_bias.caption.md) ·
+[Vector figure](figures/thermal_bias.svg).
 
 ## 3. Assumptions block (every input, with status)
 

@@ -45,13 +45,17 @@ Generating heater time constant: 80 min. Every registered duration and schedule 
 
 ## Profiles and schedule tradeoffs
 
-![Profile likelihood curves by assumed duration for each noise and model scenario](../figures/synthetic_identifiability_profiles.png)
+![Profile likelihood-ratio curves for 0.5, 2 and 6 h records in four synthetic scenarios, with the nominal cutoff and generating time constant](../figures/synthetic_identifiability_profiles.png)
 
-[Vector profiles](../figures/synthetic_identifiability_profiles.svg). First registered draw, slow-response case and repeated steps throughout. The vertical line marks the generating heater constant. In the probe-lag case there is no true single-node time constant. All full-range profiles are retained; the figure clips high likelihood-ratio values for readability.
+Synthetic development example, not physical data. Profile likelihood-ratio statistic against candidate C/G for the first registered draw of each scenario, with the slowest generating heater time constant (80 min) and repeated power steps: (a) matched dynamics with quantization; (b) higher noise with coarser quantization; (c) an unobserved ambient excursion; (d) additional probe lag. Record length: circles with solid lines, 0.5 h; squares with dashed lines, 2 h; triangles with dotted lines, 6 h. Panels share axes. The thin horizontal line is the nominal likelihood-ratio cutoff, 3.84. The dash-dot vertical line marks the generating heater time constant; in the probe-lag case there is no true single-node time constant. Curves are clipped above 12; the full-range profiles are retained. Sources: `analysis/output/synthetic_identifiability.json`, `analysis/output/synthetic_identifiability_profiles.npz` and `analysis/input/identifiability_design.json`.
 
-![Matched-model gain openness and ambient-mismatch gain coverage by observation duration and schedule](../figures/synthetic_identifiability_tradeoffs.png)
+[Caption](../figures/synthetic_identifiability_profiles.caption.md) · [Vector profiles](../figures/synthetic_identifiability_profiles.svg).
 
-[Vector tradeoffs](../figures/synthetic_identifiability_tradeoffs.svg). The dotted coverage reference is nominal, not a measured performance target. Lines connect discrete scenarios and do not establish interpolation to an untested schedule.
+![Gain-set openness under matched dynamics and gain coverage under an ambient excursion, by observation duration and schedule](../figures/synthetic_identifiability_tradeoffs.png)
+
+Synthetic development example, not physical data. Each point is the fraction of 40 draws in one cell at equal input energy. Columns are generating C/G of 5, 20 and 80 min. Panels (a) to (c), matched dynamics: the fraction of gain (eta/G) profile sets that reach the registered search edge. Panels (d) to (f), unobserved ambient excursion: the fraction of gain sets that contain the true eta/G; the thin horizontal line is the nominal 95 % level, not a measured performance target. Schedule: circles with solid lines, single step; squares with dashed lines, repeated steps. Lines connect the discrete durations 0.5, 2 and 6 h and do not establish interpolation to an untested schedule. Where both schedules give the same value, the square covers the circle; in (a) that holds at every duration. Longer observations can narrow sets while unmodeled drift defeats coverage: at 6 h no matched gain sets reach the search edge, and ambient-excursion coverage is at most 7.5 %. Sources: `analysis/output/synthetic_identifiability.csv` and `analysis/input/identifiability_design.json`.
+
+[Caption](../figures/synthetic_identifiability_tradeoffs.caption.md) · [Vector tradeoffs](../figures/synthetic_identifiability_tradeoffs.svg).
 
 The JSON duration_information entries give paired log width reduction relative to the shortest same-schedule record. paired_schedule_widths compares single versus repeated steps. Positive values mean narrower repeated-step sets. These are descriptive information proxies, not Bayesian information or entropy. Only pairs with both sets closed contribute; their counts are reported. Null means no eligible pair. They must be read alongside openness and coverage, rather than used to rank schedules alone.
 

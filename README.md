@@ -24,11 +24,13 @@ to a withheld enclosure is the research direction; it has not been demonstrated.
 [Results](#results) · [Roadmap](ROADMAP.md) · [Quick start](#quick-start) ·
 [Pilot protocol](docs/COLOCATION_PROTOCOL.md)
 
-![Two panels of nominal temperature and RH bias for dark box, painted box, passive shield and aspirated model; markers identify variants and dashes identify lower solar loading](analysis/figures/thermal_bias.png)
+![Eight panels of nominal temperature and RH bias against wind, one column per enclosure variant; marker shape identifies the variant and dashes the lower solar load](analysis/figures/thermal_bias.png)
 
-*Nominal model point estimates without propagated input uncertainty.
+Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0, circles; (a) and (e)), painted closed-box control (V0P, squares; (b) and (f)), passive multi-plate shield (V1, triangles; (c) and (g)), and actively aspirated reference (V2, diamonds; (d) and (h)). Solid lines are 1000 W/m² of sun and dashed lines 800 W/m². Panels in a row share axes. The thin line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`.
+
+[Caption](analysis/figures/thermal_bias.caption.md) ·
 [Figure inputs](docs/data-and-figures.md#thermal-bias-plot) ·
-[Vector figure](analysis/figures/thermal_bias.svg).*
+[Vector figure](analysis/figures/thermal_bias.svg).
 
 The [full-text prior-work assessment](ProConsList/jin2026sensors.md) documents
 CFD-trained correction with separate outdoor evaluation on the developed shield.
@@ -84,12 +86,13 @@ passes exact thermal-step and timestep-refinement checks. Its figure shows a
 clear-sky assumption and sensitivity to declared inputs. Missing acquisition
 metadata and actual sky forcing limit interpretation. No physical accuracy or design-transfer result has been obtained.
 
-![Separate solar and wind forcing panels above model temperature bias; variant medians and 5–95% assumed-input sensitivity under an unmeasured clear-sky assumption](analysis/figures/thermal_transient_prediction.png)
+![Solar and wind forcing panels above one temperature-bias panel per enclosure variant, each with its median and 5th to 95th percentile assumed-input band under a clear-sky scenario](analysis/figures/thermal_transient_prediction.png)
 
-*Archived hourly forcing with unknown acquisition details and an unmeasured sky scenario.
-Bands show assumed-input sensitivity. The final day is incomplete.
+Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from 2026-09-02 04:00 to 2026-09-15 03:00 UTC; the first 24 h are spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each preceding hour; daily peaks range from 300 to 839 W/m². Panel (b) is the wind speed at 10 m, between 0.25 and 5.2 m/s. Panels (c) to (f) share axes and show sensor minus air temperature for the baseline closed box (V0, circles; (c)), painted closed-box control (V0P, squares; (d)), passive multi-plate shield (V1, triangles; (e)), and actively aspirated reference (V2, diamonds; (f)). Each line is the median of 400 input draws and the grey band spans their 5th to 95th percentiles; the bands show sensitivity to assumed input ranges, not measured uncertainty. Above the thin zero line the sensor reads warm. The baseline box's median bias peaks at 5 to 14 °C each day; the other three stay below 4 °C. The final day is incomplete. Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: `analysis/input/openmeteo_brooklyn_20260901_20260914.json`. Model: `analysis/thermal_transient.py`. The weather file's acquisition details are unknown.
+
+[Caption](analysis/figures/thermal_transient_prediction.caption.md) ·
 [Inputs, method and reproduction](docs/data-and-figures.md#transient-prediction-plot) ·
-[Vector figure](analysis/figures/thermal_transient_prediction.svg).*
+[Vector figure](analysis/figures/thermal_transient_prediction.svg).
 
 Other work in the repository:
 
