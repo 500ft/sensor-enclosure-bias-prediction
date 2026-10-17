@@ -270,85 +270,125 @@ def summarise(weather, runs, spin_up_h=SPIN_UP_H, bias_inputs=False):
     return summary
 
 
-def make_figure(weather, runs, path):
+MARKER_NAMES = {"o": "circles", "s": "squares", "^": "triangles", "D": "diamonds"}
+
+
+def figure_facts(weather, runs):
+    """Retained time axis, forcing, bands and the caption's daily-peak statements."""
+    start = np.searchsorted(weather["t_s"], SPIN_UP_H * 3600)
+    dates = [datetime.fromisoformat(weather["start_utc"]) + timedelta(seconds=float(t))
+             for t in weather["t_s"][start:]]
+    ghi, wind = weather["ghi"][start:], weather["wind10"][start:]
+    bands = {vid: np.percentile(temp[start:] - weather["t_air"][start:, None], [5, 50, 95], axis=1)
+             for vid, temp in runs.items()}
+    day = np.array([d.date() for d in dates])
+    sunny = [d for d in np.unique(day) if ghi[day == d].max() > 0]
+    return {
+        "start": start, "dates": dates, "ghi": ghi, "wind": wind, "bands": bands,
+        "n_draws": next(iter(runs.values())).shape[1],
+        "peak_days": [ghi[day == d].max() for d in sunny],
+        "v0_peaks": [bands["V0"][1][day == d].max() for d in sunny],
+        "other_max": max(bands[vid][1].max() for vid in runs if vid != "V0"),
+        # The last retained day ends before midnight UTC.
+        "final_day_incomplete": (dates[-1] - dates[0]).total_seconds() % 86400 != 0,
+    }
+
+
+def figure_caption(weather, runs):
+    from analysis import figure_style as fs
+    f = figure_facts(weather, runs)
+    names = {v.vid: v.name for v in build_variants()}
+    vids = list(runs)
+    who = ", ".join(f"{'and ' if i == len(vids) - 1 else ''}{names[vid][0].lower() + names[vid][1:]} "
+                    f"({vid}, {MARKER_NAMES[fs.VARIANT_MARKERS[vid]]}; ({fs.LETTERS[2 + i]}))"
+                    for i, vid in enumerate(vids))
+    stamp = "%Y-%m-%d %H:%M"
+    return (
+        "Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from "
+        f"{f['dates'][0]:{stamp}} to {f['dates'][-1]:{stamp}} UTC; the first {SPIN_UP_H} h are "
+        "spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each "
+        f"preceding hour; daily peaks range from {min(f['peak_days']):.0f} to "
+        f"{max(f['peak_days']):.0f} W/m². Panel (b) is the wind speed at 10 m, between "
+        f"{f['wind'].min():.2f} and {f['wind'].max():.1f} m/s. Panels (c) to (f) share axes and show "
+        f"sensor minus air temperature for the {who}. Each line is the median of {f['n_draws']} "
+        "input draws and the grey band spans their 5th to 95th percentiles; the bands show "
+        "sensitivity to assumed input ranges, not measured uncertainty. Above the thin zero line the "
+        f"sensor reads warm. The baseline box's median bias peaks at {min(f['v0_peaks']):.0f} to "
+        f"{max(f['v0_peaks']):.0f} °C each day; the other three stay below "
+        f"{np.ceil(f['other_max']):.0f} °C."
+        + (" The final day is incomplete." if f["final_day_incomplete"] else "")
+        + " Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: "
+        f"`{WEATHER.relative_to(ROOT)}`. Model: `analysis/thermal_transient.py`."
+    )
+
+
+def build_figure(weather, runs):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.dates import DateFormatter, DayLocator
     from matplotlib.lines import Line2D
     from matplotlib.patches import Patch
-    from matplotlib.ticker import MultipleLocator
+    from matplotlib.ticker import MaxNLocator, MultipleLocator
     from analysis import figure_style as fs
 
-    start = np.searchsorted(weather["t_s"], SPIN_UP_H * 3600)
-    dates = [datetime.fromisoformat(weather["start_utc"]) + timedelta(seconds=float(t))
-             for t in weather["t_s"][start:]]
-    ghi, wind = weather["ghi"][start:], weather["wind10"][start:]
+    f = figure_facts(weather, runs)
+    dates = f["dates"]
     names = {v.vid: v.name for v in build_variants()}
-    styles = {"V0": "-", "V0P": "--", "V1": "-.", "V2": ":"}
-    n_draws = next(iter(runs.values())).shape[1]
-
-    # Daily peaks of each median; titles are built from them so they stay true.
-    day = np.array([d.date() for d in dates])
-    bands = {}
-    for vid, temp in runs.items():
-        bias = temp[start:] - weather["t_air"][start:, None]
-        bands[vid] = np.percentile(bias, [5, 50, 95], axis=1)
-    sunny = [d for d in np.unique(day) if ghi[day == d].max() > 0]
-    v0_peaks = [bands["V0"][1][day == d].max() for d in sunny]
-    other_max = max(bands[vid][1].max() for vid in runs if vid != "V0")
-    peak_days = [ghi[day == d].max() for d in sunny]
-
     with fs.style():
-        fig, (solar_ax, wind_ax, bias_ax) = plt.subplots(
-            3, 1, figsize=(7.2, 6.6), sharex=True,
-            gridspec_kw={"height_ratios": [1, 1, 2.7]})
-        solar_ax.step(dates, ghi, where="pre", color=fs.FORCING_COLOR, lw=0.9)
-        wind_ax.plot(dates, wind, color=fs.FORCING_COLOR, lw=0.9)
-        solar_ax.set_ylabel("Sun, hourly\nmean [W/m²]")
-        wind_ax.set_ylabel("Wind at\n10 m [m/s]")
-        solar_ax.set_title(f"Daily solar peaks range from {min(peak_days):.0f} "
-                           f"to {max(peak_days):.0f} W/m²", pad=4)
-        wind_ax.set_title(f"Wind at 10 m stays between {wind.min():.2f} "
-                          f"and {wind.max():.1f} m/s", pad=4)
-
-        for i, vid in enumerate(runs):
-            lo, mid, hi = bands[vid]
-            color = fs.VARIANT_COLORS[vid]
-            bias_ax.fill_between(dates, lo, hi, color=color, alpha=0.16, lw=0)
-            bias_ax.plot(dates, mid, color=color, lw=1.1, ls=styles[vid],
-                         marker=fs.VARIANT_MARKERS[vid], markersize=3,
-                         markevery=(i * 180, 720))
-        bias_ax.axhline(0, color=fs.ZERO_COLOR, lw=0.7)
-        bias_ax.set_ylabel("Sensor minus air temperature [°C]")
-        bias_ax.set_xlabel("Date [UTC]; the final day is incomplete")
-        bias_ax.set_title(
-            f"The baseline box's median bias peaks at {min(v0_peaks):.0f}–{max(v0_peaks):.0f} °C "
-            f"each day; the other three stay below {np.ceil(other_max):.0f} °C", pad=4)
-        bias_ax.text(0.995, 0.97, "Above 0: sensor reads warm", transform=bias_ax.transAxes,
-                     ha="right", va="top", fontsize=fs.SMALL, color="#333333")
-        bias_ax.yaxis.set_major_locator(MultipleLocator(5))
-        bias_ax.xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
-        bias_ax.xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
-        for ax, letter in zip((solar_ax, wind_ax, bias_ax), "ABC"):
-            fs.grid_y(ax)
-            fs.panel_letter(ax, letter)
-            ax.margins(x=0.01, y=0.05)
-
-        keys = [Line2D([], [], color=fs.VARIANT_COLORS[vid], lw=1.1, ls=styles[vid],
-                       marker=fs.VARIANT_MARKERS[vid], markersize=3,
+        fig = plt.figure(figsize=(7.2, 8.4))
+        grid = fig.add_gridspec(2 + len(runs), 1, height_ratios=[1, 1] + [1.25] * len(runs),
+                                left=0.095, right=0.985, bottom=0.055, top=0.905, hspace=0.42)
+        solar_ax = fig.add_subplot(grid[0])
+        axes = [solar_ax, fig.add_subplot(grid[1], sharex=solar_ax)]
+        bias_axes = []
+        for i in range(len(runs)):
+            ax = fig.add_subplot(grid[2 + i], sharex=solar_ax,
+                                 sharey=bias_axes[0] if bias_axes else None)
+            bias_axes.append(ax)
+        axes += bias_axes
+        solar_ax.step(dates, f["ghi"], where="pre", color=fs.INK, lw=0.8)
+        axes[1].plot(dates, f["wind"], color=fs.INK, lw=0.8)
+        solar_ax.set_ylabel("Solar [W/m$^2$]")
+        axes[1].set_ylabel("Wind [m/s]")
+        solar_ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
+        axes[1].yaxis.set_major_locator(MaxNLocator(nbins=3))
+        for i, (ax, vid) in enumerate(zip(bias_axes, runs)):
+            lo, mid, hi = f["bands"][vid]
+            ax.fill_between(dates, lo, hi, color=fs.BAND, lw=0, zorder=1)
+            ax.axhline(0, zorder=2, **fs.REFERENCE)
+            ax.plot(dates, mid, color=fs.INK, lw=0.9, marker=fs.VARIANT_MARKERS[vid],
+                    ms=3.5, markevery=(i * 180, 720), zorder=3)
+            ax.set_ylabel("Bias [$^\\circ$C]")
+            ax.yaxis.set_major_locator(MultipleLocator(5))
+        for i, ax in enumerate(axes):
+            fs.panel_letter(ax, i)
+            ax.margins(x=0.01, y=0.06)
+            ax.tick_params(length=3)
+            if ax is not axes[-1]:
+                ax.tick_params(labelbottom=False)
+        axes[-1].set_xlabel("Date [UTC]")
+        axes[-1].xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
+        axes[-1].xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
+        keys = [Line2D([], [], color=fs.INK, lw=0.9, marker=fs.VARIANT_MARKERS[vid], ms=4,
                        label=fs.variant_label(vid, names[vid])) for vid in runs]
-        keys.append(Patch(facecolor="#9ca3af", alpha=0.45, lw=0,
-                          label=f"5–95 % of {n_draws} input draws"))
-        fig.legend(handles=keys, loc="lower left", bbox_to_anchor=(0.04, 0.0),
-                   ncol=3, handlelength=2.6, columnspacing=1.2)
-        fig.text(0.012, 0.985,
-                 "SIMULATION | Clear-sky scenario on archived hourly Open-Meteo weather; "
-                 "lines are medians of the draws",
-                 ha="left", va="top")
-        fig.subplots_adjust(left=0.105, right=0.985, bottom=0.145, top=0.905, hspace=0.42)
-        fs.save(fig, path)
+        keys.append(Patch(facecolor=fs.BAND, lw=0, label="5th to 95th percentile"))
+        fig.legend(handles=keys, loc="upper center", bbox_to_anchor=(0.5, 0.995), ncol=3,
+                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
+    return fig
+
+
+def make_figure(weather, runs, path):
+    """Write the figure, its SVG and its caption file; return the caption."""
+    import matplotlib.pyplot as plt
+    from analysis import figure_style as fs
+
+    fig = build_figure(weather, runs)
+    fs.save(fig, path)
     plt.close(fig)
+    text = figure_caption(weather, runs)
+    fs.caption_path(path).write_text(text + "\n")
+    return text
 
 
 def main():

@@ -84,12 +84,13 @@ after an agent inspection of the corrected integration loop. The prediction
 JSON's `status` field was written before that approval and still says HOLD; it
 changes at the next regeneration. [Original artifacts](history/README.md) remain available.
 
-![Separate solar and wind panels above four variant medians and assumed-input sensitivity bands; UTC axis retains the incomplete final day](../analysis/figures/thermal_transient_prediction.png)
+![Solar and wind forcing panels above one temperature-bias panel per enclosure variant, each with its median and 5th to 95th percentile assumed-input band](../analysis/figures/thermal_transient_prediction.png)
 
-The figure shows the clear-sky scenario with 5–95% assumed-input sensitivity
-bands. It uses the same variant colours and markers as the steady figure above;
-line patterns also distinguish the transient medians. Solar and wind use separate
-axes. [Vector figure](../analysis/figures/thermal_transient_prediction.svg).
+Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from 2026-09-02 04:00 to 2026-09-15 03:00 UTC; the first 24 h are spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each preceding hour; daily peaks range from 300 to 839 W/m². Panel (b) is the wind speed at 10 m, between 0.25 and 5.2 m/s. Panels (c) to (f) share axes and show sensor minus air temperature for the baseline closed box (V0, circles; (c)), painted closed-box control (V0P, squares; (d)), passive multi-plate shield (V1, triangles; (e)), and actively aspirated reference (V2, diamonds; (f)). Each line is the median of 400 input draws and the grey band spans their 5th to 95th percentiles; the bands show sensitivity to assumed input ranges, not measured uncertainty. Above the thin zero line the sensor reads warm. The baseline box's median bias peaks at 5 to 14 °C each day; the other three stay below 4 °C. The final day is incomplete. Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: `analysis/input/openmeteo_brooklyn_20260901_20260914.json`. Model: `analysis/thermal_transient.py`.
+
+Each variant keeps the marker it has in the steady figure above.
+[Caption](../analysis/figures/thermal_transient_prediction.caption.md) ·
+[Vector figure](../analysis/figures/thermal_transient_prediction.svg).
 
 | Review item | Implemented correction and evidence |
 | --- | --- |
