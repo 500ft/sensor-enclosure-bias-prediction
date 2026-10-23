@@ -299,18 +299,21 @@ def main():
     ap.add_argument('--raw',type=Path,required=True)
     ap.add_argument('--max-cells',type=int)
     ap.add_argument('--resume',action='store_true')
+    # A registered amendment file (same keys as the registered design) runs with this override.
+    ap.add_argument('--config',type=Path,default=CONFIG)
     args=ap.parse_args()
     for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','VECLIB_MAXIMUM_THREADS'):
         if os.environ.get(key)!='1':
             raise SystemExit(f'set {key}=1 before launching this process')
-    config=json.loads(CONFIG.read_text()); start=time.monotonic()
+    config_file=str(args.config.resolve().relative_to(ROOT))
+    config=json.loads(args.config.read_text()); start=time.monotonic()
     checks=validation()
     args.out.mkdir(parents=True,exist_ok=True); args.raw.mkdir(parents=True,exist_ok=True)
     checkpoint=args.out/'identifiability_checkpoint.json'
     cells=[]; previous_elapsed=0.
     if args.resume and checkpoint.exists():
         old=json.loads(checkpoint.read_text())
-        if old['config_sha256']!=sha(CONFIG) or old['generator_sha256']!=sha(__file__):
+        if old['config_sha256']!=sha(args.config) or old['generator_sha256']!=sha(__file__):
             raise SystemExit('checkpoint inputs differ; preserve old run and use a new output directory')
         cells=old['cells'];previous_elapsed=old['elapsed_s']
     done={c['key'] for c in cells}
@@ -327,8 +330,8 @@ def main():
                     c['raw_sha256']=sha(path); c['raw_file']=path.name
                     cells.append(c)
                     total_bytes=sum(p.stat().st_size for p in args.raw.glob('*.npz'))
-                    record={'status':'executed synthetic development only','config_sha256':sha(CONFIG),'generator_sha256':sha(__file__),
-                            'config':config,'validation':checks,'cells':cells,'summary':summarize(cells),
+                    record={'status':'executed synthetic development only','config_sha256':sha(args.config),'generator_sha256':sha(__file__),
+                            'config_file':config_file,'config':config,'validation':checks,'cells':cells,'summary':summarize(cells),
                             'elapsed_s':previous_elapsed+time.monotonic()-start,'raw_bytes':total_bytes,
                             'peak_rss_bytes':resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*(1 if platform.system()=='Darwin' else 1024),
                             'python':platform.python_version(),'numpy':np.__version__,'pid':os.getpid(),

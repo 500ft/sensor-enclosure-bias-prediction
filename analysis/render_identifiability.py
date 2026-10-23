@@ -46,18 +46,63 @@ def export(checkpoint, refinement, output):
         for key in ('tau_s','delta_sse','gain_profile_k_per_w'):
             arrays[f'cell{i}_{key}']=np.array(c['profile'][key])
         c['multiple_starts']=c['profile']['starts'];del c['profile']
-    profile_path=output.with_name('synthetic_identifiability_profiles.npz')
+    profile_path=output.with_name(f'{output.stem}_profiles.npz')
     np.savez_compressed(profile_path,**arrays)
     result={k:v for k,v in run.items() if k not in ('pid','config')}
-    result['config_file']='analysis/input/identifiability_design.json'
+    result['config_file']=run.get('config_file','analysis/input/identifiability_design.json')
     result['checkpoint_sha256']=study.sha(checkpoint)
     result['profile_file']=profile_path.name; result['profile_sha256']=study.sha(profile_path)
     result['refinement']=verification;result['duration_information']=comparisons;result['paired_schedule_widths']=paired
     result['complete']=len(cells)==len(cfg['tau_s'])*len(cfg['duration_s'])*len(cfg['schedules'])*len(cfg['scenarios'])
+    if 'amends_result' in cfg:
+        result['cadence_comparison']=cadence_comparison(run['summary'],cfg)
     output.write_text(json.dumps(result,separators=(',',':'),allow_nan=False)+'\n')
     with output.with_suffix('.csv').open('w') as f:
         writer=csv.DictWriter(f,fieldnames=run['summary'][0].keys(),lineterminator='\n');writer.writeheader();writer.writerows(run['summary'])
     return result
+
+
+COMPARED = ('gain_open_fraction', 'gain_coverage', 'tau_open_fraction', 'tau_coverage')
+
+
+def cadence_comparison(summary, cfg):
+    """Amended-run cell values beside the registered run's, matched by scenario, tau, schedule and duration rank."""
+    parent_cfg_path = study.ROOT / cfg['amends']
+    assert study.sha(parent_cfg_path) == cfg['amends_sha256'], 'registered design changed since the amendment'
+    pcfg = json.loads(parent_cfg_path.read_text())
+    parent = json.loads((study.ROOT / cfg['amends_result']).read_text())
+    rank = lambda c, d: sorted(c['duration_s']).index(d)
+    index = {(r['scenario'], r['tau_s'], r['schedule'], rank(pcfg, r['duration_s'])): r for r in parent['summary']}
+    rows = []
+    for r in summary:
+        p = index[(r['scenario'], r['tau_s'], r['schedule'], rank(cfg, r['duration_s']))]
+        row = {'key': r['key'], 'parent_key': p['key'], 'scenario': r['scenario'], 'tau_s': r['tau_s'],
+               'schedule': r['schedule'], 'duration_s': r['duration_s'], 'parent_duration_s': p['duration_s'],
+               'input_energy_j': r['input_energy_j'], 'parent_input_energy_j': p['input_energy_j']}
+        for f in COMPARED:
+            row[f], row['parent_' + f], row[f + '_change'] = r[f], p[f], r[f] - p[f]
+        rows.append(row)
+    return {'parent_result': cfg['amends_result'], 'parent_config': cfg['amends'], 'parent_dt_s': pcfg['dt_s'],
+            'dt_s': cfg['dt_s'], 'matching': 'scenario, tau, schedule and duration rank; parameter draws shared, '
+            'noise realizations not', 'rows': rows}
+
+
+def config_of(result):
+    return json.loads((study.ROOT / result['config_file']).read_text())
+
+
+def cfg_relative(result):
+    """Config path relative to analysis/, for links from the generated report."""
+    return str(Path(result['config_file']).relative_to('analysis'))
+
+
+def stem_of(result):
+    """'synthetic_identifiability' from 'synthetic_identifiability_profiles.npz'."""
+    return result['profile_file'][:-len('_profiles.npz')]
+
+
+def hours(seconds):
+    return f'{seconds / 3600:.3g}'
 
 
 # Scenario order and the words the profile caption uses for each panel.
@@ -70,9 +115,12 @@ MARKER_NAMES = {'o': 'circles', 's': 'squares', '^': 'triangles'}
 STYLE_NAMES = {'-': 'solid', '--': 'dashed', ':': 'dotted'}
 PROFILE_YMAX = 12
 GENERATING = {'color': fs.INK, 'lw': 0.7, 'ls': '-.'}
-DURATION_SOURCES = ('`analysis/output/synthetic_identifiability.json`, '
-                    '`analysis/output/synthetic_identifiability_profiles.npz` and '
-                    '`analysis/input/identifiability_design.json`')
+
+
+def duration_sources(result):
+    stem = stem_of(result)
+    return (f'`analysis/output/{stem}.json`, `analysis/output/{stem}_profiles.npz` and '
+            f'`{result["config_file"]}`')
 
 
 def profile_cells(result, cfg):
@@ -102,17 +150,17 @@ def styles_phrase(labels):
 
 
 def profiles_caption(result, cfg):
-    hours = [f"{d / 3600:g}" for d in cfg['duration_s']]
+    hrs = [hours(d) for d in cfg['duration_s']]
     panels = '; '.join(f"({fs.LETTERS[i]}) {words}" for i, (_, words) in enumerate(SCENARIOS))
     return (
         "Synthetic development example, not physical data. Profile likelihood-ratio statistic against "
         "candidate C/G for the first registered draw of each scenario, with the slowest generating heater "
         f"time constant ({max(cfg['tau_s']) / 60:g} min) and repeated power steps: {panels}. "
-        f"Record length: {styles_phrase([h + ' h' for h in hours])} Panels share axes. The thin horizontal line "
+        f"Record length: {styles_phrase([h + ' h' for h in hrs])} Panels share axes. The thin horizontal line "
         f"is the nominal likelihood-ratio cutoff, {cfg['profile_delta_chi2']:.2f}. The dash-dot vertical "
         "line marks the generating heater time constant; in the probe-lag case there is no true "
         f"single-node time constant. Curves are clipped above {PROFILE_YMAX}; the full-range profiles are "
-        f"retained. Sources: {DURATION_SOURCES}."
+        f"retained. Sources: {duration_sources(result)}."
     )
 
 
@@ -146,11 +194,11 @@ def tradeoffs_caption(result, cfg):
         f"contain the true eta/G; the thin horizontal line is the nominal {100 * cfg['profile_level']:g} % "
         "level, not a measured performance target. "
         f"Schedule: {styles_phrase([s.replace('_', ' ') for s in schedules])} Lines connect the discrete durations "
-        f"{', '.join(f'{d / 3600:g}' for d in cfg['duration_s'][:-1])} and {longest / 3600:g} h and do not "
+        f"{', '.join(hours(d) for d in cfg['duration_s'][:-1])} and {hours(longest)} h and do not "
         f"establish interpolation to an untested schedule.{coincide} Longer observations can narrow sets "
-        f"while unmodeled drift defeats coverage: at {longest / 3600:g} h {first} matched gain sets reach "
+        f"while unmodeled drift defeats coverage: at {hours(longest)} h {first} matched gain sets reach "
         f"the search edge, and ambient-excursion coverage is at most {100 * cover_long:g} %. Sources: "
-        "`analysis/output/synthetic_identifiability.csv` and `analysis/input/identifiability_design.json`."
+        f"`analysis/output/{stem_of(result)}.csv` and `{result['config_file']}`."
     )
 
 
@@ -173,7 +221,7 @@ def profiles_figure(result, profiles, cfg):
         for ax in axs[:, 0]:
             ax.set_ylabel('Profile likelihood-ratio\nstatistic')
         keys = [Line2D([], [], color=fs.INK, lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=3.5,
-                       label=f'{d / 3600:g} h') for j, d in enumerate(cfg['duration_s'])]
+                       label=f'{hours(d)} h') for j, d in enumerate(cfg['duration_s'])]
         keys += [Line2D([], [], label='Nominal cutoff', **fs.REFERENCE),
                  Line2D([], [], label='Generating $C/G$', **GENERATING)]
         fig.legend(handles=keys, loc='upper center', bbox_to_anchor=(0.5, 0.995), ncol=len(keys),
@@ -194,10 +242,10 @@ def tradeoffs_figure(result, cfg):
                     axs[row, col].plot([r['duration_s'] / 3600 for r in rs], [r[field] for r in rs], color=fs.INK,
                                        lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=4)
             axs[1, col].axhline(cfg['profile_level'], zorder=1, **fs.REFERENCE)
-        hours = [d / 3600 for d in cfg['duration_s']]
+        hrs = [d / 3600 for d in cfg['duration_s']]
         for k, ax in enumerate(axs.flat):
             ax.set(xscale='log', ylim=(-.04, 1.04))
-            ax.set_xticks(hours, [f'{v:g}' for v in hours])
+            ax.set_xticks(hrs, [hours(d) for d in cfg['duration_s']])
             ax.xaxis.set_minor_formatter(NullFormatter())
             ax.tick_params(length=3, which='both')
             fs.panel_letter(ax, k)
@@ -215,27 +263,73 @@ def tradeoffs_figure(result, cfg):
 
 
 def plot(result, output, figures):
-    cfg = json.loads(study.CONFIG.read_text())
+    cfg = config_of(result)
+    stem = stem_of(result)
     profiles = np.load(output.with_name(result['profile_file']))
     for name, fig, text in (
-            ('synthetic_identifiability_profiles.png', profiles_figure(result, profiles, cfg),
+            (f'{stem}_profiles.png', profiles_figure(result, profiles, cfg),
              profiles_caption(result, cfg)),
-            ('synthetic_identifiability_tradeoffs.png', tradeoffs_figure(result, cfg),
+            (f'{stem}_tradeoffs.png', tradeoffs_figure(result, cfg),
              tradeoffs_caption(result, cfg))):
         fs.save(fig, figures / name)
         plt.close(fig)
         fs.caption_path(figures / name).write_text(text + '\n')
 
 
+def comparison_section(result, cfg):
+    """Generated from the cadence_comparison block: the longest-duration slice, every scenario."""
+    cc = result['cadence_comparison']; dt, pdt = cc['dt_s'], cc['parent_dt_s']
+    n = cfg['replicates_per_cell']; two_se = 2 * 100 * np.sqrt(.25 / n)
+    longest = max(cfg['duration_s']); shortest = min(r['duration_s'] for r in cc['rows'])
+    short = next(r for r in cc['rows'] if r['duration_s'] == shortest)
+    rows = [r for r in cc['rows'] if r['duration_s'] == longest]
+    matched = [r for r in rows if r['scenario'] == 'matched']
+    parent_stem = Path(cc['parent_result']).stem
+    pct = lambda v: f"{100 * v:.1f}"
+    drop = min(rows, key=lambda r: r['gain_coverage_change'])
+    lines = [f"## Comparison with the registered {pdt:g} s run", "",
+             f"Cadence {dt:g} s against the registered {pdt:g} s ([result]({parent_stem}.json), "
+             f"[CSV]({parent_stem}.csv)). Cells are matched by scenario, time constant, schedule and duration rank. "
+             f"The shortest cell is {hours(shortest)} h here against {hours(short['parent_duration_s'])} h registered, "
+             f"with {100 * (short['input_energy_j'] / short['parent_input_energy_j'] - 1):.1f} % more input energy; "
+             "the other durations and energies are equal. Coupling, offset and excursion-phase draws are shared "
+             "between the two runs; noise realizations are not. "
+             f"Each cell has {n} draws, so a change below {two_se:.0f} percentage points is within two Monte Carlo standard errors. "
+             "Per-cell values and changes: `cadence_comparison` in the numeric result.", "",
+             f"| Scenario | C/G [min] | Schedule | Gain open [%] {pdt:g} s | Gain open [%] {dt:g} s | Gain coverage [%] {pdt:g} s | Gain coverage [%] {dt:g} s | Time-constant open [%] {pdt:g} s | Time-constant open [%] {dt:g} s |",
+             "| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    for r in rows:
+        lines.append(f"| {r['scenario'].replace('_', ' ')} | {r['tau_s'] / 60:g} | {r['schedule'].replace('_', ' ')} | "
+                     f"{pct(r['parent_gain_open_fraction'])} | {pct(r['gain_open_fraction'])} | {pct(r['parent_gain_coverage'])} | "
+                     f"{pct(r['gain_coverage'])} | {pct(r['parent_tau_open_fraction'])} | {pct(r['tau_open_fraction'])} |")
+    lines += ["",
+              f"All rows are the {hours(longest)} h duration. Under matched dynamics at {hours(longest)} h, gain sets reach the "
+              f"search edge in {sum(r['gain_open_fraction'] > 0 for r in matched)} of {len(matched)} cells at {dt:g} s "
+              f"({sum(r['parent_gain_open_fraction'] > 0 for r in matched)} at {pdt:g} s); the largest open fraction is "
+              f"{pct(max(r['gain_open_fraction'] for r in matched))} % ({pct(max(r['parent_gain_open_fraction'] for r in matched))} % at {pdt:g} s). "
+              f"Matched gain coverage is at least {pct(min(r['gain_coverage'] for r in matched))} % "
+              f"({pct(min(r['parent_gain_coverage'] for r in matched))} % at {pdt:g} s). Over all {len(rows)} cells at this duration, "
+              f"the largest coverage change is {100 * drop['gain_coverage_change']:+.1f} percentage points in `{drop['key']}`; "
+              f"{sum(r['gain_coverage_change'] < -two_se / 100 for r in rows)} cells fall and "
+              f"{sum(r['gain_coverage_change'] > two_se / 100 for r in rows)} rise by more than {two_se:.0f} points.", ""]
+    return lines
+
+
 def report(result, path):
-    cfg=json.loads(study.CONFIG.read_text()); ref=result['refinement']
+    cfg=config_of(result); stem=stem_of(result); ref=result['refinement']
     n=cfg['replicates_per_cell']; count=sum(len(c['records']) for c in result['cells'])
     failures=[c for c in ref['cells'] if c['max_start_excess_sse']>1e-6]
-    lines=["# Executed synthetic I1 design aid", "",
+    amended='cadence_comparison' in result
+    lines=["# Executed synthetic I1 design aid"+(f" at {cfg['dt_s']:g} s sampling cadence (registered amendment)" if amended else ""), "",
            f"Executed {len(result['cells'])} scenario cells with {count} synthetic fits. Estimation-only reporting is retained.", "",
-           "Source: [numeric result](synthetic_identifiability.json), [all-cell CSV](synthetic_identifiability.csv), "
-           "[profile arrays](synthetic_identifiability_profiles.npz). This page is generated from those outputs.", "",
-           "## What the calculation supports", "",
+           f"Source: [numeric result]({stem}.json), [all-cell CSV]({stem}.csv), "
+           f"[profile arrays]({stem}_profiles.npz). This page is generated from those outputs.", ""]
+    if amended:
+        lines += [f"Registration: [amendment file](../{cfg_relative(result)}), which amends the registered design "
+                  "and records why the shortest cell changed. The design aid, its limits and the pending physical inputs are "
+                  "unchanged; this run tests the sampling cadence only.", ""] + comparison_section(result, cfg)
+    else:
+        lines += ["## What the calculation supports", "",
            "Power-only interventions identify C/G and eta/G under the single-node model. "
            "Jointly scaling C, G and eta leaves the trajectory invariant. "
            "The [derivation and registration](../identifiability_design.md) explain which independent heat-path input would fix the scale.", "",
@@ -244,8 +338,9 @@ def report(result, path):
            "This compares equal energy and duration under these assumed response/noise conditions; it does not remove the physical protocol's replication and counterbalancing requirement.", "",
            "Ambient mismatch can produce narrow sets with poor coverage. Extra probe lag also biases the single-node interpretation. "
            "A small residual variance alone does not establish an adequate thermal structure. "
-           "No physical detection limit, preferred enclosure or calibration-transfer performance follows from this study.", "",
-           "## Slow-response comparison", "",
+           "No physical detection limit, preferred enclosure or calibration-transfer performance follows from this study.", ""]
+    durations=f"{', '.join(hours(d) for d in cfg['duration_s'][:-1])} and {hours(max(cfg['duration_s']))} h"
+    lines += ["## Slow-response comparison", "",
            f"Generating heater time constant: {max(cfg['tau_s'])/60:g} min. "
            "Every registered duration and schedule is shown for this slice; other time constants remain in the CSV. "
            "Open means a profile set reaches the registered search boundary. Coverage uses all draws, including open sets.", "",
@@ -253,16 +348,16 @@ def report(result, path):
            "| --- | ---: | --- | ---: | ---: | ---: |"]
     for r in result['summary']:
         if r['tau_s']==max(cfg['tau_s']):
-            lines.append(f"| {r['scenario'].replace('_',' ')} | {r['duration_s']/3600:g} | {r['schedule'].replace('_',' ')} | {100*r['gain_coverage']:.1f} | {100*r['gain_open_fraction']:.1f} | {100*r['tau_open_fraction']:.1f} |")
+            lines.append(f"| {r['scenario'].replace('_',' ')} | {hours(r['duration_s'])} | {r['schedule'].replace('_',' ')} | {100*r['gain_coverage']:.1f} | {100*r['gain_open_fraction']:.1f} | {100*r['tau_open_fraction']:.1f} |")
     lines += ["", "## Profiles and schedule tradeoffs", "",
-              "![Profile likelihood-ratio curves for 0.5, 2 and 6 h records in four synthetic scenarios, with the nominal cutoff and generating time constant](../figures/synthetic_identifiability_profiles.png)", "",
+              f"![Profile likelihood-ratio curves for {durations} records in four synthetic scenarios, with the nominal cutoff and generating time constant](../figures/{stem}_profiles.png)", "",
               profiles_caption(result, cfg), "",
-              "[Caption](../figures/synthetic_identifiability_profiles.caption.md) · "
-              "[Vector profiles](../figures/synthetic_identifiability_profiles.svg).", "",
-              "![Gain-set openness under matched dynamics and gain coverage under an ambient excursion, by observation duration and schedule](../figures/synthetic_identifiability_tradeoffs.png)", "",
+              f"[Caption](../figures/{stem}_profiles.caption.md) · "
+              f"[Vector profiles](../figures/{stem}_profiles.svg).", "",
+              f"![Gain-set openness under matched dynamics and gain coverage under an ambient excursion, by observation duration and schedule](../figures/{stem}_tradeoffs.png)", "",
               tradeoffs_caption(result, cfg), "",
-              "[Caption](../figures/synthetic_identifiability_tradeoffs.caption.md) · "
-              "[Vector tradeoffs](../figures/synthetic_identifiability_tradeoffs.svg).", "",
+              f"[Caption](../figures/{stem}_tradeoffs.caption.md) · "
+              f"[Vector tradeoffs](../figures/{stem}_tradeoffs.svg).", "",
               "The JSON duration_information entries give paired log width reduction relative to the shortest same-schedule record. "
               "paired_schedule_widths compares single versus repeated steps. Positive values mean narrower repeated-step sets. "
               "These are descriptive information proxies, not Bayesian information or entropy. Only pairs with both sets closed contribute; their counts are reported. "
@@ -305,7 +400,7 @@ def main():
     ap.add_argument('--figures',type=Path,default=study.ROOT/'analysis/figures');args=ap.parse_args()
     result=export(args.checkpoint,args.refinement,args.output) if args.checkpoint else json.loads(args.output.read_text())
     plot(result,args.output,args.figures)
-    report(result,args.output.with_name('synthetic_identifiability_report.md'))
+    report(result,args.output.with_name(f'{args.output.stem}_report.md'))
 
 
 if __name__=='__main__': main()
