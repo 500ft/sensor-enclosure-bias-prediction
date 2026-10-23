@@ -67,10 +67,53 @@ Simulation: nominal steady-state bias from the lumped heat-balance model, withou
 [Caption](../analysis/figures/thermal_bias.caption.md) ·
 [Vector figure](../analysis/figures/thermal_bias.svg).
 
-The table and figure omit propagated input uncertainty. The standalone
-[uncertainty module](../analysis/uncertainty.py) is not connected to them.
-These are analytical outputs; no physical thermal comparison or FEA validation
-is supplied by this figure.
+The figure shows nominal values. The [uncertainty module](../analysis/uncertainty.py)
+is connected to the day and night tables by
+[`analysis/steady_uncertainty.py`](../analysis/steady_uncertainty.py), which
+propagates the input ranges the repository already declares (the transient
+priors recorded in the [prediction JSON](../analysis/output/thermal_transient_prediction.json)
+and their rows in the [parameter register](PARAMETER_REGISTER.csv)) linearly
+through the steady solver at every committed operating point. Each range is
+rectangular, u = (high - low)/sqrt(12). Areas, the fan coefficient, the
+pre-heat half-life and the operating point (air, RH, wind, solar load and the
+20 K sky depression) are held fixed because no range is documented for them.
+The k = 2 intervals below carry no coverage probability. Nominal values are
+unchanged.
+
+| Wind [m/s] | Baseline closed box (V0) [°C] | Painted closed-box control (V0P) [°C] | Passive multi-plate shield (V1) [°C] | Actively aspirated reference (V2) [°C] | V0P minus V1 [°C] |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0.0 | 22.66 (18.01 to 27.32) | 5.30 (1.01 to 9.58) | 3.69 (1.97 to 5.41) | 1.35 (0.70 to 1.99) | 1.61 (-2.09 to 5.31) |
+| 0.5 | 19.42 (15.57 to 23.26) | 4.48 (0.86 to 8.10) | 3.00 (1.60 to 4.40) | 1.35 (0.70 to 1.99) | 1.48 (-1.66 to 4.62) |
+| 1.0 | 16.95 (13.58 to 20.33) | 3.88 (0.74 to 7.02) | 2.50 (1.32 to 3.68) | 1.35 (0.70 to 1.99) | 1.38 (-1.35 to 4.11) |
+| 2.0 | 13.49 (10.66 to 16.33) | 3.06 (0.57 to 5.55) | 1.82 (0.93 to 2.71) | 1.35 (0.70 to 1.99) | 1.24 (-0.91 to 3.39) |
+| 5.0 | 8.32 (6.29 to 10.36) | 1.87 (0.33 to 3.41) | 0.91 (0.40 to 1.42) | 1.35 (0.70 to 1.99) | 0.96 (-0.36 to 2.28) |
+
+Nominal sensor minus air temperature with its k = 2 interval at 1000 W/m² of
+sun and 30 °C air. Source: [intervals CSV](../analysis/output/thermal_bias_uncertainty.csv)
+for every day and night point and
+[budget JSON](../analysis/output/thermal_bias_uncertainty.json) for the
+per-input variance terms and the paired contrast at each day point.
+
+At 1000 W/m² and 0.5 m/s the V0P and V1 intervals overlap, and the paired
+V0P minus V1 contrast, with the shared inputs cancelling, has u_c 1.57 °C
+against a nominal 1.48 °C, so its k = 2 interval includes zero. The same holds
+at every day point. The contrast budget is dominated by the light-finish
+absorptance (P-ALPHA-SH) and the box sky-view fraction (P-FSKY-V0), neither
+measured for this hardware. The nominal shield advantage therefore sits inside
+model-input uncertainty, and the I5 contrast (V0P against V1) cannot be
+pre-registered as a model-discriminating test. This agrees with the
+[2026-09-24 withdrawals](SPRINT_PROGRESS.md), which removed the earlier
+uncertainty and day/night discriminator claims. At night (0 W/m², calm) the
+closed box's interval, -6.51 to -1.54 °C, stays below zero and the shield's,
+-0.59 to 0.57 °C, straddles it, with the sky depression held at 20 K. Three
+ranges (shield solar factor, convection boost and plate pre-heat) are one-sided
+from the nominal; the linear terms do not carry that direction or the solver's
+nonlinearity, and the [matched-control screen](../analysis/thermal_bias_results.md)
+already shows the far-end combination reversing the sign. A measured range for
+absorptance or sky view narrow enough to separate the two intervals, or a
+measured contrast outside them, would change this reading. These are
+analytical outputs; no physical thermal comparison or FEA validation is
+supplied by this figure.
 
 ## Transient result
 
@@ -150,7 +193,7 @@ owner-authorized synthetic design study; physical M1/M2 and real I1 remain pendi
 | Output | Evidence type | Current limitation |
 | --- | --- | --- |
 | Deployment metrics and plots | Analysis of external field logs | Raw exports and confirmed deployment history are unavailable in the repository |
-| Thermal-bias sweep | First-order analytical simulation | Nominal point estimates without propagated input uncertainty; not yet compared with external or co-location measurements |
+| Thermal-bias sweep | First-order analytical simulation | Nominal point estimates with linearly propagated declared-range intervals; not yet compared with external or co-location measurements |
 | Transient prediction | Single-node transient simulation on archived hourly weather | Clear-sky and opaque-sky assumptions with assumed-input sensitivity bands; acquisition metadata unknown; no measured or held-out comparison |
 | [External-data suitability](../analysis/aqspec_feasibility.md) | Access probe of AQ-SPEC public sources | Reports only; no paired sensor/reference temperature series or reuse terms obtained |
 | Literature brackets | Published measurements summarized from cited sources | Not measurements of this enclosure |
