@@ -69,7 +69,10 @@ At this operating point, changing the dark box's absorptance to the white-paint
 assumption accounts for most of the predicted reduction. The shield's nominal
 bias is about 1.5 °C lower than the painted box's. Geometry, internal heat load
 and airflow also differ between these systems.
-[Prediction table](analysis/output/thermal_bias_table.csv).
+[Prediction table](analysis/output/thermal_bias_table.csv). Propagating the
+declared input ranges through the model gives overlapping intervals for the
+painted box and the shield at this point, and the paired contrast's interval
+includes zero. [Intervals](docs/results.md#thermal-bias-model).
 
 The shield-versus-painted-box ranking reverses when the documented sensitivity
 settings for poorer shading, reduced convection and increased plate-air preheat
@@ -99,10 +102,11 @@ Other work in the repository:
 - **Literature.** A [26-source matrix](literature/literature_matrix.csv) with
   [source assessments](ProConsList/README.md), and a later review of 27 more
   sources against the model's previously uncited constants.
-- **Uncertainty.** The steady tables are point estimates. The transient
-  draft carries sensitivity bands from assumed uniform ranges by Monte Carlo. The
-  standalone [linear propagation module](analysis/uncertainty.py) is tested but
-  not connected to either.
+- **Uncertainty.** The steady tables are point estimates with
+  [linearly propagated intervals](docs/results.md#thermal-bias-model) from the
+  declared input ranges, through the
+  [propagation module](analysis/uncertainty.py). The transient draft carries
+  sensitivity bands from assumed uniform ranges by Monte Carlo.
 - **Reliability accounting.** [Schedule-aware metrics](docs/RELIABILITY_METRICS.md)
   for deployed units. The historical percentages need raw exports that are not
   in this repository, so they are reported but unverified.

@@ -31,7 +31,10 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
 - The [steady comparison](analysis/thermal_bias_results.md) and combined
   sensitivity calculation remain reproducible. Their ranking reversal establishes
   no design preference. The [uncertainty module](analysis/uncertainty.py) is
-  tested separately from those point estimates.
+  connected to the steady tables: the
+  [propagated declared-range intervals](docs/results.md#thermal-bias-model)
+  of V0P and V1 overlap at 1000 W/m² and 0.5 m/s and the paired contrast
+  includes zero, so the I5 contrast is not a model-discriminating test.
 - The [full-text prior-work assessment](ProConsList/jin2026sensors.md) confirms a
   CFD-trained correction evaluated outdoors on its own design without field
   refitting. It leaves held-out-design transfer and total effort untested; those

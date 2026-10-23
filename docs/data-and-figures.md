@@ -110,6 +110,16 @@ The assumptions are encoded in the script and tabulated in
 model is not fitted to the deployment logs. Its comparison with published
 measurements is a literature bracket, not a validation using this enclosure.
 
+Propagated intervals at the same operating points come from
+[`analysis/steady_uncertainty.py`](../analysis/steady_uncertainty.py), which
+checks its nominal values against the committed tables and writes
+`analysis/output/thermal_bias_uncertainty.csv` and `.json`; there is no figure.
+Reproduce into fresh paths:
+
+```bash
+python -m analysis.steady_uncertainty --csv /tmp/enclosure-intervals.csv --json /tmp/enclosure-intervals.json
+```
+
 ## Transient prediction plot
 
 The [corrected JSON](../analysis/output/thermal_transient_prediction.json) and
