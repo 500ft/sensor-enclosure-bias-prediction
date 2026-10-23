@@ -44,6 +44,9 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
   derives the power-only scaling ambiguity and executes profile, coverage and
   schedule comparisons under declared assumptions. It identifies failure regimes
   from short records, ambient mismatch and probe lag without qualifying a rig.
+  A [registered rerun at the protocol's 60 s cadence](analysis/output/synthetic_identifiability_60s_report.md)
+  leaves no matched 6 h gain set open and does not reduce matched coverage, so
+  the sampling cadence needs no pre-run amendment on synthetic evidence.
 - **Current blocker:** owner-held rig, calibration, design/replication and funding
   inputs in the [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker).
   The thermal campaign has not run. In-principle PI support is already recorded.

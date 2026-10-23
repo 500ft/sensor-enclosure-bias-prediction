@@ -145,6 +145,27 @@ search boundaries and the Monte Carlo interpretation. The result includes
 independent numerical checks and profile-grid refinement. This completes an
 owner-authorized synthetic design study; physical M1/M2 and real I1 remain pending.
 
+The design aid was rerun at the protocol's 60 s sampling cadence under a
+[registered amendment](../analysis/input/identifiability_design_60s.json):
+same seeds, time constants, durations, schedules and scenarios, with the 0.5 h
+cell re-aligned to eight 240 s blocks (0.533 h) because its 225 s blocks do not
+fall on 60 s samples. At 6 h under matched dynamics no gain set reaches the
+search edge at either cadence, and matched gain coverage is at least 95.0 % at
+60 s against 87.5 % at 15 s. The one change beyond two Monte Carlo standard
+errors is in the noisy scenario at the 80 min time constant, where the fraction
+of open 6 h gain sets rises from 30.0 to 65.0 % with repeated steps and from
+0.0 to 27.5 % with a single step. On this synthetic evidence the 60 s cadence
+does not leave matched 6 h gain sets open or reduce matched coverage, so it
+gives no reason for a pre-run cadence amendment; a slow and noisy rig is the
+case where a longer record or the measured noise spectrum would be needed first.
+The per-sample noise correlation was held at the registered value, so the noise
+correlation time in seconds is four times longer at 60 s; a rerun holding that
+time fixed was not registered. Sources:
+[60 s report](../analysis/output/synthetic_identifiability_60s_report.md),
+[numeric result](../analysis/output/synthetic_identifiability_60s.json) and
+[CSV](../analysis/output/synthetic_identifiability_60s.csv). The registered
+15 s outputs are unchanged. This is a design aid, not a protocol amendment.
+
 ## Reading the evidence
 
 | Output | Evidence type | Current limitation |
