@@ -80,9 +80,11 @@ verification](../analysis/output/thermal_transient_verification.json).
 The [prediction JSON](../analysis/output/thermal_transient_prediction.json) is
 the source for the current scenario summaries, parameter draws, paired signed
 contrast, finite heat secant and weather provenance. The owner approved the merge on 2026-10-06
-after an agent inspection of the corrected integration loop. The prediction
-JSON's `status` field was written before that approval and still says HOLD; it
-changes at the next regeneration. [Original artifacts](history/README.md) remain available.
+after an agent inspection of the corrected integration loop. Both JSONs were
+regenerated with the current `analysis/thermal_transient.py` after the figure
+refactor: every numeric field reproduced the committed value exactly, and the
+recorded `model_sha256` matches the file. The `status` field now records that
+the PR #56 review HOLD is closed. [Original artifacts](history/README.md) remain available.
 
 ![Solar and wind forcing panels above one temperature-bias panel per enclosure variant, each with its median and 5th to 95th percentile assumed-input band](../analysis/figures/thermal_transient_prediction.png)
 

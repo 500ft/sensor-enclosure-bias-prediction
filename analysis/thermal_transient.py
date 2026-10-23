@@ -413,7 +413,7 @@ def main():
     # Shared draws define a paired contrast, without a population probability claim.
     paired = {"V1_minus_V0P_signed_bias": runs["V1"] - runs["V0P"]}
     result = {
-        "status": "CORRECTED SENSITIVITY CALCULATION; parent review HOLD; no thermal co-location data",
+        "status": "CORRECTED SENSITIVITY CALCULATION; PR #56 review HOLD closed at merge; no thermal co-location data",
         "software": {"python": platform.python_version(), "numpy": np.__version__},
         "model_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "model": "analysis/thermal_transient.py (steady balance of thermal_bias.py plus one thermal mass per variant)",
