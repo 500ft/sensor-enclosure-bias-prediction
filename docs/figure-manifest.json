@@ -80,6 +80,27 @@
     "analysis/figures/synthetic_identifiability_tradeoffs.caption.md"
    ],
    "notes": "Marginal nominal likelihood-ratio profiles and Monte Carlo coverage under declared assumptions. Open search boundaries remain explicit; physical M1/M2, I1 and transfer pending. Full compute commands in docs/data-and-figures.md."
+  },
+  {
+   "id": "synthetic-protocol-identifiability-60s",
+   "evidence_type": "synthetic development design aid at the protocol's 60 s cadence; registered amendment; no physical qualification",
+   "generator": "analysis/render_identifiability.py",
+   "command": "python -m analysis.render_identifiability --output analysis/output/synthetic_identifiability_60s.json",
+   "inputs": [
+    "analysis/input/identifiability_design_60s.json",
+    "analysis/output/synthetic_identifiability_60s.json",
+    "analysis/output/synthetic_identifiability_60s_profiles.npz",
+    "analysis/figure_style.py"
+   ],
+   "outputs": [
+    "analysis/figures/synthetic_identifiability_60s_profiles.png",
+    "analysis/figures/synthetic_identifiability_60s_profiles.svg",
+    "analysis/figures/synthetic_identifiability_60s_tradeoffs.png",
+    "analysis/figures/synthetic_identifiability_60s_tradeoffs.svg",
+    "analysis/figures/synthetic_identifiability_60s_profiles.caption.md",
+    "analysis/figures/synthetic_identifiability_60s_tradeoffs.caption.md"
+   ],
+   "notes": "Same matrix as the registered run at 60 s sampling, the shortest cell re-aligned to eight 240 s blocks. The result JSON's cadence_comparison block places every cell beside its 15 s counterpart. Not a protocol amendment."
   }
  ]
 }
