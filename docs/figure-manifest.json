@@ -54,7 +54,7 @@
     "analysis/figures/thermal_transient_prediction.svg",
     "analysis/figures/thermal_transient_prediction.caption.md"
    ],
-   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer. Solar and wind panels above one bias panel per variant; markers, type and layout come from analysis/figure_style.py; titles and results are in the caption file. Committed result JSON retains its original generator hash and historical status.",
+   "notes": "Clear-sky scenario with uniform assumed-input bands and UTC labels. Numerical checks: analysis/output/thermal_transient_verification.json. Acquisition request/date/product unavailable. Original artifacts linked in docs/history/README.md. No calibrated intervals or demonstrated transfer. Solar and wind panels above one bias panel per variant; markers, type and layout come from analysis/figure_style.py; titles and results are in the caption file. Committed result JSONs were regenerated with the current generator; their model_sha256 matches analysis/thermal_transient.py and every numeric field was unchanged.",
    "result_sources": [
     "analysis/output/thermal_transient_prediction.json",
     "analysis/output/thermal_transient_verification.json"
