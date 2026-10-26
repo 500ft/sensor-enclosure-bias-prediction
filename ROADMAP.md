@@ -84,12 +84,15 @@ Tasks:
   and airflow instrumentation. Check synchronization, positions and whether
   input power can vary with airflow fixed.
 - Decide from the real apparatus whether absolute effective heat capacity `C`,
-  conductance `G` or electrical-to-node coupling `eta` is needed. If so, identify
-  an independent measurement of one of them for this single-node model. The
-  power-step record can identify `C/G` and `eta/G` under its assumed heat path.
-  Review instrument calibration and that heat path before choosing an I1
-  schedule. A scale measurement alone cannot establish precision or prediction
-  for another enclosure.
+  conductance `G` or electrical-to-node coupling `eta` is needed. If not, use
+  the `C/G` and `eta/G` model that power steps can identify under the stated
+  heat path. If absolute values are needed, independently measure one of `C`,
+  `G` or `eta`, checking the instrument calibration and whether the measurement
+  represents the I1 heat path. Measuring one absolute thermal parameter removes
+  the scale ambiguity in this single-node model. By itself, it does not
+  establish precise estimates of all three parameters or prediction for
+  another enclosure. Review the rig specifications before choosing an I1
+  schedule.
 - Record usable equipment and space, permitted purchases and a spending ceiling.
   Self-funded apparatus and independently arranged space can satisfy the access
   route when qualified for the measurements.
