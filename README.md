@@ -12,10 +12,12 @@ and rain-path packaging, mounting, and service access.
 ## Thermal analysis
 
 How much design-specific co-location can measured geometry, material and power
-data plus shared thermal laws replace, at comparable prediction error? This
-repository has a heat-balance model, an executed numerical correction, a literature review of its assumptions,
-and a planned first-stage comparison against a reference thermometer. Transfer
-to a withheld enclosure is the research direction; it has not been demonstrated.
+data plus shared thermal laws replace, at comparable prediction error? The
+repository contains steady and transient heat-balance calculations, checks
+of the transient solver, and a literature review of the model inputs. The
+planned first field study will compare enclosure temperatures with a calibrated
+reference thermometer. Prediction for an enclosure excluded from model fitting
+has not been tested.
 
 [![CI](https://github.com/500ft/sensor-enclosure-bias-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/500ft/sensor-enclosure-bias-prediction/actions/workflows/ci.yml)
 [![Evidence: analytical model](https://img.shields.io/badge/evidence-analytical_model-475569)](docs/results.md)
@@ -36,10 +38,15 @@ The [full-text prior-work assessment](ProConsList/jin2026sensors.md) documents
 CFD-trained correction with separate outdoor evaluation on the developed shield.
 The adopted question compares held-out-design transfer and total effort.
 
-The [executed synthetic I1 design study](analysis/output/synthetic_identifiability_report.md)
-shows why power steps estimate capacity/conductance and coupling/conductance,
-and how ambient mismatch can defeat interval coverage. It is a development
-design aid; the physical rig and held-out-design comparison remain pending.
+The [synthetic heater power-step study (I1)](analysis/output/synthetic_identifiability_report.md)
+examines which parameters a temperature record can identify. In its single-node
+model, measured power steps identify the time constant `C/G` and temperature
+gain per watt `eta/G`, where `C` is effective heat capacity, `G` is heat-loss
+conductance and `eta` is the fraction of electrical heat reaching the modeled
+node. They cannot separate the three absolute parameters without an independent
+measurement. Ambient mismatch can also defeat interval coverage. The study used
+assumed instrument behavior; no physical I1 test or withheld-design comparison
+has run.
 
 ## About
 
@@ -53,6 +60,17 @@ checks the model's constants against the literature, and prepares a
 co-location pilot: the enclosures mounted next to a reference thermometer for
 at least a full day and night. The PI has approved the pilot in principle and offered a test
 site and manufacturing help.
+
+The plotted versions are the dark closed box (V0), the same box with a finish
+change (V0P), a passive vented shield (V1), and an aspirated model reference
+(V2). The draft physical protocol lists V0, V0P and V1; V2 is not an identified
+pilot unit. The [protocol's setup table](docs/COLOCATION_PROTOCOL.md#r12-enclosures-and-reference)
+defines the optional unpowered V0 arm and the actual reference thermometer.
+Its [intervention table](docs/COLOCATION_PROTOCOL.md#c2-intervention-matrix)
+defines I1 through I6: power, sunlight, ventilation, finish, whole-design and
+optional aspiration comparisons. Parameter IDs such as `P-QINT-V0` identify
+model inputs in the [parameter register](docs/PARAMETER_REGISTER.csv), where
+their units and evidence status are recorded.
 
 ## Results
 
@@ -141,17 +159,19 @@ covers external-data prerequisites and the intake checker.
 
 ## What's next
 
-The [roadmap](ROADMAP.md) orders prerequisites and completion evidence without
-a schedule. Owner decisions and qualified rig measurements come first, followed
-by identifiability and measurement capability, I1 at known airflow, registered
-field interventions, and withheld-design calibration/effort comparisons.
+The [roadmap](ROADMAP.md) orders the equipment check, the power-step experiment,
+field comparisons and the withheld-design effort comparison. The next work
+needs the actual enclosure and instrument inventory, reference calibration,
+fixed-airflow capability, site/data terms and a usable resource budget. The
+[current decision and equipment record](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
+tracks those missing inputs.
 
-The first stage remains estimation-only. A later skip-co-location claim needs
-an agreed application tolerance. The [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
-holds the pending inputs; neither this cleanup nor the merged numerical result
-closes physical gates. Total effort includes geometry/material/power acquisition,
-setup, calibration and deployment. External designs or exposure regimes are
-conditional extensions.
+The first stage reports estimated bias, uncertainty and model error without a
+pass/fail verdict. A later claim that co-location can be skipped needs an
+application-specific tolerance agreed with the PI before that claim is tested.
+Total effort includes geometry, material and power measurements, setup,
+calibration and deployment. External designs or exposure regimes require a
+separate decision.
 
 ## Limits
 
@@ -172,7 +192,8 @@ conditional extensions.
 | [Data and figures](docs/data-and-figures.md) · [manifest](docs/figure-manifest.json) | Where each plot and input came from |
 | [Model assumptions](analysis/thermal_bias_results.md) | Geometry, radiation and convection terms |
 | [Pilot protocol](docs/COLOCATION_PROTOCOL.md) | What the side-by-side test measures |
-| [Owner decisions](docs/OWNER_DECISIONS_2026-09-24.md) | Open questions for the pilot |
+| [Study decisions and equipment requirements](docs/COLOCATION_OWNER_SESSION.md#current-blocker) | Current physical prerequisites |
+| [Decision history](docs/OWNER_DECISIONS_2026-09-24.md) | Recorded choices and unanswered questions |
 | [Working manuscript](paper/manuscript_v1.md) | Literature and analysis written up |
 | [Geometry reference](docs/cad_geometry_reference.md) | Retained CAD inputs and geometry checks |
 
