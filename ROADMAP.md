@@ -38,6 +38,9 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
   remain our evaluation question, without an established novelty or success claim.
 - The [baseline CAD](cad/enclosure/v0/README.md) has recorded geometric checks.
   It does not establish the new rig inventory or thermal performance.
+- The [vent configuration review](literature/vent_configuration_review.md)
+  lists candidate hole layouts for the existing box and the tests that rank
+  them, in answer to the PI's request. No configuration is selected.
 - The [external-data probe](analysis/aqspec_feasibility.md) obtained reports but
   no qualified paired temperature series. That route is optional.
 - **Done:** the [synthetic I1 design aid](analysis/output/synthetic_identifiability_report.md)

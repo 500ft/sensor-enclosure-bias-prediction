@@ -2,6 +2,18 @@
 
 ## Current blocker
 
+PI request, 2026-10-26 (relayed by the owner in this project session): the PI
+asked for the range of vent configurations for the existing box, meaning hole
+number, size and position plus internal layout, to get the most air through the
+box while keeping water out and fitting all parts. The
+[vent configuration review](../literature/vent_configuration_review.md) answers
+with design rules, six candidate configurations (C0 as deployed, C1 to C5) and
+the tests that rank them. No configuration is selected and no PI choice is
+recorded. Turning the candidates into dimensions needs the deployed box's
+measured geometry; the shared Onshape model is still unreviewed. Next owner
+inputs: confirm the deployed box and its dimensions, and say which candidates
+the PI wants tested.
+
 Owner adoption, 2026-10-12 (owner's adopted-next-steps instruction): the
 [executed synthetic I1 study](../analysis/output/synthetic_identifiability_report.md)
 is now in the owner's in-person Guibaud brief. The meeting asks whether absolute
