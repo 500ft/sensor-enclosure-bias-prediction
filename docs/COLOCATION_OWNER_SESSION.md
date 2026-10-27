@@ -14,9 +14,11 @@ enclosure: the relation from as-built geometry, material and heat path to its
 effective `C`, `G` and `eta` still needs measurement and a held-out check.
 Record the time, equipment and calibration cost of obtaining those inputs.
 Ask whether resistive input can change while airflow stays fixed. Select a
-schedule only after inventory and instrument specifications are reviewed. No
-meeting response, apparatus qualification, funding route or new PI decision has
-been received. Estimation-only reporting remains selected.
+schedule only after inventory and instrument specifications are reviewed. A PI
+email response on scope and the funding route was received on 2026-10-19 (see
+the 2026-10-26 update below). Apparatus qualification, the I1 scale answer and
+a tolerance decision have not been received. Estimation-only reporting remains
+selected.
 
 Synthetic compute authorization, 2026-10-11 (owner's compute-task handoff): the
 [executed design aid](../analysis/output/synthetic_identifiability_report.md)
@@ -36,10 +38,30 @@ The physical blocker is unchanged. Guibaud's in-person discussion, ENC-2 through
 ENC-5, rig inventory, calibration and physical access remain owner supplied;
 this source review supplies no new approval or rig measurement.
 
-Owner communication update, 2026-10-08 (this project session): "the guibaud
-email has not been sent because i will meet him in person soon". The Guibaud
-draft remains unsent; the owner will discuss it in person. No meeting date was
-provided, and the agent must not send the draft.
+PI communication update, 2026-10-26 (agent review of the owner's mailbox at
+the owner's request): the owner emailed Guibaud on 2026-10-16 with the research
+question, the draft status, a request to build the experimental setup with the
+lab's currently deployed enclosures, and the SURA funding question. Guibaud
+replied on 2026-10-19 that the SURA route is proceeding, with the hours term
+for returning students adjusted, and gave this direction: "focus the work on
+the existing configuration first, to make sure that there is enough time. We
+could then rapidly implement a suggested design modification based of your
+model." On 2026-10-21 he asked the owner to join the air quality team's Friday
+1:00 to 2:30 pm meeting, and the owner agreed. The owner submitted the SURA
+reappointment form on 2026-10-20; no funding receipt is recorded. The PI
+direction is therefore the existing deployed configuration first, then one
+model-suggested design modification, which matches the estimation-only first
+stage. The tolerance question, the I1 scale question (absolute `C`, `G` or
+`eta` versus `C/G` and `eta/G`), the rig inventory, calibration records, fan
+independence and site/data terms were not addressed in the exchange and remain
+open. On 2026-10-26 a lab member shared an Onshape model described as "the
+box"; edit access was being arranged, the model has not been reviewed, and
+whether it is the deployed enclosure is unconfirmed. No measurement or protocol
+freeze is recorded.
+
+Owner communication update, 2026-10-08 (superseded 2026-10-26, see above): "the
+guibaud email has not been sent because i will meet him in person soon". The
+email was later sent on 2026-10-16.
 
 The discussion seeks PI feedback on calibration transfer and whether a later
 skip-co-location claim needs an application tolerance. The owner-adopted
@@ -78,8 +100,9 @@ review its draft data request; no outreach has been sent. External comparison
 needs a permitted sample and thermal/reference metadata from the data custodian.
 This does not close `EN-R03` or establish a transferable design ranking.
 
-**Owner next action:** discuss calibration transfer, the possible later
-tolerance and the I1 scale question with Guibaud in person; record his feedback.
+**Owner next action:** raise the possible later tolerance and the I1 scale
+question with Guibaud at the Friday meeting; record his answers. The scope
+direction (existing configuration first) is recorded above.
 Supply the actual designs and rig inventory, calibrated reference and
 logging/power/airflow specifications, fan independence, site/data terms and
 resource budget. Physical setup remains the owner's step. No pilot data is collected until the rig exists
