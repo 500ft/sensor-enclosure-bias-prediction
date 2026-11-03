@@ -1,24 +1,22 @@
-"""Shared checks for the figure tests: printed text and caption placement."""
+"""Shared helpers for the figure tests: repository paths and the MATLAB outputs."""
 from pathlib import Path
 
-from matplotlib.text import Text
-
 ROOT = Path(__file__).resolve().parents[2]
-
-
-def printed(fig):
-    return {t.get_text() for t in fig.findobj(Text) if t.get_visible() and t.get_text().strip()}
-
-
-def axis_text(fig):
-    """Tick labels, axis labels and legend entries: the text a data-only canvas may hold."""
-    allowed = {t.get_text() for legend in fig.legends for t in legend.get_texts()}
-    for ax in fig.axes:
-        allowed |= {t.get_text() for t in ax.get_xticklabels(which="both") + ax.get_yticklabels(which="both")}
-        allowed |= {ax.get_xlabel(), ax.get_ylabel()}
-    allowed.add(fig.get_supxlabel())
-    return allowed
+FIGURES = ROOT / "analysis/figures"
+MATLAB = ROOT / "analysis/matlab"
 
 
 def squash(text):
     return " ".join(text.split())
+
+
+def check_matlab_outputs(case, stem, script, data_names):
+    """The committed PNG and PDF exist, and the drawing script reads the named data files."""
+    png, pdf = FIGURES / f"{stem}.png", FIGURES / f"{stem}.pdf"
+    case.assertEqual(png.read_bytes()[:8], b"\x89PNG\r\n\x1a\n", png)
+    case.assertEqual(pdf.read_bytes()[:5], b"%PDF-", pdf)
+    case.assertFalse((FIGURES / f"{stem}.svg").exists(), "the PDF replaces the SVG companion")
+    source = (MATLAB / script).read_text()
+    for name in data_names:
+        case.assertIn(name, source, script)
+    case.assertIn(script[:-2], (MATLAB / "render_figures.m").read_text())

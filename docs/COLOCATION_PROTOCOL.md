@@ -59,7 +59,7 @@ The literature review found two things that shape the design:
 heating can be exactly cancelled by long-wave loss to the sky, so zero net bias
 does not mean zero dissipation. A calculated example in this model (V1
 geometry, `eps` 0.9, `A_conv` 0.020 m², `f_sky` 0.05, `T_air` 30 °C, `T_sky`
-10 °C): `Q = eps·sigma·A_conv·f_sky·(303.15⁴ − 283.15⁴)` = 0.102972 W gives a
+10 °C): $Q = \varepsilon \sigma A_\text{conv} f_\text{sky} \left(303.15^4 - 283.15^4\right) = 0.102972\ \text{W}$ gives a
 night bias of −1.2e-8 °C. That is a real heat source with essentially no bias.
 "The shell traps heat" and "the electronics make heat" are compatible: one is
 a resistance, the other a source.
@@ -192,7 +192,7 @@ the design cannot separate the named confounder.
 ### I1 procedure (the first experiment)
 
 The [executed exact-RC check](../analysis/output/thermal_transient_verification.json)
-tests the single-node equation `C*dtheta/dt + G*theta = Q_effective`.
+tests the single-node equation $C\, \mathrm{d}\theta/\mathrm{d}t + G\theta = Q_\text{effective}$.
 A step identifies `DeltaQ_effective/G` and `C/G`. Electrical input equals
 coupled heat only with a documented heat path; without that relation, absolute
 `G` and `C` remain confounded with coupling. Airflow and fan state must be held
@@ -253,8 +253,8 @@ A temperature-only campaign cannot support an RH claim. If RH is an endpoint:
 | Sensor temperature | already required |
 
 Report RH differences in percentage points, and also compare vapour pressure
-`e = (RH/100)·e_sat(T)`. If the enclosure only warms the air, vapour pressure
-is conserved and the RH drop follows from `e_sat(T)`; wetting, condensation,
+$e = (\text{RH}/100)\, e_\text{sat}(T)$. If the enclosure only warms the air, vapour pressure
+is conserved and the RH drop follows from $e_\text{sat}(T)$; wetting, condensation,
 air exchange and sensor response can break that, which is what makes it a
 test. Register how wet intervals are handled before the run; don't remove them
 afterwards because they look bad. If there is no RH reference, the campaign is
@@ -391,8 +391,8 @@ is reported as its own number.
 
 ### R3.1 Components
 
-Each is a standard uncertainty `u(x_i)` with a sensitivity coefficient
-`c_i = ∂f/∂x_i` (`jcgm2008gum`); where the model isn't analytically
+Each is a standard uncertainty $u(x_i)$ with a sensitivity coefficient
+$c_i = \partial f / \partial x_i$ (`jcgm2008gum`); where the model isn't analytically
 differentiable, use the Guide's numerical form (5.1.3 Note 2). Units are °C
 unless stated.
 
@@ -415,20 +415,20 @@ does not automatically mean few degrees of freedom.
 
 ### R3.2 What U95 ≤ 0.5 °C requires
 
-`U = k·u_c` (GUM Eq. 18), so U95 ≤ 0.5 °C means `u_c ≤ 0.25 °C` at `k = 2`.
-And `k = 2` gives about 95% only under the four GUM G.6.6 conditions:
+$U = k u_c$ (GUM Eq. 18), so $U_{95} \le 0.5\ ^\circ\text{C}$ means $u_c \le 0.25\ ^\circ\text{C}$ at $k = 2$.
+And $k = 2$ gives about 95% only under the four GUM G.6.6 conditions:
 well-behaved input distributions, comparable contributions, an adequate
 first-order approximation, and more than about 10 effective degrees of freedom.
 Those have to be shown, not assumed. If one Type B component dominates with few
-degrees of freedom, `k = 2` does not deliver 95%; choose the coverage method
+degrees of freedom, $k = 2$ does not deliver 95%; choose the coverage method
 from the actual inputs.
 
 ### R3.3 One reference for all arms
 
 For simultaneous readings `A` and `B` against the same reference reading `R`:
-`b_A = A − R` and `b_B = B − R`, so `b_A − b_B = A − B`. The reference cancels
+$b_A = A - R$ and $b_B = B - R$, so $b_A - b_B = A - B$. The reference cancels
 exactly in the difference. In general
-`Var(b_A − b_B) = Var(b_A) + Var(b_B) − 2·Cov(b_A, b_B)`, so ignoring a
+$\mathrm{Var}(b_A - b_B) = \mathrm{Var}(b_A) + \mathrm{Var}(b_B) - 2\,\mathrm{Cov}(b_A, b_B)$, so ignoring a
 positive shared-reference covariance overstates the uncertainty of a
 difference (and understates it for a sum or mean).
 
@@ -447,8 +447,8 @@ an explicit independent input, rather than estimating pairwise covariances.
 
 - `h_c` dominates and cannot be pinned to 10% (`berdahlbretz1997`). Carry it as
   a band.
-- The model's `h = 5.0 + 4.0·U` is mis-referenced: it is Jürges' correlation,
-  whose intercept is 5.6, valid for `U ≤ 5 m/s`, on free-stream wind. Against
+- The model's $h = 5.0 + 4.0\,U$ is mis-referenced: it is Jürges' correlation,
+  whose intercept is 5.6, valid for $U \le 5$ m/s, on free-stream wind. Against
   station wind `U10` the measured slopes are 0.90–2.9. This is why the recorded
   wind has to be declared.
 - The fixed sky-temperature depression is an assumption. Use measured long-wave
