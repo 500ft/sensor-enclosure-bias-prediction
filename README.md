@@ -24,13 +24,13 @@ to a withheld enclosure is the research direction; it has not been demonstrated.
 [Results](#results) · [Roadmap](ROADMAP.md) · [Quick start](#quick-start) ·
 [Pilot protocol](docs/COLOCATION_PROTOCOL.md)
 
-![Eight panels of nominal temperature and RH bias against wind, one column per enclosure variant; marker shape identifies the variant and dashes the lower solar load](analysis/figures/thermal_bias.png)
+![Eight panels of nominal temperature and RH bias against wind, one column per enclosure variant; blue solid lines for 1000 W/m² and orange dashed lines for 800 W/m²](analysis/figures/thermal_bias.png)
 
-Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0, circles; (a) and (e)), painted closed-box control (V0P, squares; (b) and (f)), passive multi-plate shield (V1, triangles; (c) and (g)), and actively aspirated reference (V2, diamonds; (d) and (h)). Solid lines are 1000 W/m² of sun and dashed lines 800 W/m². Panels in a row share axes. The thin line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`.
+Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0; (a) and (e)), painted closed-box control (V0P; (b) and (f)), passive multi-plate shield (V1; (c) and (g)), and actively aspirated reference (V2; (d) and (h)). Blue solid lines are 1000 W/m² of sun and orange dashed lines 800 W/m². Panels in a row share axes. The grey dotted line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`. Drawn by `analysis/matlab/make_thermal_bias.m`.
 
 [Caption](analysis/figures/thermal_bias.caption.md) ·
 [Figure inputs](docs/data-and-figures.md#thermal-bias-plot) ·
-[Vector figure](analysis/figures/thermal_bias.svg).
+[Vector figure (PDF)](analysis/figures/thermal_bias.pdf).
 
 The [full-text prior-work assessment](ProConsList/jin2026sensors.md) documents
 CFD-trained correction with separate outdoor evaluation on the developed shield.
@@ -56,8 +56,12 @@ site and manufacturing help.
 
 ## Results
 
-At 1000 W/m² of sun and 0.5 m/s of wind, the model gives these nominal point
-estimates of temperature rise above ambient:
+At 0.5 m/s of wind, the model gives these nominal point estimates of sensor
+bias. At 1000 W/m² of sun the dark box reads 19.4 °C warm and the shield 3.0 °C:
+
+![Typeset table: predicted sensor minus air temperature and reported minus true RH for the four enclosure variants at 800 and 1000 W/m² and 0.5 m/s wind](analysis/figures/tables/predicted_rise_table.png)
+
+<details><summary>Table as text</summary>
 
 | Enclosure | Predicted rise [°C] |
 | --- | ---: |
@@ -65,11 +69,14 @@ estimates of temperature rise above ambient:
 | Same box, painted white (V0P) | 4.5 |
 | Passive radiation shield (V1) | 3.0 |
 
+</details>
+
 At this operating point, changing the dark box's absorptance to the white-paint
 assumption accounts for most of the predicted reduction. The shield's nominal
 bias is about 1.5 °C lower than the painted box's. Geometry, internal heat load
 and airflow also differ between these systems.
-[Prediction table](analysis/output/thermal_bias_table.csv).
+[Prediction table](analysis/output/thermal_bias_table.csv) ·
+[typeset table (PDF)](analysis/figures/tables/predicted_rise_table.pdf).
 
 The shield-versus-painted-box ranking reverses when the documented sensitivity
 settings for poorer shading, reduced convection and increased plate-air preheat
@@ -88,11 +95,11 @@ metadata and actual sky forcing limit interpretation. No physical accuracy or de
 
 ![Solar and wind forcing panels above one temperature-bias panel per enclosure variant, each with its median and 5th to 95th percentile assumed-input band under a clear-sky scenario](analysis/figures/thermal_transient_prediction.png)
 
-Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from 2026-09-02 04:00 to 2026-09-15 03:00 UTC; the first 24 h are spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each preceding hour; daily peaks range from 300 to 839 W/m². Panel (b) is the wind speed at 10 m, between 0.25 and 5.2 m/s. Panels (c) to (f) share axes and show sensor minus air temperature for the baseline closed box (V0, circles; (c)), painted closed-box control (V0P, squares; (d)), passive multi-plate shield (V1, triangles; (e)), and actively aspirated reference (V2, diamonds; (f)). Each line is the median of 400 input draws and the grey band spans their 5th to 95th percentiles; the bands show sensitivity to assumed input ranges, not measured uncertainty. Above the thin zero line the sensor reads warm. The baseline box's median bias peaks at 5 to 14 °C each day; the other three stay below 4 °C. The final day is incomplete. Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: `analysis/input/openmeteo_brooklyn_20260901_20260914.json`. Model: `analysis/thermal_transient.py`. The weather file's acquisition details are unknown.
+Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from 2026-09-02 04:00 to 2026-09-15 03:00 UTC; the first 24 h are spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each preceding hour; daily peaks range from 300 to 839 W/m². Panel (b) is the wind speed at 10 m, between 0.25 and 5.2 m/s. Panels (c) to (f) share axes and show sensor minus air temperature for the baseline closed box (V0; (c)), painted closed-box control (V0P; (d)), passive multi-plate shield (V1; (e)), and actively aspirated reference (V2; (f)). Each blue line is the median of 400 input draws and the light blue band spans their 5th to 95th percentiles; the bands show sensitivity to assumed input ranges, not measured uncertainty. Above the grey dotted zero line the sensor reads warm. The baseline box's median bias peaks at 5 to 14 °C each day; the other three stay below 4 °C. The final day is incomplete. Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: `analysis/input/openmeteo_brooklyn_20260901_20260914.json`. Model: `analysis/thermal_transient.py`. Drawn by `analysis/matlab/make_thermal_transient.m`. The weather file's acquisition details are unknown.
 
 [Caption](analysis/figures/thermal_transient_prediction.caption.md) ·
 [Inputs, method and reproduction](docs/data-and-figures.md#transient-prediction-plot) ·
-[Vector figure](analysis/figures/thermal_transient_prediction.svg).
+[Vector figure (PDF)](analysis/figures/thermal_transient_prediction.pdf).
 
 Other work in the repository:
 
@@ -135,7 +142,9 @@ diff -u analysis/output/thermal_bias_table.csv "$OUT_DIR/thermal-day.csv"
 diff -u analysis/output/thermal_bias_night_table.csv "$OUT_DIR/thermal-night.csv"
 ```
 
-No diff means the tables reproduce in your environment. The
+No diff means the tables reproduce in your environment. MATLAB R2025b draws the
+figures and typeset tables from the Python plot data; the commands are in
+[analysis/matlab/README.md](analysis/matlab/README.md). The
 [reading guide](docs/START_HERE.md#reviewer-reproduce-the-contained-analysis)
 covers external-data prerequisites and the intake checker.
 

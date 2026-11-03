@@ -11,34 +11,38 @@ the corrected verdict in §5. The exact nonlinear dimensionless balance holds to
 
 The steady lumped balance solved by `thermal_bias.solve_surface_temperature`:
 
-    alpha*phi*G*A_proj + Q = h*A_conv*(T_s - T_l) + eps*sigma*A_conv*[ f*(T_s^4 - T_sky^4) + (1-f)*(T_s^4 - T_l^4) ]
+```math
+\alpha \phi G A_\text{proj} + Q = h A_\text{conv} (T_s - T_l) + \varepsilon \sigma A_\text{conv} \left[ f \left(T_s^4 - T_\text{sky}^4\right) + (1 - f)\left(T_s^4 - T_l^4\right) \right]
+```
 
-with local air `T_l = T_air + delta` (shield plate pre-heat), `h = h_ext * conv_boost`,
-`f = f_sky`, and reported bias `dT = T_s - T_air`.
+with local air $T_l = T_\text{air} + \delta$ (shield plate pre-heat), $h = h_\text{ext} \times$ `conv_boost`,
+$f = f_\text{sky}$, and reported bias $\Delta T = T_s - T_\text{air}$.
 
 ## 2. Dimensionless groups
 
-Linearise radiation about ambient, `h_r = 4*eps*sigma*T_air^3` (5.69 W/m²K at 30 °C, ε 0.90). With
-`theta = dT/dT_sky` and `dT_sky = T_air - T_sky`:
+Linearise radiation about ambient, $h_r = 4 \varepsilon \sigma T_\text{air}^3$ (5.69 W/m²K at 30 °C, ε 0.90). With
+$\theta = \Delta T / \Delta T_\text{sky}$ and $\Delta T_\text{sky} = T_\text{air} - T_\text{sky}$:
 
 | Group | Definition | Meaning | Novelty relevance |
 |---|---|---|---|
-| `Pi_G`  | `alpha*phi*G*A_proj / (h*A_conv*dT_sky)` | heating number: absorbed solar vs convective removal | bundles absorptance, shading, irradiance, area ratio, wind (via `h`) |
-| `N_Q`   | `Q / (alpha*phi*G*A_proj)` | internal-dissipation ratio: self-heat vs solar load | **the axis shield physics never had** (AQ self-heating) |
-| `N_r`   | `h_r / h` | radiation/convection coupling | governs the radiation-dominated failure regime |
-| `f`     | `f_sky` | fraction of the element radiating to cold sky | sets night sub-ambient behaviour |
-| `Pi_d`  | `delta / dT_sky` | ventilation/pre-heat number (wind-dependent) | empirical closure; maps to a vent-Reynolds group in Study B |
+| $\Pi_G$ | $\alpha \phi G A_\text{proj} / (h A_\text{conv} \Delta T_\text{sky})$ | heating number: absorbed solar vs convective removal | bundles absorptance, shading, irradiance, area ratio, wind (via `h`) |
+| $N_Q$ | $Q / (\alpha \phi G A_\text{proj})$ | internal-dissipation ratio: self-heat vs solar load | **the axis shield physics never had** (AQ self-heating) |
+| $N_r$ | $h_r / h$ | radiation/convection coupling | governs the radiation-dominated failure regime |
+| $f$ | $f_\text{sky}$ | fraction of the element radiating to cold sky | sets night sub-ambient behaviour |
+| $\Pi_d$ | $\delta / \Delta T_\text{sky}$ | ventilation/pre-heat number (wind-dependent) | empirical closure; maps to a vent-Reynolds group in Study B |
 
 The balance reduces **exactly (for the linearised model)** to a closed form:
 
-    theta = [ Pi_G*(1 + N_Q) - N_r*f + Pi_d*(1 + N_r*(1-f)) ] / (1 + N_r)
+```math
+\theta = \frac{\Pi_G (1 + N_Q) - N_r f + \Pi_d \left(1 + N_r (1 - f)\right)}{1 + N_r}
+```
 
 Implemented in [`analysis/nondimensional.py`](../analysis/nondimensional.py) (`theta_linear`), written to
 stay finite at night (`solar = 0`) by folding `N_Q` back into an absolute internal-load term.
 
 ## 3. The Biot gate — why printed AQ enclosures are physically open
 
-The lumped reduction assumes an **isothermal wall**, i.e. `Bi = h*t/k << 1`. That holds for metal
+The lumped reduction assumes an **isothermal wall**, i.e. $\mathrm{Bi} = h t / k \ll 1$. That holds for metal
 meteorological screens; it does **not** hold for low-cost printed polymer enclosures:
 
 | Wall (3 mm) | k [W/mK] | Bi at h=7 | Bi at h=25 | source |
@@ -73,20 +77,20 @@ external film coefficient; `k` is the **through-layer** value where direction is
 (`janek2026`), which is the direction a wall conducts. Anisotropy ratio **1.60**, so an in-plane `k`
 would understate `Bi` by up to ~60 %.
 
-**Model.** `Bi = h·t/k` — the ratio of internal conduction resistance to external film resistance.
-`Bi ≪ 1` is the condition under which a single wall node is defensible. This is a **screening
+**Model.** $\mathrm{Bi} = h t / k$ — the ratio of internal conduction resistance to external film resistance.
+$\mathrm{Bi} \ll 1$ is the condition under which a single wall node is defensible. This is a **screening
 ratio, not a verdict**: low `Bi` does not make separate plates, or a sensor-to-wall gap, isothermal
 (Study B §9.8).
 
 **Substitution.** Worst credible case, through-layer ABS at the high film coefficient:
-`Bi = 25 W/m²K × 0.003 m ÷ 0.1039 W/mK`
+$\mathrm{Bi} = 25\ \text{W/m}^2\text{K} \times 0.003\ \text{m} \div 0.1039\ \text{W/mK}$
 
-**Result.** `Bi ≈ 0.72` (worst credible); range across materials and film conditions **0.07 – 0.72**.
+**Result.** $\mathrm{Bi} \approx 0.72$ (worst credible); range across materials and film conditions **0.07 – 0.72**.
 Two significant figures — the inputs support no more.
 
-**Unit check.** `(W/m²K · m) / (W/mK) = (W/mK)/(W/mK) = 1` ✓ dimensionless.
+**Unit check.** $(\text{W/m}^2\text{K} \cdot \text{m}) / (\text{W/mK}) = (\text{W/mK})/(\text{W/mK}) = 1$ ✓ dimensionless.
 
-**Sensitivity.** `Bi ∝ h·t/k`, so it is linear in each. Infill is the largest lever: `lopes2023`
+**Sensitivity.** $\mathrm{Bi} \propto h t / k$, so it is linear in each. Infill is the largest lever: `lopes2023`
 shows infill *pattern alone* moves effective `k` by **82 %** at fixed density, which would push
 `Bi` to ~**1.3** for a genuinely infilled wall. Using the old handbook PLA value (0.13) inflated
 `Bi` by **40–105 %** — that error is corrected above.
@@ -152,7 +156,9 @@ Overall `R² = 0.972`.
 >
 > The **exact nonlinear dimensionless balance**
 >
-> `Pi_G + Pi_Q = theta - d + N_r/(4*tau) * { f*[(1+tau*theta)^4 - (1-tau)^4] + (1-f)*[(1+tau*theta)^4 - (1+tau*d)^4] }`
+> ```math
+> \Pi_G + \Pi_Q = \theta - d + \frac{N_r}{4\tau} \left\{ f \left[(1 + \tau\theta)^4 - (1 - \tau)^4\right] + (1 - f)\left[(1 + \tau\theta)^4 - (1 + \tau d)^4\right] \right\}
+> ```
 >
 > was derived and evaluated at **all 1,944 DOE points**: maximum absolute residual **5.478e-9**,
 > i.e. solver tolerance (`nondimensional.balance_residual`; regression test
@@ -194,7 +200,7 @@ failure modes in [specs/study-b-cht/design.md](specs/study-b-cht/design.md) §7.
 ## 6. Honest limits
 
 - **Radiation nonlinearity** — the linearised law is the reduction hypothesis; ground truth is the
-  full nonlinear solver. At fixed climate (`tau = dT_sky/T_air ≈ 0.066`) the collapse is onto the 5
+  full nonlinear solver. At fixed climate ($\tau = \Delta T_\text{sky} / T_\text{air} \approx 0.066$) the collapse is onto the 5
   groups; **varying `T_air` across climates (Study D) adds a sixth radiation-nonlinearity group.**
 - **`Pi_d` is an empirical closure**, not first-principles ventilation physics; Study B replaces it
   with a resolved vent-Reynolds treatment via CHT.
