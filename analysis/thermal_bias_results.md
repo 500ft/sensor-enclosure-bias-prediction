@@ -12,7 +12,9 @@ Regenerate with:
 
 ```bash
 python3 analysis/thermal_bias.py
-# figure -> analysis/figures/thermal_bias.png
+# plot data -> analysis/figures/data/thermal_bias_sweep.csv
+matlab -batch "addpath('analysis/matlab'); render_figures"
+# figure -> analysis/figures/thermal_bias.png and .pdf; tables -> analysis/figures/tables/
 ```
 
 ## 1. What this models and why FEA is not needed for it
@@ -24,14 +26,16 @@ in temperature and low in RH. This mechanism is *first order* and does **not**
 require FEA to bound. For each variant we solve the steady-state lumped energy
 balance on the sensor-coupled surface:
 
-```
-alpha * solar_factor * G * A_proj  +  Q_internal
-    =  h_eff * A_conv * (T_s - T_local)
-       +  eps * sigma * A_conv * [ f_sky*(T_s^4 - T_sky^4) + (1-f_sky)*(T_s^4 - T_local^4) ]
+```math
+\alpha\, F_\text{solar}\, G\, A_\text{proj} + Q_\text{internal}
+  = h_\text{eff} A_\text{conv} \left(T_s - T_\text{local}\right)
+  + \varepsilon \sigma A_\text{conv} \left[ f_\text{sky}\left(T_s^4 - T_\text{sky}^4\right) + \left(1 - f_\text{sky}\right)\left(T_s^4 - T_\text{local}^4\right) \right]
 ```
 
-and report the sensor temperature rise above **true** ambient, `dT = T_s - T_air`,
-then map `dT` to the reported RH error (warm air at fixed water-vapor content
+Here $F_\text{solar}$ is `solar_factor` in `analysis/thermal_bias.py`.
+
+and report the sensor temperature rise above **true** ambient, $\Delta T = T_s - T_\text{air}$,
+then map $\Delta T$ to the reported RH error (warm air at fixed water-vapor content
 reads low RH). The former FEA stub performed no solve and has been removed.
 These outputs compare assumptions in the lumped model; the combined sensitivity
 screen below limits any design preference.
@@ -51,6 +55,10 @@ modeling assumption, not a measured property of a paint or filament. The main
 [CSV](output/thermal_bias_table.csv) contains all four variants at every reported
 operating point; the existing V0/V1/V2 values are unchanged.
 
+![Typeset table: painted-box rise, RH error and painted box minus shield at 800 and 1000 W/m² and five wind speeds](figures/tables/painted_control_table.png)
+
+<details><summary>Table as text</summary>
+
 | Solar [W/m²] | Wind [m/s] | Painted box (V0P) rise [°C] | Painted box (V0P) RH error [percentage points] | Painted box minus shield (V0P − V1) [°C] |
 | ---: | ---: | ---: | ---: | ---: |
 | 800 | 0.0 | 3.4679 | -8.9307 | 0.5156 |
@@ -64,17 +72,23 @@ operating point; the existing V0/V1/V2 values are unchanged.
 | 1000 | 2.0 | 3.0576 | -7.9743 | 1.2405 |
 | 1000 | 5.0 | 1.8674 | -5.0543 | 0.9571 |
 
+</details>
+
 The last column is the difference of the exported rounded predictions. It is
 neither measured shielding benefit nor an uncertainty bound. The small
 800 W/m² differences also show why the dark-box comparison alone overstates the
 incremental design case. Physical matched-finish comparisons, geometry inventory
 and joint-uncertainty evaluation remain required before a validation verdict.
 
-Ambient case: `T_air = 30 degC`, `RH_true = 50 %`, clear-sky `T_sky = 10 degC`
-(20 K depression). `dT` in degC (sensor rise above true ambient); `RH_err` in
+Ambient case: $T_\text{air} = 30\ ^\circ\text{C}$, $\text{RH}_\text{true} = 50\ \%$, clear-sky $T_\text{sky} = 10\ ^\circ\text{C}$
+(20 K depression). $\Delta T$ in °C (sensor rise above true ambient); $\text{RH}_\text{err}$ in
 %RH (reported minus true; **negative = reads dry**).
 
 ### Temperature bias
+
+![Typeset table: sensor minus air temperature for four variants at 800 and 1000 W/m² and five wind speeds](figures/tables/thermal_bias_temperature_table.png)
+
+<details><summary>Table as text</summary>
 
 | Solar [W/m²] | Wind [m/s] | Baseline closed box (V0) [°C] | Painted closed-box control (V0P) [°C] | Passive multi-plate shield (V1) [°C] | Actively aspirated reference (V2) [°C] |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -89,7 +103,13 @@ Ambient case: `T_air = 30 degC`, `RH_true = 50 %`, clear-sky `T_sky = 10 degC`
 | 1000 | 2.0 | 13.5 | 3.1 | 1.8 | 1.3 |
 | 1000 | 5.0 | 8.3 | 1.9 | 0.9 | 1.3 |
 
+</details>
+
 ### Relative-humidity bias
+
+![Typeset table: reported minus true RH for four variants at 800 and 1000 W/m² and five wind speeds](figures/tables/thermal_bias_rh_table.png)
+
+<details><summary>Table as text</summary>
 
 | Solar [W/m²] | Wind [m/s] | Baseline closed box (V0) [pp] | Painted closed-box control (V0P) [pp] | Passive multi-plate shield (V1) [pp] | Actively aspirated reference (V2) [pp] |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -103,6 +123,8 @@ Ambient case: `T_air = 30 degC`, `RH_true = 50 %`, clear-sky `T_sky = 10 degC`
 | 1000 | 1.0 | -30.0 | -9.9 | -6.6 | -3.7 |
 | 1000 | 2.0 | -26.1 | -8.0 | -4.9 | -3.7 |
 | 1000 | 5.0 | -18.6 | -5.1 | -2.5 | -3.7 |
+
+</details>
 
 RH differences use percentage points (pp).
 Source: [downloadable predictions](output/thermal_bias_table.csv). Displayed
@@ -123,7 +145,7 @@ published *measurements*; all model values remain predictions):
 
 | Prediction | Measured bracket | Sources |
 |---|---|---|
-| V1 passive multi-plate, dT 0.9-3.7 degC | Good stacked-plate passive shields measure dT -0.7 to +2.2 degC full-sun (89% of daytime readings <= 1.5 degC); poorer passive geometries reach +5.4 degC (cones) and +7.4 degC (open-bottom tubes). A $3 Gill-style shield showed MAE 0.99 degC vs. a mechanically aspirated reference in the open, warm-biased at low wind. 3D-printed cone shields measured max daytime errors 0.3-1.5 degC vs. a Vantage Pro. | Tarara & Hoheisel 2007; Holden et al. 2013; Botero-Valencia et al. 2022 |
+| V1 passive multi-plate, dT 0.9-3.7 degC | Good stacked-plate passive shields measure dT -0.7 to +2.2 degC full-sun (89% of daytime readings <= 1.5 degC); poorer passive geometries reach +5.4 degC (cones) and +7.4 degC (open-bottom tubes). A \$3 Gill-style shield showed MAE 0.99 degC vs. a mechanically aspirated reference in the open, warm-biased at low wind. 3D-printed cone shields measured max daytime errors 0.3-1.5 degC vs. a Vantage Pro. | Tarara & Hoheisel 2007; Holden et al. 2013; Botero-Valencia et al. 2022 |
 | V2 aspirated, ~1.3 degC flat | Measured aspirated shields average < +/-0.5 degC vs. a passive Gill reference — the V2 prediction is conservative (high) by ~2x. | Tarara & Hoheisel 2007 |
 | Wind dependence (both V0/V1 fall steeply with wind) | Passive multi-plate 3D-PAWS temperature RMSE fell 1.22 -> 1.08 degC above 1 m/s wind and approached the 0.8 degC sensor floor above ~5 m/s vs. an actively aspirated Mesonet reference. | Theisen et al. 2020 |
 | V0 closed box, dT 8.3-22.7 degC | **Not directly bracketed.** The source set contains no measured sealed-dark-box-in-sun bias; the nearest measured anchors are the worst passive geometry (+7.4 degC) and a fully exposed sensor (max +4.1 to +6.0 degC daytime). V0 exceeding all of these is *expected* (closed dark enclosure + internal dissipation, no ventilation) but is a model claim only until the solar-heat-soak test (Section 7) measures it. | Tarara & Hoheisel 2007; Botero-Valencia et al. 2022 |
@@ -135,9 +157,9 @@ Deford et al.).
 
 Figure: `analysis/figures/thermal_bias.png`. The top row plots temperature rise
 and the bottom row RH error against wind, one column per variant. Solid lines are
-1000 W/m² and dashed lines 800 W/m²; marker shape identifies the variant, and V0P
-is the painted control. [Caption](figures/thermal_bias.caption.md) ·
-[Vector figure](figures/thermal_bias.svg).
+1000 W/m² (blue) and dashed lines 800 W/m² (orange); each variant has its own
+column, and V0P is the painted control. [Caption](figures/thermal_bias.caption.md) ·
+[Vector figure (PDF)](figures/thermal_bias.pdf).
 
 ## 3. Assumptions block (every input, with status)
 
@@ -160,7 +182,7 @@ Status: `bounded` = bounded engineering assumption to be measured/refined;
 | A_conv baseline / shield element | 0.090 / 0.020 | m² | geometry/TODO-from-lab |
 | shield_solar_factor (flux reaching sensor) | 0.18 | dimensionless | bounded |
 | Internal self-heat: single-zone / two-zone | 0.8 / 0.1 | W | bounded/TODO-from-lab |
-| h_ext = 5.0 + 4.0*wind | — | W/(m²·K) | physics |
+| $h_\text{ext} = 5.0 + 4.0\,U_\text{wind}$ | — | W/(m²·K) | physics |
 | shield natural-convection boost | 1.4 | dimensionless | bounded |
 | shield air pre-heat (calm) | 1.2 | K | bounded |
 | pre-heat wind half-life | 1.5 | m/s | bounded |
@@ -196,9 +218,9 @@ establish robustness to joint uncertainty or measured manufacturing variation.
 ## 5. RH-error mapping
 
 The reported RH is computed by holding the **absolute** water-vapor content at
-the ambient partial pressure and raising the sensor temperature to `T_s`; RH is
+the ambient partial pressure and raising the sensor temperature to $T_s$; RH is
 then the fixed actual vapor pressure over the saturation pressure at the warmer
-sensor temperature (Magnus/Tetens `e_s`). A warm sensor therefore reports a
+sensor temperature (Magnus/Tetens $e_s$). A warm sensor therefore reports a
 **low** RH. This converts each thermal `dT` into the measurable RH bias the paper
 cares about (table 2): e.g. V0's ~19 degC rise reads about **-32 %RH**, while
 V1's ~3 degC rise reads about **-8 %RH** at low wind.
@@ -233,11 +255,17 @@ dominates and a sky-exposed enclosure reads *below* ambient. From
 [`analysis/output/thermal_bias_night_table.csv`](output/thermal_bias_night_table.csv), regenerated
 by `python analysis/thermal_bias.py` (assumptions unchanged; G = 0 W/m²):
 
+![Typeset table: night clear-sky sensor minus air temperature and RH error](figures/tables/night_table.png)
+
+<details><summary>Table as text</summary>
+
 | Variant | Sensor minus air, calm [°C] | Sensor minus air, 5 m/s [°C] | RH error, calm [pp] |
 | --- | ---: | ---: | ---: |
 | Baseline closed box (V0) | -4.028 | -1.390 | +13.24 |
 | Passive multi-plate shield (V1) | -0.012 | — | +0.03 |
 | Actively aspirated reference (V2) | -0.005 | — | +0.01 |
+
+</details>
 
 A dash marks a value not shown here; the night CSV has every operating point.
 

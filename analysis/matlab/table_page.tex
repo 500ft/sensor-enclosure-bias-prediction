@@ -1,0 +1,11 @@
+% Standalone page for one table fragment. Compile with LuaLaTeX, XeLaTeX or Tectonic:
+%   cp analysis/figures/tables/<name>.tex fragment.tex && lualatex table_page.tex
+\documentclass[border=6pt]{standalone}
+\usepackage{fontspec}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{xcolor}
+\sisetup{group-separator={,}}
+\begin{document}
+\input{fragment.tex}
+\end{document}
