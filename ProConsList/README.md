@@ -48,5 +48,29 @@ When adding a paper:
 | `wmo2023no8` | WMO-No. 8 instruments and observation methods guide | `wmo2023no8.md` |
 | `astm2022d8406` | ASTM D8406-22 outdoor sensor evaluation practice | `astm2022d8406.md` |
 | `cen2021ts17660` | CEN/TS 17660-1 sensor-system performance classification | `cen2021ts17660.md` |
+| `linden1990` | Linden et al. 1990 | `linden1990.md` |
+| `misale1997` | Misale 1997 | `misale1997.md` |
+| `karava2004` | Karava et al. 2004 | `karava2004.md` |
+| `ohba2006` | Ohba et al. 2006 | `ohba2006.md` |
+| `valera2006` | Valera et al. 2006 | `valera2006.md` |
+| `burt2022` | Burt 2022 | `burt2022.md` |
+| `tetreault2023cci` | Tetreault and Hagan 2023 (CCI TB 38) | `tetreault2023cci.md` |
+| `smardo2018amca` | Smardo 2018 (AMCA 500-L talk) | `smardo2018amca.md` |
+| `freeth2015bsria` | Freeth 2015 (BSRIA EN 13030 report) | `freeth2015bsria.md` |
+| `masters2006soffit` | Masters 2006 | `masters2006soffit.md` |
+| `ganchowdhury2009vents` | Gan Chowdhury et al. 2009 | `ganchowdhury2009vents.md` |
+| `blocken2004` | Blocken and Carmeliet 2004 | `blocken2004.md` |
+| `staliulionis2016` | Staliulionis et al. 2016 | `staliulionis2016.md` |
+| `porexvirtek` | Porex Virtek datasheets | `porexvirtek.md` |
+| `gore2011cycling` | Gore 2011 technical note | `gore2011cycling.md` |
+| `ouimette2024` | Ouimette et al. 2024 | `ouimette2024.md` |
+| `johnston2019` | Johnston et al. 2019 | `johnston2019.md` |
+| `bainomugisha2023` | Bainomugisha et al. 2023 | `bainomugisha2023.md` |
+| `tse2025` | Tse and Liang 2025 | `tse2025.md` |
+| `schilt2023` | Schilt et al. 2023 | `schilt2023.md` |
+| `sensirion2024design` | Sensirion 2024 T/RH design guide | `sensirion2024design.md` |
+| `sensirion2021sen5x` | Sensirion SPS30/SEN5x/SEN6x guidelines | `sensirion2021sen5x.md` |
+| `plantower2016` | Plantower 2016 PMS5003 manual | `plantower2016.md` |
+| `bosch2018bme280` | Bosch 2018 BME280 mounting | `bosch2018bme280.md` |
 
 The cross-paper analysis from the initial literature review is preserved in `consolidated_selections.md`.

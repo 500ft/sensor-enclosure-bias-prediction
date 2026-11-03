@@ -405,6 +405,23 @@ the abstract-only entry; numerical details stay in that assessment.
 | --- | --- | --- | --- |
 | Jin et al. (Sensors) | Calibrated thin-film Pt100 | Copper sphere, white plastic guides, dual aluminum shields with reflective outer and black inner surfaces | CFD-trained correction evaluated outdoors on the proposed design without field refitting; no withheld-design or total-effort comparison |
 
+## Vent Configuration Sources Added October 2026
+
+The [vent configuration review](vent_configuration_review.md) uses 24 sources on
+vent airflow, rain entry and AQ node layout. Node geometry reported in them:
+
+- Johnston et al. (2019): PMS5003, PMS7003, HPMA115S0 and OPC-N2 in an IP65 ABS
+  box, 360 x 200 x 160 mm. Version 1 used grids of 8 mm holes in the base and
+  one side behind steel mesh (3 mm holes, 51% open). Version 2 used three sealed
+  sections and two 54 mm intake and two 70 mm exhaust holes with the same mesh,
+  a sloped drip cover over the Raspberry Pi and two Gore breather vents.
+- Bainomugisha et al. (2023), AirQo: two PMS5003, external SHT25 and internal
+  DHT11 in a 3D-printed body and cover. Vent dimensions are only in the STL files.
+- Schilt et al. (2023): water-resistant plastic box with an external snorkel and
+  base-plate holes; hole size and count not reported.
+- Ouimette et al. (2024) and Tse and Liang (2025), PurpleAir PA-II: two PMS5003
+  in a PVC tube capped on top and open at the bottom, BME280 under the cap.
+
 ## Sources
 
 - Theisen et al. (2020): https://doi.org/10.5194/amt-13-4699-2020
@@ -463,3 +480,27 @@ the abstract-only entry; numerical details stay in that assessment.
 - JCGM 100:2008 (GUM): https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf
 - Arlot and Celisse (2010): https://doi.org/10.1214/09-SS054
 - Jin et al. (2026, Sensors), full text assessed: https://doi.org/10.3390/s26123853
+- Linden et al. 1990: https://doi.org/10.1017/S0022112090001987
+- Misale 1997: https://www.electronics-cooling.com/1997/09/a-practical-formula-for-air-cooled-boards-in-ventilated-enclosures/
+- Karava et al. 2004: https://doi.org/10.1080/14733315.2004.11683920
+- Ohba et al. 2006: https://doi.org/10.1080/14733315.2006.11683728
+- Valera et al. 2006: https://doi.org/10.5424/sjar/2006044-204
+- Burt 2022: https://doi.org/10.5194/gi-11-263-2022
+- Tetreault and Hagan 2023 (CCI TB 38): https://www.canada.ca/en/conservation-institute/services/conservation-preservation-publications/technical-bulletins/airtightness-measurement-display-cases.html
+- Smardo 2018 (AMCA 500-L talk): https://www.amca.org/resources/Smardo%20-%20Louvers%20ASET-US-2018%20-%20RC.pdf
+- Freeth 2015 (BSRIA EN 13030 report): https://dam.renson.net/m/3bfd7ce194657c91/original/MR074-L-066IM1-Airflow-Rain-BSRIA-E-25-03-15.pdf
+- Masters 2006: https://www.ihrc.fiu.edu/wp-content/uploads/2012/05/HLMP_Year06_Section2_SoffitTesting_RCMPY6v2.pdf
+- Gan Chowdhury et al. 2009: https://ihrc.fiu.edu/wp-content/uploads/2012/05/HLMP_Year09_Section2_Roof_WallVents_RCMP08-09.pdf
+- Blocken and Carmeliet 2004: https://doi.org/10.1016/j.jweia.2004.06.003
+- Staliulionis et al. 2016: https://doi.org/10.1063/1.4951797
+- Porex Virtek datasheets: https://www.porex.com/?p=28634
+- Gore 2011 technical note: https://www.gore.com/sites/default/files/resources/pdf/2025-07/ptv-techinfo-temperature-cycling-us.pdf
+- Ouimette et al. 2024: https://doi.org/10.1080/02786826.2023.2285935
+- Johnston et al. 2019: https://doi.org/10.3390/s19010209
+- Bainomugisha et al. 2023: https://doi.org/10.1016/j.ohx.2023.e00482
+- Tse and Liang 2025: https://doi.org/10.3390/s25103044
+- Schilt et al. 2023: https://doi.org/10.3390/s23020794
+- Sensirion 2024 T/RH design guide: https://sensirion.com/media/documents/FC5BED84/662B494D/Sensirion_Humidity_Temperature_Design_Guide.pdf
+- Sensirion SPS30/SEN5x/SEN6x guidelines: https://sensirion.com/resource/user_guide/sen5x/mechanical_design_assembly_guidelines
+- Plantower 2016 PMS5003 manual: https://www.aqmd.gov/docs/default-source/aq-spec/resources-page/plantower-pms5003-manual_v2-3.pdf
+- Bosch 2018 BME280 mounting: https://www.bosch-sensortec.com/media/boschsensortec/downloads/handling_soldering_mounting_instructions/bst-bme280-hs006.pdf
