@@ -1,6 +1,6 @@
 {
   "status": "executed numerical consistency checks; no physical validation",
-  "model_sha256": "8b0a424c9bbfe98fe3308a4f2175224a9b1fd9573ddef081bfc08d2bf605621e",
+  "model_sha256": "49a8a56c51c76edb6772ebe9c0fc07319b25dc8795468f5932fad31a45c41bd7",
   "weather_sha256": "a01ce1c2a1ac749eb4f6ffd005c4f65d7acbaacd4df41c2c120fed38b09dd8af",
   "rc_step": {
     "equation": "C*dtheta/dt + G*theta = effective_heat_step",
