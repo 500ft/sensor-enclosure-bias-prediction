@@ -1,9 +1,9 @@
 # Roadmap
 
-This is the only active plan. The [owner record](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
-holds decisions and physical prerequisites; the [protocol](docs/COLOCATION_PROTOCOL.md)
-holds acquisition rules. [Results](docs/results.md) and [history](docs/history/README.md)
-separate executed evidence from retired proposals.
+This is the only active plan. The [study decision and equipment record](docs/COLOCATION_OWNER_SESSION.md#current-blocker)
+tracks the current physical prerequisites. The [protocol](docs/COLOCATION_PROTOCOL.md)
+specifies acquisition rules. [Results](docs/results.md) reports the calculations
+and [history](docs/history/README.md) links earlier proposals.
 
 ## Question and finish line
 
@@ -24,10 +24,10 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
 
 ## Verified starting point
 
-- **Done:** corrected transient integration, exact-RC and interval-energy checks,
-  refinement checks, explicit sky scenarios and assumed-input sensitivity.
-  [The merged result](docs/results.md#transient-result) retains missing acquisition
-  provenance as unknown; it is not a physical validation.
+- The transient solver has passed exact-RC, interval-energy and timestep-refinement
+  checks. Its [current result](docs/results.md#transient-result) uses explicit sky
+  scenarios and shows sensitivity to assumed inputs. Weather acquisition details
+  remain unknown, and no physical comparison has tested this prediction.
 - The [steady comparison](analysis/thermal_bias_results.md) and combined
   sensitivity calculation remain reproducible. Their ranking reversal establishes
   no design preference. The [uncertainty module](analysis/uncertainty.py) is
@@ -38,8 +38,9 @@ fitted, quantify the remaining calibration rather than claiming zero calibration
   remain our evaluation question, without an established novelty or success claim.
 - The [baseline CAD](cad/enclosure/v0/README.md) has recorded geometric checks.
   It does not establish the new rig inventory or thermal performance.
-- The [external-data probe](analysis/aqspec_feasibility.md) obtained reports but
-  no qualified paired temperature series. That route is optional.
+- The [external-data search](analysis/aqspec_feasibility.md) found reports but no
+  paired sensor/reference temperature records with established reuse terms. That
+  route is optional.
 - **Done:** the [synthetic I1 design aid](analysis/output/synthetic_identifiability_report.md)
   derives the power-only scaling ambiguity and executes profile, coverage and
   schedule comparisons under declared assumptions. It identifies failure regimes
@@ -62,7 +63,7 @@ flowchart TD
 
 ### M1. Resolve decisions and qualify the rig
 
-Status: current, blocked on owner inputs.
+Status: current. The equipment and access information listed below is missing.
 
 Prerequisites: the recorded in-principle PI support and owner access to actual
 hardware, calibration records and site/data terms. The owner-authorized research
@@ -82,12 +83,16 @@ Tasks:
   calibration certificate and uncertainty, loggers, electrical-power measurement
   and airflow instrumentation. Check synchronization, positions and whether
   input power can vary with airflow fixed.
-- Decide from the real apparatus whether absolute `C`, `G` or `eta` is needed.
-  If so, identify an independent, qualified coupling, capacity or conductance
-  measurement for this single-node model. Otherwise retain the identifiable
-  `C/G` and `eta/G` model. Qualify the actual instruments and heat path before
-  selecting an I1 schedule. An absolute anchor alone does not establish
-  practical identifiability or prediction for another enclosure.
+- Decide from the real apparatus whether absolute effective heat capacity `C`,
+  conductance `G` or electrical-to-node coupling `eta` is needed. If not, use
+  the `C/G` and `eta/G` model that power steps can identify under the stated
+  heat path. If absolute values are needed, independently measure one of `C`,
+  `G` or `eta`, checking the instrument calibration and whether the measurement
+  represents the I1 heat path. Measuring one absolute thermal parameter removes
+  the scale ambiguity in this single-node model. By itself, it does not
+  establish precise estimates of all three parameters or prediction for
+  another enclosure. Review the rig specifications before choosing an I1
+  schedule.
 - Record usable equipment and space, permitted purchases and a spending ceiling.
   Self-funded apparatus and independently arranged space can satisfy the access
   route when qualified for the measurements.

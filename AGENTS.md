@@ -70,3 +70,6 @@ and edited text should read like an engineer wrote it for another engineer.
   section. Don't chain clauses with em dashes.
 - Keep dates and changelog entries out of README and roadmap prose unless the
   date matters to the reader. History belongs in git and the progress log.
+- In public explanations, name the missing instrument, calibration, site or
+  data requirement. Keep the decision history and permission rules explicit in
+  their dedicated records.
