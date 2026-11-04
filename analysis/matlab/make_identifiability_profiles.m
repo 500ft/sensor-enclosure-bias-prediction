@@ -62,8 +62,9 @@ for k = 1:4
             'FontSize', S.size.note, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom');
     end
     if k == 2
-        text(ax, gen * 1.12, PROFILE_YMAX - 0.4, sprintf('generating $C/G$, %g min', gen), ...
-            'Color', S.c.grey, 'FontSize', S.size.note, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');
+        % Two lines, right-aligned just inside the axes, so the label stays on the canvas.
+        text(ax, max(x) / 1.03, PROFILE_YMAX - 0.4, {'generating $C/G$', sprintf('%g min', gen)}, ...
+            'Color', S.c.grey, 'FontSize', S.size.note, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top');
     end
 end
 xlabel(tl, 'Candidate $C/G$ (min)', 'Interpreter', 'latex', 'FontSize', S.size.label, 'Color', S.c.ink);
