@@ -63,17 +63,19 @@ class MatchedFinishTests(unittest.TestCase):
                                   if r["g_w_m2"] == g and r["wind_m_s"] == wind},
                                  {"V0", "V0P", "V1", "V2"})
 
-    def test_consumer_cli_exports_control_and_figure_outside_checkout(self):
+    def test_consumer_cli_exports_control_and_figure_data_outside_checkout(self):
         script = Path(__file__).resolve().parents[1] / "thermal_bias.py"
         with tempfile.TemporaryDirectory() as directory:
             result = subprocess.run(
-                [sys.executable, str(script), "--table", "bias.csv", "--figure", "bias.png"],
+                [sys.executable, str(script), "--table", "bias.csv", "--night-table", "night.csv",
+                 "--figure-data", "sweep.csv", "--caption", "bias.caption.md"],
                 cwd=directory, text=True, capture_output=True)
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("Painted closed-box control", result.stdout)
             self.assertIn("not an isolated shielding effect", result.stdout)
             self.assertIn(",V0P,", (Path(directory) / "bias.csv").read_text())
-            self.assertGreater((Path(directory) / "bias.png").stat().st_size, 1000)
+            self.assertIn(",V0P,", (Path(directory) / "sweep.csv").read_text())
+            self.assertIn("Blue solid lines", (Path(directory) / "bias.caption.md").read_text())
 
 
 class NightClearSkyTests(unittest.TestCase):

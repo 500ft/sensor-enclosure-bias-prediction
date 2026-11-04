@@ -482,14 +482,15 @@ def write_bias_table(res: SweepResult, variants: list[Variant], wind_marks: list
     print(f"[table] wrote {out_path}")
 
 
-MARKER_NAMES = {"o": "circles", "s": "squares", "^": "triangles", "D": "diamonds"}
-
-
-def _figure_facts(res: SweepResult, variants: list[Variant], fs):
-    """Validated values shared by the figure and its caption."""
+def _figure_facts(res: SweepResult, variants: list[Variant]):
+    """Validated values shared by the figure data and its caption."""
+    try:
+        from analysis import figure_data as fd
+    except ImportError:  # run as a script, with analysis/ on sys.path
+        import figure_data as fd
     g_hi, g_lo = max(res.g_values), min(res.g_values)
     assert len(res.g_values) == 2, res.g_values
-    ordered = sorted(variants, key=lambda v: fs.VARIANT_ORDER.index(v.vid))
+    ordered = sorted(variants, key=lambda v: fd.VARIANT_ORDER.index(v.vid))
 
     def span(values, vids):
         both = np.concatenate([values[vid][g] for vid in vids for g in res.g_values])
@@ -501,97 +502,64 @@ def _figure_facts(res: SweepResult, variants: list[Variant], fs):
     # The caption says "warm" and "dry" for every plotted day point.
     assert spans["v0_dt"][0] > 0 and spans["rest_dt"][0] > 0, spans
     assert spans["v0_rh"][1] < 0 and spans["rest_rh"][1] < 0, spans
-    return g_hi, g_lo, ordered, spans
+    return g_hi, g_lo, ordered, spans, fd
 
 
 def figure_caption(res: SweepResult, variants: list[Variant], t_air_c: float, rh_true_pct: float) -> str:
-    try:
-        from analysis import figure_style as fs
-    except ImportError:  # run as a script, with analysis/ on sys.path
-        import figure_style as fs
-    g_hi, g_lo, ordered, s = _figure_facts(res, variants, fs)
+    g_hi, g_lo, ordered, s, fd = _figure_facts(res, variants)
     n = len(ordered)
+    L = fd.LETTERS
     who = ", ".join(
-        f"{'and ' if i == n - 1 else ''}{v.name[0].lower() + v.name[1:]} ({v.vid}, "
-        f"{MARKER_NAMES[fs.VARIANT_MARKERS[v.vid]]}; ({fs.LETTERS[i]}) and ({fs.LETTERS[n + i]}))"
+        f"{'and ' if i == n - 1 else ''}{v.name[0].lower() + v.name[1:]} ({v.vid}; ({L[i]}) and ({L[n + i]}))"
         for i, v in enumerate(ordered))
     return (
         "Simulation: nominal steady-state bias from the lumped heat-balance model, without "
         f"propagated input uncertainty. Air {t_air_c:g} °C, true RH {rh_true_pct:g} %, clear sky "
-        f"{float(_a('T_sky_offset')):g} K below air. Panels ({fs.LETTERS[0]}) to ({fs.LETTERS[n - 1]}) "
+        f"{float(_a('T_sky_offset')):g} K below air. Panels ({L[0]}) to ({L[n - 1]}) "
         "show sensor minus air temperature and panels "
-        f"({fs.LETTERS[n]}) to ({fs.LETTERS[2 * n - 1]}) reported minus true relative humidity in "
+        f"({L[n]}) to ({L[2 * n - 1]}) reported minus true relative humidity in "
         f"percentage points, against external wind speed from {res.wind.min():g} to "
-        f"{res.wind.max():g} m/s, for the {who}. Solid lines are {g_hi:.0f} W/m² of sun and dashed "
-        f"lines {g_lo:.0f} W/m². Panels in a row share axes. The thin line marks zero: above it "
-        "the sensor reads warm, below it the sensor reads dry. Across both solar loads the "
+        f"{res.wind.max():g} m/s, for the {who}. Blue solid lines are {g_hi:.0f} W/m² of sun and "
+        f"orange dashed lines {g_lo:.0f} W/m². Panels in a row share axes. The grey dotted line marks "
+        "zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the "
         f"baseline box reads {s['v0_dt'][0]:.0f} to {s['v0_dt'][1]:.0f} °C warm and "
         f"{-s['v0_rh'][1]:.0f} to {-s['v0_rh'][0]:.0f} points dry; the other three read "
         f"{s['rest_dt'][0]:.1f} to {s['rest_dt'][1]:.1f} °C warm and {-s['rest_rh'][1]:.0f} to "
         f"{-s['rest_rh'][0]:.0f} points dry. Values at five wind speeds: "
-        "`analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`."
+        "`analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`. "
+        "Drawn by `analysis/matlab/make_thermal_bias.m`."
     )
 
 
-def make_figure(res: SweepResult, variants: list[Variant], out_path: str,
-                t_air_c: float | None = None, rh_true_pct: float | None = None):
-    """Write the figure, its SVG and its caption file; return the open figure's caption."""
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    try:
-        from analysis import figure_style as fs
-    except ImportError:  # run as a script, with analysis/ on sys.path
-        import figure_style as fs
+FIGURE_DATA = "analysis/figures/data/thermal_bias_sweep.csv"
+FIGURE_CAPTION = "analysis/figures/thermal_bias.caption.md"
 
+
+def figure_rows(res: SweepResult, variants: list[Variant]):
+    """The plotted sweep: one row per solar load, wind speed and variant."""
+    _, _, ordered, _, _ = _figure_facts(res, variants)
+    for g in sorted(res.g_values):
+        for i, wind in enumerate(res.wind):
+            for v in ordered:
+                yield [f"{g:.0f}", f"{wind:.2f}", v.vid, v.name,
+                       f"{res.dT[v.vid][g][i]:.6f}", f"{res.rh_err[v.vid][g][i]:.6f}"]
+
+
+def write_figure_data(res: SweepResult, variants: list[Variant], data_path: str, caption_path: str,
+                      t_air_c: float | None = None, rh_true_pct: float | None = None) -> str:
+    """Write the plotted sweep for make_thermal_bias.m and the caption file; return the caption."""
+    _, _, _, _, fd = _figure_facts(res, variants)
     t_air_c = float(_a("T_air")) if t_air_c is None else t_air_c
     rh_true_pct = float(_a("RH_air")) if rh_true_pct is None else rh_true_pct
-    fig = build_figure(res, variants)
-    fs.save(fig, out_path)
-    plt.close(fig)
+    fd.write_csv(data_path, ["g_w_m2", "wind_m_s", "variant_id", "variant_name",
+                             "delta_t_degc", "rh_err_pct"], figure_rows(res, variants))
     text = figure_caption(res, variants, t_air_c, rh_true_pct)
-    fs.caption_path(out_path).write_text(text + "\n")
-    print(f"[figure] wrote {out_path}")
+    import os
+    os.makedirs(os.path.dirname(caption_path) or ".", exist_ok=True)
+    with open(caption_path, "w") as fh:
+        fh.write(text + "\n")
+    print(f"[figure data] wrote {data_path} and {caption_path}")
     return text
-
-
-def build_figure(res: SweepResult, variants: list[Variant]):
-    """Two rows (temperature, RH) by one column per variant; rows share axes."""
-    import matplotlib.pyplot as plt
-    from matplotlib.lines import Line2D
-    try:
-        from analysis import figure_style as fs
-    except ImportError:  # run as a script, with analysis/ on sys.path
-        import figure_style as fs
-
-    g_hi, g_lo, ordered, _ = _figure_facts(res, variants, fs)
-    loads = ((g_hi, "-"), (g_lo, "--"))
-    ylabels = ("Sensor minus air\ntemperature [$^\\circ$C]", "Reported minus true\nRH [percentage points]")
-    n = len(ordered)
-    with fs.style():
-        fig, axes = plt.subplots(2, n, figsize=(7.2, 4.6), sharex=True, sharey="row")
-        for row, (values, ylabel) in enumerate(zip((res.dT, res.rh_err), ylabels)):
-            for col, v in enumerate(ordered):
-                ax = axes[row, col]
-                ax.axhline(0, zorder=1, **fs.REFERENCE)
-                for g, ls in loads:
-                    ax.plot(res.wind, values[v.vid][g], color=fs.INK, lw=1.0, ls=ls,
-                            marker=fs.VARIANT_MARKERS[v.vid], markevery=10, ms=3.5,
-                            mfc=fs.INK, mew=0.8, zorder=3)
-                ax.margins(x=0.05, y=0.06)
-                ax.tick_params(length=3)
-                fs.panel_letter(ax, row * n + col)
-            axes[row, 0].set_ylabel(ylabel)
-        fig.supxlabel("External wind speed [m/s]", y=0.015, size=fs.LABEL_SIZE)
-        keys = [Line2D([], [], color=fs.INK, ls="none", marker=fs.VARIANT_MARKERS[v.vid], ms=4,
-                       label=fs.variant_label(v.vid, v.name)) for v in ordered]
-        keys += [Line2D([], [], color=fs.INK, lw=1.0, ls=ls, label=f"{g:.0f} W/m$^2$ sun")
-                 for g, ls in loads]
-        fig.legend(handles=keys, loc="upper center", bbox_to_anchor=(0.5, 0.995), ncol=3,
-                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
-        fig.subplots_adjust(left=0.10, right=0.99, bottom=0.115, top=0.84,
-                            wspace=0.28, hspace=0.30)
-    return fig
 
 
 def sensitivity_block(
@@ -686,9 +654,10 @@ def main() -> None:
     p.add_argument("--wind-points", type=int, default=51, help="Number of wind samples")
     p.add_argument("--wind-marks", type=float, nargs="+", default=[0.0, 0.5, 1.0, 2.0, 5.0],
                    help="Wind speeds to print in the table [m/s]")
-    p.add_argument("--figure", default="analysis/figures/thermal_bias.png",
-                   help="Output figure path (PNG). Set empty to skip.")
-    p.add_argument("--no-figure", action="store_true", help="Skip figure generation")
+    p.add_argument("--figure-data", default=FIGURE_DATA,
+                   help="Plotted sweep for analysis/matlab/make_thermal_bias.m (CSV). Set empty to skip.")
+    p.add_argument("--caption", default=FIGURE_CAPTION, help="Figure caption file (Markdown)")
+    p.add_argument("--no-figure", action="store_true", help="Skip the figure data and caption")
     p.add_argument("--night-table", default="analysis/output/thermal_bias_night_table.csv",
                    help="Write the zero-solar (night, clear-sky) bias table here. Same solver, same "
                         "assumptions, G = 0: reports the bias without solar heating. "
@@ -732,10 +701,8 @@ def main() -> None:
         write_bias_table(night, variants, args.wind_marks, args.night_table)
     sensitivity_block(variants, args.t_air, args.rh_air, t_sky_c, h_floor, h_slope)
 
-    if not args.no_figure and args.figure:
-        import os
-        os.makedirs(os.path.dirname(args.figure) or ".", exist_ok=True)
-        make_figure(res, variants, args.figure, args.t_air, args.rh_air)
+    if not args.no_figure and args.figure_data:
+        write_figure_data(res, variants, args.figure_data, args.caption, args.t_air, args.rh_air)
 
     print("NOTE: All values above are SIMULATION outputs and are the analytical")
     print("baseline for the comparisons in ROADMAP.md. They remain predictions")

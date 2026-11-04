@@ -90,20 +90,23 @@ be tied to specific source files.
 
 ## Thermal-bias plot
 
-Generator: [`analysis/thermal_bias.py`](../analysis/thermal_bias.py)
+Model: [`analysis/thermal_bias.py`](../analysis/thermal_bias.py). Drawing:
+[`analysis/matlab/make_thermal_bias.m`](../analysis/matlab/make_thermal_bias.m).
 
 ```bash
 python analysis/thermal_bias.py
+matlab -batch "addpath('analysis/matlab'); render_figures"
 ```
 
 The script solves a lumped steady-state energy balance for absorbed solar and
 internal heat against convection and long-wave radiation. It converts predicted
 sensor temperature rise into relative-humidity error at fixed water-vapor
-partial pressure, sweeps solar loading and wind speed, and writes
-`analysis/figures/thermal_bias.png`, its SVG companion and the caption file
-`analysis/figures/thermal_bias.caption.md`. Each variant has the same marker
-shape as in the transient plot; solid and dashed lines distinguish solar loading.
-RH differences are in percentage points.
+partial pressure, and sweeps solar loading and wind speed. It writes the plotted
+sweep to `analysis/figures/data/thermal_bias_sweep.csv` and the caption file
+`analysis/figures/thermal_bias.caption.md`. The MATLAB script checks the sweep
+against the committed day table, then writes `analysis/figures/thermal_bias.png`
+(300 dpi) and its vector PDF. Each variant has its own column; blue solid and
+orange dashed lines distinguish solar loading. RH differences are in percentage points.
 
 The assumptions are encoded in the script and tabulated in
 [`analysis/thermal_bias_results.md`](../analysis/thermal_bias_results.md). The
@@ -114,6 +117,7 @@ Propagated intervals at the same operating points come from
 [`analysis/steady_uncertainty.py`](../analysis/steady_uncertainty.py), which
 checks its nominal values against the committed tables and writes
 `analysis/output/thermal_bias_uncertainty.csv` and `.json`; there is no figure.
+MATLAB typesets the 1000 W/m² rows as `analysis/figures/tables/thermal_bias_interval_table`.
 Reproduce into fresh paths:
 
 ```bash
@@ -123,13 +127,20 @@ python -m analysis.steady_uncertainty --csv /tmp/enclosure-intervals.csv --json 
 ## Transient prediction plot
 
 The [corrected JSON](../analysis/output/thermal_transient_prediction.json) and
-figure come from [`analysis/thermal_transient.py`](../analysis/thermal_transient.py).
-Reproduce into fresh paths:
+plot data come from [`analysis/thermal_transient.py`](../analysis/thermal_transient.py);
+[`analysis/matlab/make_thermal_transient.m`](../analysis/matlab/make_thermal_transient.m)
+draws the figure. Reproduce into fresh paths:
 
 ```bash
-python -m analysis.thermal_transient --json /tmp/enclosure-transient.json --figure /tmp/enclosure-transient.png
+python -m analysis.thermal_transient --json /tmp/enclosure-transient.json --figure-data /tmp/enclosure-transient.csv
 python -m analysis.verify_thermal_transient --out /tmp/enclosure-verification.json
 ```
+
+Without `--figure-data`, the first command writes
+`analysis/figures/data/thermal_transient_series.csv`, which the MATLAB script
+reads. That file keeps every fifth 1-min step of the retained period. Hour
+boundaries fall on kept rows, so the solar steps are exact. Caption numbers come
+from the full 1-min arrays.
 
 The [weather bytes](../analysis/input/openmeteo_brooklyn_20260901_20260914.json)
 are unchanged. Their acquisition request, retrieval date and product/version
@@ -193,31 +204,48 @@ in a machine-readable form.
 
 ## Visual revision and retained material
 
-All four committed analysis figures take their markers, type and layout rules from
-[`analysis/figure_style.py`](../analysis/figure_style.py). The canvas holds only
-data, axes, tick and axis labels, panel letters and one framed legend, in black.
-Marker shape carries the variant and line style the other condition, so no
-meaning depends on colour. Variants that would overlap in one panel get their own
-panels with shared axes. Titles, notes and results moved to a caption file
-written next to each image, `<name>.caption.md`, with every number computed from
-the plotted values; the documents under each image repeat it. The style module's
-overlap audit refuses to save a figure in which any printed item touches another.
-No inputs, draws, exclusions, summaries or uncertainty interpretation changed. Steady Markdown tables name each variant with its code in parentheses,
-put units in headings and keep their CSV links.
+Python computes every plotted value and MATLAB R2025b draws the figures. The
+Python steps write the plotted series to `analysis/figures/data/` and the caption
+files to `analysis/figures/<name>.caption.md`. The scripts in
+[`analysis/matlab/`](../analysis/matlab/README.md) read those files and the
+committed results, and write each figure as a 300-dpi PNG and a vector PDF at the
+paths the documents link. One command draws all of them:
+
+```bash
+matlab -batch "addpath('analysis/matlab'); render_figures"
+```
+
+The canvas holds data, axes, tick and axis labels, panel letters with short
+panel names, and direct series labels. Text is set with MATLAB's LaTeX
+interpreter in Computer Modern. MATLAB's first default colour (blue) marks the
+first series and its second (orange) the comparison, always with a second cue
+(solid or dashed line, filled or hollow marker). The profile figure needs three
+record lengths, so it adds the fourth default colour (purple) and a dotted line.
+Reference lines are grey and dotted, labelled once. Titles, notes and results
+stay in the caption files, with every number computed from the plotted values;
+the documents under each image repeat them. No inputs, draws, exclusions,
+summaries or uncertainty interpretation changed.
+
+Six steady result tables are typeset with booktabs and siunitx.
+[`make_rise_table.m`](../analysis/matlab/make_rise_table.m),
+[`make_result_tables.m`](../analysis/matlab/make_result_tables.m) and
+[`make_interval_table.m`](../analysis/matlab/make_interval_table.m) read the
+committed CSVs and JSON and write LaTeX fragments to `analysis/figures/tables/`. Each
+fragment is compiled to a PDF and a 300-dpi PNG. The documents show the PNG and
+keep the Markdown table under "Table as text", so the values stay searchable.
 
 | Active visual or table | Treatment and reason |
 | --- | --- |
-| Steady thermal figure | One column per variant, temperature and RH rows with shared axes, framed key above, results and sign cues in the caption; PNG, SVG and caption |
-| Transient figure | Forcing panels above one bias panel per variant on a shared UTC axis, framed key above, results and draw count in the caption; PNG, SVG and caption |
-| Synthetic I1 figures | Black profiles and tradeoffs with marker and line-style keys, scenario and column titles in the caption; PNG, SVG and caption |
-| README prediction table and steady result tables | Variant names with codes, units in headings, numeric alignment, consistent display precision and source CSV |
-| Deployment figures and historical metrics | Original images/values retained because source exports are unavailable; full-width summaries and evidence captions improved |
+| Steady thermal figure | MATLAB; one column per variant, temperature and RH rows with shared axes, solar loads labelled in panel (e); PNG, PDF and caption |
+| Transient figure | MATLAB; forcing panels above one bias panel per variant on a shared UTC axis, median and band labelled once; PNG, PDF and caption |
+| Synthetic I1 figures | MATLAB; record lengths and schedules labelled on the canvas, scenario and heater time constant in panel names; PNG, PDF and caption |
+| README prediction table and steady result tables | Typeset from the committed CSVs; Markdown kept under "Table as text" |
+| Steady interval table (docs/results.md) | Typeset from the committed intervals CSV and budget JSON; Markdown kept under "Table as text" |
+| Model equations | GitHub math in the model, design, protocol and Study A documents |
+| Deployment figures and historical metrics | Original images/values retained because source exports are unavailable |
 | Overview diagram and roadmap dependency graph | Retained: conceptual dependencies, with no numerical axes to redesign |
 | Frozen manuscript, deliverables and archived evidence | Retained unchanged to preserve historical release and evidence provenance |
 
-Every plotting function writes the requested image at 600 dpi, a same-name
-SVG and the caption file beside it. The SVG has no date stamp and fixed element ids, so a rerun in
-the same environment gives the same files.
 Use temporary result paths in the commands above to preserve the committed
 numerical records and their original software hashes. The figure manifest lists
 the figure-only outputs and their result sources. The source-file hash in a
@@ -249,10 +277,13 @@ To redraw without repeating computation:
 
 ```bash
 python -m analysis.render_identifiability
+matlab -batch "addpath('analysis/matlab'); render_figures"
 ```
 
-The renderer reads the result and compressed profile arrays, writes PNG/SVG
-companions, caption files and a Markdown report that repeats the captions. The all-cell CSV is generated on export;
+The renderer reads the result and compressed profile arrays. It writes the
+plotted profiles to `analysis/figures/data/synthetic_identifiability_profiles.csv`,
+the caption files and a Markdown report that repeats the captions. The MATLAB
+scripts draw the PNG and PDF figures; the tradeoff figure reads the all-cell CSV directly. The all-cell CSV is generated on export;
 missing finite log widths are empty cells. Runtime and peak memory are machine
 observations, so regenerated resource fields and byte hashes may differ across
 environments. Scientific comparisons should use numeric arrays and tolerances.

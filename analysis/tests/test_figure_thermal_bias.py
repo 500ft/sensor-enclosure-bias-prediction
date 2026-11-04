@@ -1,14 +1,13 @@
-"""The steady figure shows only the swept model values; its words live in the caption."""
+"""The steady figure's plot data is the swept model; MATLAB draws it and its words live in the caption."""
 import csv
 import unittest
 
 import numpy as np
 
-from analysis import figure_style as fs
 from analysis import thermal_bias as tb
-from analysis.tests.figure_checks import ROOT, axis_text, printed, squash
+from analysis.tests.figure_checks import FIGURES, ROOT, check_matlab_outputs, squash
 
-import matplotlib.pyplot as plt  # noqa: E402  (figure_style selects the Agg backend)
+DATA = ROOT / tb.FIGURE_DATA
 
 
 def sweep():
@@ -25,36 +24,33 @@ class SteadyFigureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.res, cls.variants, cls.t_air, cls.rh = sweep()
-        cls.fig = tb.build_figure(cls.res, cls.variants)
+        cls.rows = list(csv.DictReader(DATA.read_text().splitlines()))
 
-    @classmethod
-    def tearDownClass(cls):
-        plt.close(cls.fig)
+    def test_plot_data_is_the_default_sweep(self):
+        self.assertEqual(len(self.rows), 2 * 51 * 4)
+        expected = list(tb.figure_rows(self.res, self.variants))
+        for row, want in zip(self.rows, expected):
+            self.assertEqual(list(row.values())[:4], want[:4])
+            np.testing.assert_allclose([float(row["delta_t_degc"]), float(row["rh_err_pct"])],
+                                       [float(want[4]), float(want[5])], rtol=0, atol=2e-6)
 
-    def test_lines_carry_the_committed_table_values(self):
-        rows = list(csv.DictReader(
+    def test_plot_data_carries_the_committed_table_values(self):
+        table = list(csv.DictReader(
             (ROOT / "analysis/output/thermal_bias_table.csv").read_text().splitlines()[1:]))
-        self.assertEqual(len(rows), 40)
-        axes = np.array(self.fig.axes).reshape(2, len(fs.VARIANT_ORDER))
-        for row in rows:
-            col = fs.VARIANT_ORDER.index(row["variant_id"])
-            ls = "-" if row["g_w_m2"] == "1000" else "--"
-            for r, key in enumerate(("delta_t_degc", "rh_err_pct")):
-                (line,) = [l for l in axes[r, col].lines if l.get_linestyle() == ls
-                           and l.get_marker() == fs.VARIANT_MARKERS[row["variant_id"]]]
-                i = int(np.flatnonzero(np.isclose(line.get_xdata(), float(row["wind_m_s"])))[0])
-                self.assertEqual(f"{line.get_ydata()[i]:.4f}", row[key])
+        self.assertEqual(len(table), 40)
+        index = {(r["g_w_m2"], float(r["wind_m_s"]), r["variant_id"]): r for r in self.rows}
+        for row in table:
+            plotted = index[row["g_w_m2"], float(row["wind_m_s"]), row["variant_id"]]
+            for key in ("delta_t_degc", "rh_err_pct"):
+                self.assertEqual(f"{float(plotted[key]):.4f}", row[key])
 
-    def test_canvas_holds_only_axes_text_panel_letters_and_legend(self):
-        allowed = axis_text(self.fig) | {f"({c})" for c in fs.LETTERS[:8]}
-        self.assertLessEqual(printed(self.fig), allowed, printed(self.fig) - allowed)
-
-    def test_nothing_printed_touches_anything(self):
-        self.assertEqual(fs.audit(self.fig), [])
+    def test_matlab_figure_files(self):
+        check_matlab_outputs(self, "thermal_bias", "make_thermal_bias.m",
+                             ["thermal_bias_sweep.csv", "thermal_bias_table.csv"])
 
     def test_caption_matches_file_and_documents(self):
         text = tb.figure_caption(self.res, self.variants, self.t_air, self.rh)
-        self.assertEqual(text, (ROOT / "analysis/figures/thermal_bias.caption.md").read_text().strip())
+        self.assertEqual(text, (FIGURES / "thermal_bias.caption.md").read_text().strip())
         self.assertIn("6 to 23 °C warm", text)
         for doc in ("README.md", "docs/results.md"):
             self.assertIn(squash(text), squash((ROOT / doc).read_text()), doc)

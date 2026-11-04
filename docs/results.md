@@ -62,10 +62,10 @@ differ across those systems, so this comparison establishes no design preference
 
 ![Eight panels of nominal temperature and RH bias against wind, one column per enclosure variant](../analysis/figures/thermal_bias.png)
 
-Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0, circles; (a) and (e)), painted closed-box control (V0P, squares; (b) and (f)), passive multi-plate shield (V1, triangles; (c) and (g)), and actively aspirated reference (V2, diamonds; (d) and (h)). Solid lines are 1000 W/m² of sun and dashed lines 800 W/m². Panels in a row share axes. The thin line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`.
+Simulation: nominal steady-state bias from the lumped heat-balance model, without propagated input uncertainty. Air 30 °C, true RH 50 %, clear sky 20 K below air. Panels (a) to (d) show sensor minus air temperature and panels (e) to (h) reported minus true relative humidity in percentage points, against external wind speed from 0 to 5 m/s, for the baseline closed box (V0; (a) and (e)), painted closed-box control (V0P; (b) and (f)), passive multi-plate shield (V1; (c) and (g)), and actively aspirated reference (V2; (d) and (h)). Blue solid lines are 1000 W/m² of sun and orange dashed lines 800 W/m². Panels in a row share axes. The grey dotted line marks zero: above it the sensor reads warm, below it the sensor reads dry. Across both solar loads the baseline box reads 6 to 23 °C warm and 15 to 35 points dry; the other three read 0.7 to 5.3 °C warm and 2 to 13 points dry. Values at five wind speeds: `analysis/output/thermal_bias_table.csv`. Model and inputs: `analysis/thermal_bias.py`. Drawn by `analysis/matlab/make_thermal_bias.m`.
 
 [Caption](../analysis/figures/thermal_bias.caption.md) ·
-[Vector figure](../analysis/figures/thermal_bias.svg).
+[Vector figure (PDF)](../analysis/figures/thermal_bias.pdf).
 
 The figure shows nominal values. The [uncertainty module](../analysis/uncertainty.py)
 is connected to the day and night tables by
@@ -74,11 +74,15 @@ propagates the input ranges the repository already declares (the transient
 priors recorded in the [prediction JSON](../analysis/output/thermal_transient_prediction.json)
 and their rows in the [parameter register](PARAMETER_REGISTER.csv)) linearly
 through the steady solver at every committed operating point. Each range is
-rectangular, u = (high - low)/sqrt(12). Areas, the fan coefficient, the
+rectangular, $u = (\text{high} - \text{low})/\sqrt{12}$. Areas, the fan coefficient, the
 pre-heat half-life and the operating point (air, RH, wind, solar load and the
 20 K sky depression) are held fixed because no range is documented for them.
-The k = 2 intervals below carry no coverage probability. Nominal values are
+The $k = 2$ intervals below carry no coverage probability. Nominal values are
 unchanged.
+
+![Typeset table: nominal sensor minus air temperature with its k = 2 interval for four variants and the painted box minus shield contrast at 1000 W/m² and five wind speeds](../analysis/figures/tables/thermal_bias_interval_table.png)
+
+<details><summary>Table as text</summary>
 
 | Wind [m/s] | Baseline closed box (V0) [°C] | Painted closed-box control (V0P) [°C] | Passive multi-plate shield (V1) [°C] | Actively aspirated reference (V2) [°C] | V0P minus V1 [°C] |
 | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -88,15 +92,18 @@ unchanged.
 | 2.0 | 13.49 (10.66 to 16.33) | 3.06 (0.57 to 5.55) | 1.82 (0.93 to 2.71) | 1.35 (0.70 to 1.99) | 1.24 (-0.91 to 3.39) |
 | 5.0 | 8.32 (6.29 to 10.36) | 1.87 (0.33 to 3.41) | 0.91 (0.40 to 1.42) | 1.35 (0.70 to 1.99) | 0.96 (-0.36 to 2.28) |
 
-Nominal sensor minus air temperature with its k = 2 interval at 1000 W/m² of
+</details>
+
+Nominal sensor minus air temperature with its $k = 2$ interval at 1000 W/m² of
 sun and 30 °C air. Source: [intervals CSV](../analysis/output/thermal_bias_uncertainty.csv)
 for every day and night point and
 [budget JSON](../analysis/output/thermal_bias_uncertainty.json) for the
 per-input variance terms and the paired contrast at each day point.
+[Typeset table (PDF)](../analysis/figures/tables/thermal_bias_interval_table.pdf).
 
 At 1000 W/m² and 0.5 m/s the V0P and V1 intervals overlap, and the paired
-V0P minus V1 contrast, with the shared inputs cancelling, has u_c 1.57 °C
-against a nominal 1.48 °C, so its k = 2 interval includes zero. The same holds
+V0P minus V1 contrast, with the shared inputs cancelling, has $u_c$ = 1.57 °C
+against a nominal 1.48 °C, so its $k = 2$ interval includes zero. The same holds
 at every day point. The contrast budget is dominated by the light-finish
 absorptance (P-ALPHA-SH) and the box sky-view fraction (P-FSKY-V0), neither
 measured for this hardware. The nominal shield advantage therefore sits inside
@@ -129,11 +136,11 @@ changes at the next regeneration. [Original artifacts](history/README.md) remain
 
 ![Solar and wind forcing panels above one temperature-bias panel per enclosure variant, each with its median and 5th to 95th percentile assumed-input band](../analysis/figures/thermal_transient_prediction.png)
 
-Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from 2026-09-02 04:00 to 2026-09-15 03:00 UTC; the first 24 h are spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each preceding hour; daily peaks range from 300 to 839 W/m². Panel (b) is the wind speed at 10 m, between 0.25 and 5.2 m/s. Panels (c) to (f) share axes and show sensor minus air temperature for the baseline closed box (V0, circles; (c)), painted closed-box control (V0P, squares; (d)), passive multi-plate shield (V1, triangles; (e)), and actively aspirated reference (V2, diamonds; (f)). Each line is the median of 400 input draws and the grey band spans their 5th to 95th percentiles; the bands show sensitivity to assumed input ranges, not measured uncertainty. Above the thin zero line the sensor reads warm. The baseline box's median bias peaks at 5 to 14 °C each day; the other three stay below 4 °C. The final day is incomplete. Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: `analysis/input/openmeteo_brooklyn_20260901_20260914.json`. Model: `analysis/thermal_transient.py`.
+Simulation: clear-sky scenario driven by archived hourly Open-Meteo weather from 2026-09-02 04:00 to 2026-09-15 03:00 UTC; the first 24 h are spin-up and are not shown. Panel (a) is the hourly mean solar irradiance, held over each preceding hour; daily peaks range from 300 to 839 W/m². Panel (b) is the wind speed at 10 m, between 0.25 and 5.2 m/s. Panels (c) to (f) share axes and show sensor minus air temperature for the baseline closed box (V0; (c)), painted closed-box control (V0P; (d)), passive multi-plate shield (V1; (e)), and actively aspirated reference (V2; (f)). Each blue line is the median of 400 input draws and the light blue band spans their 5th to 95th percentiles; the bands show sensitivity to assumed input ranges, not measured uncertainty. Above the grey dotted zero line the sensor reads warm. The baseline box's median bias peaks at 5 to 14 °C each day; the other three stay below 4 °C. The final day is incomplete. Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: `analysis/input/openmeteo_brooklyn_20260901_20260914.json`. Model: `analysis/thermal_transient.py`. Drawn by `analysis/matlab/make_thermal_transient.m`.
 
-Each variant keeps the marker it has in the steady figure above.
+Each variant has its own panel, in the same order as the steady figure above.
 [Caption](../analysis/figures/thermal_transient_prediction.caption.md) ·
-[Vector figure](../analysis/figures/thermal_transient_prediction.svg).
+[Vector figure (PDF)](../analysis/figures/thermal_transient_prediction.pdf).
 
 | Review item | Implemented correction and evidence |
 | --- | --- |
