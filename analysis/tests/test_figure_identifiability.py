@@ -1,18 +1,14 @@
-"""The synthetic I1 figures plot the committed profiles and summary rows; words live in captions."""
+"""The synthetic I1 plot data equals the committed profiles; words live in captions."""
 import csv
 import json
 import unittest
 
 import numpy as np
 
-from analysis import figure_style as fs
 from analysis import render_identifiability as ri
-from analysis.tests.figure_checks import ROOT, axis_text, printed, squash
-
-import matplotlib.pyplot as plt  # noqa: E402
+from analysis.tests.figure_checks import FIGURES, MATLAB, ROOT, check_matlab_outputs, squash
 
 OUT = ROOT / "analysis/output"
-FIGURES = ROOT / "analysis/figures"
 # The registered 15 s run and its registered 60 s cadence amendment.
 STEMS = ("synthetic_identifiability", "synthetic_identifiability_60s")
 
@@ -25,60 +21,42 @@ class IdentifiabilityFigureTests(unittest.TestCase):
             result = json.loads((OUT / f"{stem}.json").read_text())
             cfg = ri.config_of(result)
             profiles = np.load(OUT / result["profile_file"])
-            cls.runs[stem] = (result, cfg, profiles,
-                              {"profiles": ri.profiles_figure(result, profiles, cfg),
-                               "tradeoffs": ri.tradeoffs_figure(result, cfg)})
-
-    @classmethod
-    def tearDownClass(cls):
-        for *_, figs in cls.runs.values():
-            for fig in figs.values():
-                plt.close(fig)
+            rows = list(csv.DictReader((FIGURES / "data" / ri.profile_data(result)).read_text().splitlines()))
+            cls.runs[stem] = (result, cfg, profiles, rows)
 
     def test_stems_and_configs_are_consistent(self):
         for stem, (result, cfg, _, _) in self.runs.items():
             self.assertEqual(ri.stem_of(result), stem)
             self.assertEqual(cfg["dt_s"], 60 if stem.endswith("_60s") else 15)
+        self.assertEqual(ri.profile_data(self.runs[STEMS[0]][0]), ri.PROFILE_DATA)
 
-    def test_profile_lines_equal_the_stored_arrays(self):
-        for stem, (result, cfg, profiles, figs) in self.runs.items():
+    def test_profile_columns_equal_the_stored_arrays(self):
+        for stem, (result, cfg, profiles, rows) in self.runs.items():
             cells = ri.profile_cells(result, cfg)
-            for ax, (scenario, _) in zip(figs["profiles"].axes, ri.SCENARIOS):
-                lines = [l for l in ax.lines if l.get_marker() in ri.MARKERS]
-                self.assertEqual(len(lines), len(cfg["duration_s"]), stem)
-                for j, (line, duration) in enumerate(zip(lines, cfg["duration_s"])):
-                    idx = cells[scenario, duration]
-                    self.assertEqual(result["cells"][idx]["schedule"], "repeated_steps")
-                    self.assertEqual(line.get_marker(), ri.MARKERS[j])
-                    np.testing.assert_array_equal(line.get_xdata(), profiles[f"cell{idx}_tau_s"] / 60)
-                    np.testing.assert_array_equal(line.get_ydata(), profiles[f"cell{idx}_delta_sse"])
+            columns = ri.profile_columns(cfg)
+            self.assertEqual(list(rows[0]), ["candidate_cg_min"] + [name for _, _, name in columns], stem)
+            for scenario, duration, name in columns:
+                idx = cells[scenario, duration]
+                self.assertEqual(result["cells"][idx]["schedule"], "repeated_steps")
+                np.testing.assert_allclose([float(r["candidate_cg_min"]) for r in rows],
+                                           profiles[f"cell{idx}_tau_s"] / 60, rtol=1e-7)
+                np.testing.assert_allclose([float(r[name]) for r in rows],
+                                           profiles[f"cell{idx}_delta_sse"], rtol=1e-7, atol=1e-12)
 
-    def test_tradeoff_points_equal_the_csv(self):
-        for stem, (result, cfg, _, figs) in self.runs.items():
-            rows = list(csv.DictReader((OUT / f"{stem}.csv").read_text().splitlines()))
-            axes = np.array(figs["tradeoffs"].axes).reshape(2, len(cfg["tau_s"]))
-            for r, (scenario, field) in enumerate((("matched", "gain_open_fraction"),
-                                                   ("ambient_mismatch", "gain_coverage"))):
-                for c, tau in enumerate(cfg["tau_s"]):
-                    lines = [l for l in axes[r, c].lines if l.get_marker() in ri.MARKERS]
-                    for j, (line, sch) in enumerate(zip(lines, cfg["schedules"])):
-                        expected = sorted((int(x["duration_s"]), float(x[field])) for x in rows
-                                          if x["scenario"] == scenario and int(x["tau_s"]) == tau
-                                          and x["schedule"] == sch)
-                        self.assertEqual(line.get_marker(), ri.MARKERS[j])
-                        self.assertEqual(list(line.get_xdata()), [d / 3600 for d, _ in expected])
-                        self.assertEqual(list(line.get_ydata()), [v for _, v in expected])
-
-    def test_canvas_holds_only_axes_text_panel_letters_and_legend(self):
-        for stem, (*_, figs) in self.runs.items():
-            for name, fig in figs.items():
-                allowed = axis_text(fig) | {f"({c})" for c in fs.LETTERS}
-                self.assertLessEqual(printed(fig), allowed, (stem, name, printed(fig) - allowed))
-
-    def test_nothing_printed_touches_anything(self):
-        for stem, (*_, figs) in self.runs.items():
-            for name, fig in figs.items():
-                self.assertEqual(fs.audit(fig), [], (stem, name))
+    def test_matlab_scripts_match_the_caption_encodings(self):
+        source = (MATLAB / "make_identifiability_profiles.m").read_text()
+        self.assertIn(f"PROFILE_YMAX = {ri.PROFILE_YMAX};", source)
+        driver = (MATLAB / "render_figures.m").read_text()
+        for stem, (result, cfg, _, _) in self.runs.items():
+            self.assertEqual(list(cfg["schedules"]), ["single_step", "repeated_steps"])
+            self.assertEqual(len(ri.SCHEDULE_STYLES), len(cfg["schedules"]))
+            self.assertEqual(len(ri.PROFILE_STYLES), len(cfg["duration_s"]))
+            self.assertIn(f"'{stem}'", driver)
+            self.assertIn(f"'{result['config_file'].split('/')[-1]}'", driver)
+            check_matlab_outputs(self, f"{stem}_profiles", "make_identifiability_profiles.m",
+                                 ["_profiles.csv", "identifiability_design.json"])
+            check_matlab_outputs(self, f"{stem}_tradeoffs", "make_identifiability_tradeoffs.m",
+                                 ["synthetic_identifiability", "gain_open_fraction", "gain_coverage"])
 
     def test_captions_match_files_and_report(self):
         for stem, (result, cfg, _, _) in self.runs.items():

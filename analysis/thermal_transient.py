@@ -26,7 +26,8 @@ from analysis.thermal_bias import SIGMA, _a, build_variants, h_external, solve_s
 ROOT = Path(__file__).resolve().parents[1]
 WEATHER = ROOT / "analysis/input/openmeteo_brooklyn_20260901_20260914.json"
 OUT_JSON = ROOT / "analysis/output/thermal_transient_prediction.json"
-OUT_FIG = ROOT / "analysis/figures/thermal_transient_prediction.png"
+OUT_FIG_DATA = ROOT / "analysis/figures/data/thermal_transient_series.csv"
+OUT_CAPTION = ROOT / "analysis/figures/thermal_transient_prediction.caption.md"
 
 DT_S = 60.0          # integration step [s]
 SPIN_UP_H = 24       # first day discarded: the initial state is a guess
@@ -270,9 +271,6 @@ def summarise(weather, runs, spin_up_h=SPIN_UP_H, bias_inputs=False):
     return summary
 
 
-MARKER_NAMES = {"o": "circles", "s": "squares", "^": "triangles", "D": "diamonds"}
-
-
 def figure_facts(weather, runs):
     """Retained time axis, forcing, bands and the caption's daily-peak statements."""
     start = np.searchsorted(weather["t_s"], SPIN_UP_H * 3600)
@@ -295,12 +293,12 @@ def figure_facts(weather, runs):
 
 
 def figure_caption(weather, runs):
-    from analysis import figure_style as fs
+    from analysis import figure_data as fd
     f = figure_facts(weather, runs)
     names = {v.vid: v.name for v in build_variants()}
     vids = list(runs)
     who = ", ".join(f"{'and ' if i == len(vids) - 1 else ''}{names[vid][0].lower() + names[vid][1:]} "
-                    f"({vid}, {MARKER_NAMES[fs.VARIANT_MARKERS[vid]]}; ({fs.LETTERS[2 + i]}))"
+                    f"({vid}; ({fd.LETTERS[2 + i]}))"
                     for i, vid in enumerate(vids))
     stamp = "%Y-%m-%d %H:%M"
     return (
@@ -310,84 +308,42 @@ def figure_caption(weather, runs):
         f"preceding hour; daily peaks range from {min(f['peak_days']):.0f} to "
         f"{max(f['peak_days']):.0f} W/m². Panel (b) is the wind speed at 10 m, between "
         f"{f['wind'].min():.2f} and {f['wind'].max():.1f} m/s. Panels (c) to (f) share axes and show "
-        f"sensor minus air temperature for the {who}. Each line is the median of {f['n_draws']} "
-        "input draws and the grey band spans their 5th to 95th percentiles; the bands show "
-        "sensitivity to assumed input ranges, not measured uncertainty. Above the thin zero line the "
+        f"sensor minus air temperature for the {who}. Each blue line is the median of {f['n_draws']} "
+        "input draws and the light blue band spans their 5th to 95th percentiles; the bands show "
+        "sensitivity to assumed input ranges, not measured uncertainty. Above the grey dotted zero line the "
         f"sensor reads warm. The baseline box's median bias peaks at {min(f['v0_peaks']):.0f} to "
         f"{max(f['v0_peaks']):.0f} °C each day; the other three stay below "
         f"{np.ceil(f['other_max']):.0f} °C."
         + (" The final day is incomplete." if f["final_day_incomplete"] else "")
         + " Summaries: `analysis/output/thermal_transient_prediction.json`. Weather: "
-        f"`{WEATHER.relative_to(ROOT)}`. Model: `analysis/thermal_transient.py`."
+        f"`{WEATHER.relative_to(ROOT)}`. Model: `analysis/thermal_transient.py`. "
+        "Drawn by `analysis/matlab/make_thermal_transient.m`."
     )
 
 
-def build_figure(weather, runs):
-    import matplotlib
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-    from matplotlib.dates import DateFormatter, DayLocator
-    from matplotlib.lines import Line2D
-    from matplotlib.patches import Patch
-    from matplotlib.ticker import MaxNLocator, MultipleLocator
-    from analysis import figure_style as fs
+EXPORT_EVERY = 5   # plot-data rows keep every fifth 1-min step; hour boundaries stay on rows
 
+
+def figure_rows(weather, runs):
+    """Retained time, forcing and each variant's 5th/50th/95th percentile bias."""
     f = figure_facts(weather, runs)
-    dates = f["dates"]
-    names = {v.vid: v.name for v in build_variants()}
-    with fs.style():
-        fig = plt.figure(figsize=(7.2, 8.4))
-        grid = fig.add_gridspec(2 + len(runs), 1, height_ratios=[1, 1] + [1.25] * len(runs),
-                                left=0.095, right=0.985, bottom=0.055, top=0.905, hspace=0.42)
-        solar_ax = fig.add_subplot(grid[0])
-        axes = [solar_ax, fig.add_subplot(grid[1], sharex=solar_ax)]
-        bias_axes = []
-        for i in range(len(runs)):
-            ax = fig.add_subplot(grid[2 + i], sharex=solar_ax,
-                                 sharey=bias_axes[0] if bias_axes else None)
-            bias_axes.append(ax)
-        axes += bias_axes
-        solar_ax.step(dates, f["ghi"], where="pre", color=fs.INK, lw=0.8)
-        axes[1].plot(dates, f["wind"], color=fs.INK, lw=0.8)
-        solar_ax.set_ylabel("Solar [W/m$^2$]")
-        axes[1].set_ylabel("Wind [m/s]")
-        solar_ax.yaxis.set_major_locator(MaxNLocator(nbins=3))
-        axes[1].yaxis.set_major_locator(MaxNLocator(nbins=3))
-        for i, (ax, vid) in enumerate(zip(bias_axes, runs)):
-            lo, mid, hi = f["bands"][vid]
-            ax.fill_between(dates, lo, hi, color=fs.BAND, lw=0, zorder=1)
-            ax.axhline(0, zorder=2, **fs.REFERENCE)
-            ax.plot(dates, mid, color=fs.INK, lw=0.9, marker=fs.VARIANT_MARKERS[vid],
-                    ms=3.5, markevery=(i * 180, 720), zorder=3)
-            ax.set_ylabel("Bias [$^\\circ$C]")
-            ax.yaxis.set_major_locator(MultipleLocator(5))
-        for i, ax in enumerate(axes):
-            fs.panel_letter(ax, i)
-            ax.margins(x=0.01, y=0.06)
-            ax.tick_params(length=3)
-            if ax is not axes[-1]:
-                ax.tick_params(labelbottom=False)
-        axes[-1].set_xlabel("Date [UTC]")
-        axes[-1].xaxis.set_major_locator(DayLocator(interval=2, tz=timezone.utc))
-        axes[-1].xaxis.set_major_formatter(DateFormatter("%Y-%m-%d", tz=timezone.utc))
-        keys = [Line2D([], [], color=fs.INK, lw=0.9, marker=fs.VARIANT_MARKERS[vid], ms=4,
-                       label=fs.variant_label(vid, names[vid])) for vid in runs]
-        keys.append(Patch(facecolor=fs.BAND, lw=0, label="5th to 95th percentile"))
-        fig.legend(handles=keys, loc="upper center", bbox_to_anchor=(0.5, 0.995), ncol=3,
-                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
-    return fig
+    for k in range(0, len(f["dates"]), EXPORT_EVERY):
+        row = [f["dates"][k].strftime("%Y-%m-%dT%H:%M"), f"{f['ghi'][k]:.4f}", f"{f['wind'][k]:.4f}"]
+        for vid in runs:
+            row += [f"{f['bands'][vid][q][k]:.4f}" for q in range(3)]
+        yield row
 
 
-def make_figure(weather, runs, path):
-    """Write the figure, its SVG and its caption file; return the caption."""
-    import matplotlib.pyplot as plt
-    from analysis import figure_style as fs
-
-    fig = build_figure(weather, runs)
-    fs.save(fig, path)
-    plt.close(fig)
+def write_figure_data(weather, runs, data_path, caption_path):
+    """Write the plot data for make_thermal_transient.m and the caption file; return the caption."""
+    from analysis import figure_data as fd
+    header = ["utc", "ghi_w_m2", "wind10_m_s"]
+    for vid in runs:
+        header += [f"{vid}_p05_degc", f"{vid}_p50_degc", f"{vid}_p95_degc"]
+    fd.write_csv(data_path, header, figure_rows(weather, runs))
     text = figure_caption(weather, runs)
-    fs.caption_path(path).write_text(text + "\n")
+    Path(caption_path).parent.mkdir(parents=True, exist_ok=True)
+    Path(caption_path).write_text(text + "\n")
     return text
 
 
@@ -395,8 +351,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--samples", type=int, default=N_SAMPLES)
     ap.add_argument("--json", default=str(OUT_JSON))
-    ap.add_argument("--figure", default=str(OUT_FIG))
-    ap.add_argument("--no-figure", action="store_true")
+    ap.add_argument("--figure-data", default=str(OUT_FIG_DATA),
+                    help="Plot data for analysis/matlab/make_thermal_transient.m (CSV)")
+    ap.add_argument("--caption", default=str(OUT_CAPTION))
+    ap.add_argument("--no-figure", action="store_true", help="Skip the plot data and caption")
     args = ap.parse_args()
     if args.samples < 1:
         ap.error("--samples must be positive")
@@ -465,7 +423,7 @@ def main():
     Path(args.json).parent.mkdir(parents=True, exist_ok=True)
     Path(args.json).write_text(json.dumps(result, indent=2) + "\n")
     if not args.no_figure:
-        make_figure(weather, runs, args.figure)
+        write_figure_data(weather, runs, args.figure_data, args.caption)
     for vid, s in result["bias_summary"].items():
         print(vid, s)
     print("I1 (nominal, shade):", result["i1_finite_secant_shade"])

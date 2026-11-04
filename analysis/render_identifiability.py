@@ -4,11 +4,8 @@ import csv
 import json
 from pathlib import Path
 import numpy as np
-from analysis import figure_style as fs
+from analysis import figure_data as fd
 from analysis import synthetic_identifiability as study
-import matplotlib.pyplot as plt
-from matplotlib.lines import Line2D
-from matplotlib.ticker import NullFormatter
 
 
 def width(record, field):
@@ -110,11 +107,10 @@ SCENARIOS = (('matched', 'matched dynamics with quantization'),
              ('noisy', 'higher noise with coarser quantization'),
              ('ambient_mismatch', 'an unobserved ambient excursion'),
              ('probe_lag', 'additional probe lag'))
-MARKERS = ('o', 's', '^'); STYLES = ('-', '--', ':')
-MARKER_NAMES = {'o': 'circles', 's': 'squares', '^': 'triangles'}
-STYLE_NAMES = {'-': 'solid', '--': 'dashed', ':': 'dotted'}
-PROFILE_YMAX = 12
-GENERATING = {'color': fs.INK, 'lw': 0.7, 'ls': '-.'}
+# Series encodings drawn by the MATLAB scripts, in plotting order (MATLAB default colours 1, 2 and 4).
+PROFILE_STYLES = ('blue solid', 'orange dashed', 'purple dotted')
+SCHEDULE_STYLES = ('blue filled circles on solid lines', 'orange hollow squares on dashed lines')
+PROFILE_YMAX = 12   # make_identifiability_profiles.m clips the y axis here
 
 
 def duration_sources(result):
@@ -143,24 +139,24 @@ def tradeoff_rows(result, cfg):
     return out
 
 
-def styles_phrase(labels):
-    """'circles with solid lines, A; squares with dashed lines, B.' in plotting order."""
-    return '; '.join(f'{MARKER_NAMES[m]} with {STYLE_NAMES[ls]} lines, {label}'
-                     for m, ls, label in zip(MARKERS, STYLES, labels)) + '.'
+def styles_phrase(styles, labels):
+    """'blue solid, A; orange dashed, B.' in plotting order."""
+    return '; '.join(f'{style}, {label}' for style, label in zip(styles, labels)) + '.'
 
 
 def profiles_caption(result, cfg):
     hrs = [hours(d) for d in cfg['duration_s']]
-    panels = '; '.join(f"({fs.LETTERS[i]}) {words}" for i, (_, words) in enumerate(SCENARIOS))
+    panels = '; '.join(f"({fd.LETTERS[i]}) {words}" for i, (_, words) in enumerate(SCENARIOS))
     return (
         "Synthetic development example, not physical data. Profile likelihood-ratio statistic against "
         "candidate C/G for the first registered draw of each scenario, with the slowest generating heater "
         f"time constant ({max(cfg['tau_s']) / 60:g} min) and repeated power steps: {panels}. "
-        f"Record length: {styles_phrase([h + ' h' for h in hrs])} Panels share axes. The thin horizontal line "
-        f"is the nominal likelihood-ratio cutoff, {cfg['profile_delta_chi2']:.2f}. The dash-dot vertical "
-        "line marks the generating heater time constant; in the probe-lag case there is no true "
-        f"single-node time constant. Curves are clipped above {PROFILE_YMAX}; the full-range profiles are "
-        f"retained. Sources: {duration_sources(result)}."
+        f"Record length: {styles_phrase(PROFILE_STYLES, [h + ' h' for h in hrs])} Panels share axes. "
+        f"The grey dotted horizontal line is the nominal likelihood-ratio cutoff, {cfg['profile_delta_chi2']:.2f}. "
+        "The grey dash-dot vertical line marks the generating heater time constant; in the probe-lag case "
+        f"there is no true single-node time constant. Curves are clipped above {PROFILE_YMAX}; the full-range "
+        f"profiles are retained. Sources: {duration_sources(result)}. "
+        "Drawn by `analysis/matlab/make_identifiability_profiles.m`."
     )
 
 
@@ -176,11 +172,11 @@ def tradeoffs_caption(result, cfg):
     fields = ('gain_open_fraction', 'gain_coverage')
     series = {(row, tau): [tuple(r[fields[row]] for r in rows[row, tau, s]) for s in schedules]
               for row in range(2) for tau in cfg['tau_s']}
-    letter = {key: f"({fs.LETTERS[row * n_tau + col]})"
+    letter = {key: f"({fd.LETTERS[row * n_tau + col]})"
               for col, tau in enumerate(cfg['tau_s']) for row in range(2) for key in [(row, tau)]}
     same = [letter[key] for key, (a, b) in series.items() if a == b]
     touching = any(x == y for a, b in series.values() for x, y in zip(a, b))
-    coincide = ((" Where both schedules give the same value, the square covers the circle"
+    coincide = ((" Where both schedules give the same value, the hollow square rings the filled circle"
                  + (f"; in {' and '.join(same)} that holds at every duration" if same else "") + ".")
                 if touching else "")
     first = 'no' if open_long == 0 else f'at most {100 * open_long:g} % of'
@@ -188,92 +184,58 @@ def tradeoffs_caption(result, cfg):
         "Synthetic development example, not physical data. Each point is the fraction of "
         f"{cfg['replicates_per_cell']} draws in one cell at equal input energy. Columns are generating C/G of "
         f"{', '.join(f'{t / 60:g}' for t in cfg['tau_s'][:-1])} and {cfg['tau_s'][-1] / 60:g} min. "
-        f"Panels (a) to ({fs.LETTERS[n_tau - 1]}), matched dynamics: the fraction of gain (eta/G) profile "
-        f"sets that reach the registered search edge. Panels ({fs.LETTERS[n_tau]}) to "
-        f"({fs.LETTERS[2 * n_tau - 1]}), unobserved ambient excursion: the fraction of gain sets that "
-        f"contain the true eta/G; the thin horizontal line is the nominal {100 * cfg['profile_level']:g} % "
+        f"Panels (a) to ({fd.LETTERS[n_tau - 1]}), matched dynamics: the fraction of gain (eta/G) profile "
+        f"sets that reach the registered search edge. Panels ({fd.LETTERS[n_tau]}) to "
+        f"({fd.LETTERS[2 * n_tau - 1]}), unobserved ambient excursion: the fraction of gain sets that "
+        f"contain the true eta/G; the grey dotted line is the nominal {100 * cfg['profile_level']:g} % "
         "level, not a measured performance target. "
-        f"Schedule: {styles_phrase([s.replace('_', ' ') for s in schedules])} Lines connect the discrete durations "
+        f"Schedule: {styles_phrase(SCHEDULE_STYLES, [s.replace('_', ' ') for s in schedules])} Lines connect the discrete durations "
         f"{', '.join(hours(d) for d in cfg['duration_s'][:-1])} and {hours(longest)} h and do not "
         f"establish interpolation to an untested schedule.{coincide} Longer observations can narrow sets "
         f"while unmodeled drift defeats coverage: at {hours(longest)} h {first} matched gain sets reach "
         f"the search edge, and ambient-excursion coverage is at most {100 * cover_long:g} %. Sources: "
-        f"`analysis/output/{stem_of(result)}.csv` and `{result['config_file']}`."
+        f"`analysis/output/{stem_of(result)}.csv` and `{result['config_file']}`. "
+        "Drawn by `analysis/matlab/make_identifiability_tradeoffs.m`."
     )
 
 
-def profiles_figure(result, profiles, cfg):
+PROFILE_DATA = 'synthetic_identifiability_profiles.csv'
+
+
+def profile_data(result):
+    """Plot-data file name for this run: PROFILE_DATA for the registered run, <stem>_profiles.csv otherwise."""
+    return f'{stem_of(result)}_profiles.csv'
+
+
+def profile_columns(cfg):
+    """Plot-data column per (scenario, duration), in plotting order."""
+    return [(scenario, duration, f"{scenario}_{duration // 60}min")
+            for scenario, _ in SCENARIOS for duration in cfg['duration_s']]
+
+
+def profile_rows(result, profiles, cfg):
+    """The plotted profiles (slowest heater, repeated steps) on their shared C/G grid."""
     cells = profile_cells(result, cfg)
-    with fs.style():
-        fig, axs = plt.subplots(2, 2, figsize=(7.2, 5.4), sharex=True, sharey=True)
-        for k, (ax, (scenario, _)) in enumerate(zip(axs.flat, SCENARIOS)):
-            for j, duration in enumerate(cfg['duration_s']):
-                idx = cells[scenario, duration]
-                ax.plot(profiles[f'cell{idx}_tau_s'] / 60, profiles[f'cell{idx}_delta_sse'], color=fs.INK,
-                        lw=1.0, ls=STYLES[j], marker=MARKERS[j], markevery=130, ms=3.5)
-            ax.axhline(cfg['profile_delta_chi2'], zorder=1, **fs.REFERENCE)
-            ax.axvline(max(cfg['tau_s']) / 60, zorder=1, **GENERATING)
-            ax.set(xscale='log', ylim=(0, PROFILE_YMAX))
-            ax.tick_params(length=3, which='both')
-            fs.panel_letter(ax, k)
-        for ax in axs[1]:
-            ax.set_xlabel('Candidate $C/G$ [min]')
-        for ax in axs[:, 0]:
-            ax.set_ylabel('Profile likelihood-ratio\nstatistic')
-        keys = [Line2D([], [], color=fs.INK, lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=3.5,
-                       label=f'{hours(d)} h') for j, d in enumerate(cfg['duration_s'])]
-        keys += [Line2D([], [], label='Nominal cutoff', **fs.REFERENCE),
-                 Line2D([], [], label='Generating $C/G$', **GENERATING)]
-        fig.legend(handles=keys, loc='upper center', bbox_to_anchor=(0.5, 0.995), ncol=len(keys),
-                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
-        fig.subplots_adjust(left=0.095, right=0.985, bottom=0.09, top=0.89, wspace=0.12, hspace=0.25)
-    return fig
-
-
-def tradeoffs_figure(result, cfg):
-    rows = tradeoff_rows(result, cfg)
-    n_tau = len(cfg['tau_s'])
-    with fs.style():
-        fig, axs = plt.subplots(2, n_tau, figsize=(7.2, 4.8), sharex=True, sharey=True)
-        for col, tau in enumerate(cfg['tau_s']):
-            for j, sch in enumerate(cfg['schedules']):
-                for row, field in enumerate(('gain_open_fraction', 'gain_coverage')):
-                    rs = rows[row, tau, sch]
-                    axs[row, col].plot([r['duration_s'] / 3600 for r in rs], [r[field] for r in rs], color=fs.INK,
-                                       lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=4)
-            axs[1, col].axhline(cfg['profile_level'], zorder=1, **fs.REFERENCE)
-        hrs = [d / 3600 for d in cfg['duration_s']]
-        for k, ax in enumerate(axs.flat):
-            ax.set(xscale='log', ylim=(-.04, 1.04))
-            ax.set_xticks(hrs, [hours(d) for d in cfg['duration_s']])
-            ax.xaxis.set_minor_formatter(NullFormatter())
-            ax.tick_params(length=3, which='both')
-            fs.panel_letter(ax, k)
-        for ax in axs[1]:
-            ax.set_xlabel('Observation duration [h]')
-        axs[0, 0].set_ylabel('Gain sets at search\nedge [fraction]')
-        axs[1, 0].set_ylabel('Gain sets containing\ntrue $\\eta/G$ [fraction]')
-        keys = [Line2D([], [], color=fs.INK, lw=1.0, ls=STYLES[j], marker=MARKERS[j], ms=4,
-                       label=sch.replace('_', ' ').capitalize()) for j, sch in enumerate(cfg['schedules'])]
-        keys.append(Line2D([], [], label='Nominal coverage level', **fs.REFERENCE))
-        fig.legend(handles=keys, loc='upper center', bbox_to_anchor=(0.5, 0.995), ncol=len(keys),
-                   handlelength=2.4, columnspacing=1.2, borderaxespad=0)
-        fig.subplots_adjust(left=0.105, right=0.985, bottom=0.10, top=0.88, wspace=0.12, hspace=0.25)
-    return fig
+    cols = [profiles[f'cell{cells[s, d]}_delta_sse'] for s, d, _ in profile_columns(cfg)]
+    grid = profiles[f'cell{cells[SCENARIOS[0][0], cfg["duration_s"][0]]}_tau_s']
+    for s, d, _ in profile_columns(cfg):
+        assert np.array_equal(profiles[f'cell{cells[s, d]}_tau_s'], grid), (s, d)
+    for i, tau in enumerate(grid):
+        yield [f"{tau / 60:.8g}"] + [f"{c[i]:.8g}" for c in cols]
 
 
 def plot(result, output, figures):
+    """Write the profile plot data and both captions. The MATLAB scripts draw the images:
+    profiles from the plot data, tradeoffs from the committed all-cell CSV."""
     cfg = config_of(result)
     stem = stem_of(result)
     profiles = np.load(output.with_name(result['profile_file']))
-    for name, fig, text in (
-            (f'{stem}_profiles.png', profiles_figure(result, profiles, cfg),
-             profiles_caption(result, cfg)),
-            (f'{stem}_tradeoffs.png', tradeoffs_figure(result, cfg),
-             tradeoffs_caption(result, cfg))):
-        fs.save(fig, figures / name)
-        plt.close(fig)
-        fs.caption_path(figures / name).write_text(text + '\n')
+    fd.write_csv(figures / 'data' / profile_data(result),
+                 ['candidate_cg_min'] + [name for _, _, name in profile_columns(cfg)],
+                 profile_rows(result, profiles, cfg))
+    for name, text in ((f'{stem}_profiles.png', profiles_caption(result, cfg)),
+                       (f'{stem}_tradeoffs.png', tradeoffs_caption(result, cfg))):
+        fd.caption_path(figures / name).write_text(text + '\n')
 
 
 def comparison_section(result, cfg):
@@ -353,11 +315,11 @@ def report(result, path):
               f"![Profile likelihood-ratio curves for {durations} records in four synthetic scenarios, with the nominal cutoff and generating time constant](../figures/{stem}_profiles.png)", "",
               profiles_caption(result, cfg), "",
               f"[Caption](../figures/{stem}_profiles.caption.md) · "
-              f"[Vector profiles](../figures/{stem}_profiles.svg).", "",
+              f"[Vector profiles](../figures/{stem}_profiles.pdf).", "",
               f"![Gain-set openness under matched dynamics and gain coverage under an ambient excursion, by observation duration and schedule](../figures/{stem}_tradeoffs.png)", "",
               tradeoffs_caption(result, cfg), "",
               f"[Caption](../figures/{stem}_tradeoffs.caption.md) · "
-              f"[Vector tradeoffs](../figures/{stem}_tradeoffs.svg).", "",
+              f"[Vector tradeoffs](../figures/{stem}_tradeoffs.pdf).", "",
               "The JSON duration_information entries give paired log width reduction relative to the shortest same-schedule record. "
               "paired_schedule_widths compares single versus repeated steps. Positive values mean narrower repeated-step sets. "
               "These are descriptive information proxies, not Bayesian information or entropy. Only pairs with both sets closed contribute; their counts are reported. "

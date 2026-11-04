@@ -2,17 +2,17 @@
 
 ## Structural result before simulation
 
-In dark, fixed-airflow conditions, let `C dT/dt = eta P - G (T-Ta)`.
-`C` is heat capacity [J/K], `G` is effective conductance [W/K], `eta` is
-electrical-to-modeled-node heat coupling [dimensionless], and `P` is measured
-electrical input [W]. Dividing by `G` gives
-`tau dT/dt = beta P - (T-Ta)`, with `tau=C/G` [s] and `beta=eta/G` [K/W].
-Multiplying `(C,G,eta)` by the same positive factor leaves every trajectory
+In dark, fixed-airflow conditions, let $C\, \mathrm{d}T/\mathrm{d}t = \eta P - G\,(T - T_a)$.
+$C$ is heat capacity [J/K], $G$ is effective conductance [W/K], $\eta$ is
+electrical-to-modeled-node heat coupling [dimensionless], and $P$ is measured
+electrical input [W]. Dividing by $G$ gives
+$\tau\, \mathrm{d}T/\mathrm{d}t = \beta P - (T - T_a)$, with $\tau = C/G$ [s] and $\beta = \eta/G$ [K/W].
+Multiplying $(C, G, \eta)$ by the same positive factor leaves every trajectory
 unchanged, for any power waveform and the same initial and ambient temperatures.
 The physical coupling bound restricts that family but does not select a member.
 Power changes alone cannot identify the three original parameters.
 
-An independently measured coupling gives `G=eta/beta` and `C=tau*eta/beta`.
+An independently measured coupling gives $G = \eta/\beta$ and $C = \tau\eta/\beta$.
 Alternatively, independently known effective `C` or `G` fixes the scale under
 this single-node model. Electrical V/I alone measures `P`, not `eta P`.
 Calorimetry or a calibrated heat injection with demonstrated node coupling
