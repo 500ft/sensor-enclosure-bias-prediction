@@ -37,14 +37,31 @@ class SyntheticIdentifiabilityTests(unittest.TestCase):
 
     def test_power_schedules_have_equal_energy(self):
         import json
-        cfg = json.loads(study.CONFIG.read_text())
-        for duration in cfg['duration_s']:
-            energies = []
-            for levels in cfg['schedules'].values():
-                t, p = study.schedule(duration, cfg['dt_s'], levels, cfg['power_w'])
-                self.assertTrue(np.allclose(np.diff(t), cfg['dt_s']))
-                energies.append(np.sum(p*np.diff(t)))
-            self.assertAlmostEqual(energies[0], energies[1])
+        for name in ('identifiability_design.json', 'identifiability_design_60s.json'):
+            cfg = json.loads(study.CONFIG.with_name(name).read_text())
+            for duration in cfg['duration_s']:
+                energies = []
+                for levels in cfg['schedules'].values():
+                    t, p = study.schedule(duration, cfg['dt_s'], levels, cfg['power_w'])
+                    self.assertTrue(np.allclose(np.diff(t), cfg['dt_s']), (name, duration))
+                    energies.append(np.sum(p*np.diff(t)))
+                self.assertAlmostEqual(energies[0], energies[1])
+
+    def test_cadence_amendment_changes_only_cadence_and_shortest_cell(self):
+        import hashlib
+        import json
+        parent = json.loads(study.CONFIG.read_text())
+        amended = json.loads(study.CONFIG.with_name('identifiability_design_60s.json').read_text())
+        self.assertEqual(amended['amends_sha256'], hashlib.sha256(study.CONFIG.read_bytes()).hexdigest())
+        self.assertEqual(amended['parent_registration_amendment'], parent['registration_amendment'])
+        changed = {k for k in parent if parent[k] != amended[k]}
+        self.assertEqual(changed, {'status', 'dt_s', 'duration_s', 'registration_amendment'})
+        self.assertEqual(amended['dt_s'], 60)
+        self.assertEqual(amended['duration_s'][1:], parent['duration_s'][1:])
+        self.assertEqual(amended['duration_s'][0], 8*240)
+        # The registered 1800 s cell cannot be sampled at 60 s: its 225 s blocks end off the grid.
+        t, _ = study.schedule(parent['duration_s'][0], 60, parent['schedules']['single_step'], parent['power_w'])
+        self.assertFalse(np.allclose(np.diff(t), 60))
 
 
 if __name__ == '__main__':

@@ -22,8 +22,14 @@ S = fig_style();
 jobs = {
     'thermal_bias',                       @() make_thermal_bias(root, outDir, S)
     'thermal_transient_prediction',       @() make_thermal_transient(root, outDir, S)
-    'synthetic_identifiability_profiles', @() make_identifiability_profiles(root, outDir, S)
-    'synthetic_identifiability_tradeoffs', @() make_identifiability_tradeoffs(root, outDir, S)
+    'synthetic_identifiability_profiles', @() make_identifiability_profiles(root, outDir, S, ...
+        'synthetic_identifiability', 'identifiability_design.json')
+    'synthetic_identifiability_tradeoffs', @() make_identifiability_tradeoffs(root, outDir, S, ...
+        'synthetic_identifiability', 'identifiability_design.json')
+    'synthetic_identifiability_60s_profiles', @() make_identifiability_profiles(root, outDir, S, ...
+        'synthetic_identifiability_60s', 'identifiability_design_60s.json')
+    'synthetic_identifiability_60s_tradeoffs', @() make_identifiability_tradeoffs(root, outDir, S, ...
+        'synthetic_identifiability_60s', 'identifiability_design_60s.json')
     'predicted_rise_table',               @() make_rise_table(dataDir, tableDir)
     'result_tables',                      @() make_result_tables(dataDir, tableDir)
     };

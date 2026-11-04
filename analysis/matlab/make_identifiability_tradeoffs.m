@@ -1,14 +1,17 @@
-function make_identifiability_tradeoffs(root, outDir, S)
+function make_identifiability_tradeoffs(root, outDir, S, stem, cfgName)
 %MAKE_IDENTIFIABILITY_TRADEOFFS Gain-set openness and coverage by record length and schedule.
-%   Inputs: the committed analysis/output/synthetic_identifiability.csv (one row
-%   per cell) and analysis/input/identifiability_design.json. Top row: matched
+%   Inputs: the committed analysis/output/<stem>.csv (one row per cell) and
+%   analysis/input/<cfgName>; defaults 'synthetic_identifiability' and
+%   'identifiability_design.json'. Top row: matched
 %   dynamics, fraction of gain sets at the search edge. Bottom row: ambient
 %   excursion, fraction of gain sets containing the true eta/G. Single step is
 %   blue with filled circles; repeated steps orange with hollow squares, so a
-%   tie shows as a ring around a dot. Output: synthetic_identifiability_tradeoffs.pdf/.png.
+%   tie shows as a ring around a dot. Output: <stem>_tradeoffs.pdf/.png.
 
-R = readtable(fullfile(root, 'analysis', 'output', 'synthetic_identifiability.csv'), 'TextType', 'string');
-cfg = jsondecode(fileread(fullfile(root, 'analysis', 'input', 'identifiability_design.json')));
+if nargin < 4 || isempty(stem), stem = 'synthetic_identifiability'; end
+if nargin < 5 || isempty(cfgName), cfgName = 'identifiability_design.json'; end
+R = readtable(fullfile(root, 'analysis', 'output', [stem '.csv']), 'TextType', 'string');
+cfg = jsondecode(fileread(fullfile(root, 'analysis', 'input', cfgName)));
 tau = cfg.tau_s(:)';
 sch = string(fieldnames(cfg.schedules))';     % registration order: single_step, repeated_steps
 assert(isequal(sch, ["single_step", "repeated_steps"]), 'unexpected schedule order');
@@ -35,7 +38,7 @@ for r = 1:2
                 'MarkerSize', msz(j), 'MarkerFaceColor', face{j}, 'MarkerEdgeColor', col{j});
         end
         set(ax, 'XScale', 'log', 'XLim', [0.4 8], 'XTick', hours, ...
-            'XTickLabel', arrayfun(@(h) sprintf('%g', h), hours, 'UniformOutput', false), ...
+            'XTickLabel', arrayfun(@(h) sprintf('%.3g', h), hours, 'UniformOutput', false), ...
             'XMinorTick', 'off', 'YLim', [-0.04 1.04], 'YTick', 0:0.2:1);
         if c > 1, ax.YTickLabel = {}; end
         if r == 1, ax.XTickLabel = {}; end
@@ -60,5 +63,5 @@ end
 ylabel(nexttile(tl, 1), {'Gain sets at search', 'edge (fraction)'});
 ylabel(nexttile(tl, numel(tau) + 1), {'Gain sets containing', 'true $\eta/G$ (fraction)'});
 xlabel(tl, 'Observation duration (h)', 'Interpreter', 'latex', 'FontSize', S.size.label, 'Color', S.c.ink);
-export_pair(fig, fullfile(outDir, 'synthetic_identifiability_tradeoffs'));
+export_pair(fig, fullfile(outDir, [stem '_tradeoffs']));
 end

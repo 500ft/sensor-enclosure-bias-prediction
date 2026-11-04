@@ -267,8 +267,29 @@ python -m analysis.render_identifiability
 matlab -batch "addpath('analysis/matlab'); render_figures"
 ```
 
+The [registered 60 s cadence amendment](../analysis/input/identifiability_design_60s.json)
+reruns the same matrix with `--config`. Its outputs carry the `_60s` suffix
+(`analysis/output/synthetic_identifiability_60s.json`, `.csv`, `_profiles.npz`,
+`_report.md` and the two `analysis/figures/synthetic_identifiability_60s_*`
+figures); the registered 15 s files are untouched:
+
+```bash
+python -m analysis.synthetic_identifiability --config analysis/input/identifiability_design_60s.json --out /tmp/enclosure-design-60s --raw /tmp/enclosure-design-60s/raw
+python -m analysis.verify_synthetic_identifiability /tmp/enclosure-design-60s/identifiability_checkpoint.json --out /tmp/enclosure-design-60s/refinement.json
+python -m analysis.render_identifiability --checkpoint /tmp/enclosure-design-60s/identifiability_checkpoint.json --refinement /tmp/enclosure-design-60s/refinement.json --output analysis/output/synthetic_identifiability_60s.json
+python -m analysis.render_identifiability --output analysis/output/synthetic_identifiability_60s.json
+matlab -batch "addpath('analysis/matlab'); render_figures"
+```
+
+The renderer names plot data, captions and the report from the output stem and
+reads the configuration recorded in the result, so the fourth command rewrites
+the amended run's plot data alone. `render_figures` draws both runs; the 60 s
+figures come from the same MATLAB scripts with the `_60s` stem and
+configuration. An amended result also carries a `cadence_comparison` block
+with every cell beside its registered counterpart.
+
 The renderer reads the result and compressed profile arrays. It writes the
-plotted profiles to `analysis/figures/data/synthetic_identifiability_profiles.csv`,
+plotted profiles to `analysis/figures/data/<stem>_profiles.csv`,
 the caption files and a Markdown report that repeats the captions. The MATLAB
 scripts draw the PNG and PDF figures; the tradeoff figure reads the all-cell CSV directly. The all-cell CSV is generated on export;
 missing finite log widths are empty cells. Runtime and peak memory are machine

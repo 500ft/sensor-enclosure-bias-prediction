@@ -28,6 +28,10 @@ stopping rules. It is committed before the first synthetic result. Its values
 are chosen to span short and long observations relative to assumed thermal
 response times, not inferred from a rig or selected to achieve a desired result.
 No source-backed instrument specification is assigned to unknown hardware.
+A [registered amendment](input/identifiability_design_60s.json) reruns the
+matrix at the protocol's 60 s cadence with the shortest cell re-aligned to
+eight 240 s blocks; it was committed before its result and changes no other
+registered value.
 
 Compare an isolated on/off block with repeated steps at equal total duration,
 amplitude and integrated energy. The fitter knows the recorded ambient ramp;

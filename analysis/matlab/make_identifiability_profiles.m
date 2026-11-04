@@ -1,14 +1,18 @@
-function make_identifiability_profiles(root, outDir, S)
+function make_identifiability_profiles(root, outDir, S, stem, cfgName)
 %MAKE_IDENTIFIABILITY_PROFILES Profile likelihood-ratio curves for the synthetic I1 study.
-%   Input: analysis/figures/data/synthetic_identifiability_profiles.csv, written
-%   by `python -m analysis.render_identifiability` from the committed profile
-%   arrays, and analysis/input/identifiability_design.json (cutoff, heater time
-%   constants, record lengths). Three record lengths need three colours, so this
+%   Input: analysis/figures/data/<stem>_profiles.csv, written by
+%   `python -m analysis.render_identifiability` from the committed profile
+%   arrays, and analysis/input/<cfgName> (cutoff, heater time constants, record
+%   lengths). stem defaults to 'synthetic_identifiability' and cfgName to
+%   'identifiability_design.json'; the 60 s cadence amendment passes
+%   'synthetic_identifiability_60s' and 'identifiability_design_60s.json'. Three record lengths need three colours, so this
 %   figure uses MATLAB default colours 1, 2 and 4 (colour 3, yellow, is too light
-%   on white). Output: synthetic_identifiability_profiles.pdf and .png.
+%   on white). Output: <stem>_profiles.pdf and .png.
 
-P = readtable(fullfile(root, 'analysis', 'figures', 'data', 'synthetic_identifiability_profiles.csv'));
-cfg = jsondecode(fileread(fullfile(root, 'analysis', 'input', 'identifiability_design.json')));
+if nargin < 4 || isempty(stem), stem = 'synthetic_identifiability'; end
+if nargin < 5 || isempty(cfgName), cfgName = 'identifiability_design.json'; end
+P = readtable(fullfile(root, 'analysis', 'figures', 'data', [stem '_profiles.csv']));
+cfg = jsondecode(fileread(fullfile(root, 'analysis', 'input', cfgName)));
 PROFILE_YMAX = 12;   % same value as render_identifiability.PROFILE_YMAX, quoted in the caption
 scen = ["matched", "noisy", "ambient_mismatch", "probe_lag"];
 labels = ["matched dynamics with quantization", "higher noise with coarser quantization", ...
@@ -21,6 +25,14 @@ dur = cfg.duration_s(:)';
 gen = max(cfg.tau_s) / 60;
 cut = cfg.profile_delta_chi2;
 x = P.candidate_cg_min;
+% Direct-label anchors (candidate C/G in min, statistic): one row per record length,
+% then the x anchor of the cutoff label in panel c. Placed clear of each run's curves.
+lab = [0.6 2.3; 11 8; 140 10];
+cutX = 0.55;
+if strcmp(stem, 'synthetic_identifiability_60s')
+    lab(3, :) = [250 10];
+    cutX = 4;
+end
 
 fig = figure('Visible', 'off', 'Units', 'centimeters', 'Position', [2 2 18 12]);
 tl = tiledlayout(fig, 2, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
@@ -38,22 +50,23 @@ for k = 1:4
     if k <= 2, ax.XTickLabel = {}; end
     panel_title(ax, char('a' + k - 1), labels(k), S);
     if k == 1
-        text(ax, 0.6, 2.3, sprintf('%g h', dur(1) / 3600), 'Color', col{1}, 'FontSize', S.size.label, ...
+        text(ax, lab(1, 1), lab(1, 2), sprintf('%.3g h', dur(1) / 3600), 'Color', col{1}, 'FontSize', S.size.label, ...
             'VerticalAlignment', 'bottom');
-        text(ax, 11, 8, sprintf('%g h', dur(2) / 3600), 'Color', col{2}, 'FontSize', S.size.label, ...
+        text(ax, lab(2, 1), lab(2, 2), sprintf('%.3g h', dur(2) / 3600), 'Color', col{2}, 'FontSize', S.size.label, ...
             'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle');
-        text(ax, 140, 10, sprintf('%g h', dur(3) / 3600), 'Color', col{3}, 'FontSize', S.size.label, ...
+        text(ax, lab(3, 1), lab(3, 2), sprintf('%.3g h', dur(3) / 3600), 'Color', col{3}, 'FontSize', S.size.label, ...
             'HorizontalAlignment', 'left', 'VerticalAlignment', 'middle');
     end
     if k == 3
-        text(ax, 0.55, cut + 0.3, sprintf('nominal cutoff %.2f', cut), 'Color', S.c.grey, ...
+        text(ax, cutX, cut + 0.3, sprintf('nominal cutoff %.2f', cut), 'Color', S.c.grey, ...
             'FontSize', S.size.note, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom');
     end
     if k == 2
-        text(ax, gen * 1.12, PROFILE_YMAX - 0.4, sprintf('generating $C/G$, %g min', gen), ...
-            'Color', S.c.grey, 'FontSize', S.size.note, 'HorizontalAlignment', 'left', 'VerticalAlignment', 'top');
+        % Two lines, right-aligned just inside the axes, so the label stays on the canvas.
+        text(ax, max(x) / 1.03, PROFILE_YMAX - 0.4, {'generating $C/G$', sprintf('%g min', gen)}, ...
+            'Color', S.c.grey, 'FontSize', S.size.note, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'top');
     end
 end
 xlabel(tl, 'Candidate $C/G$ (min)', 'Interpreter', 'latex', 'FontSize', S.size.label, 'Color', S.c.ink);
-export_pair(fig, fullfile(outDir, 'synthetic_identifiability_profiles'));
+export_pair(fig, fullfile(outDir, [stem '_profiles']));
 end
