@@ -44,6 +44,7 @@ pdftoppm -r 300 -png -singlefile table_page.pdf predicted_rise_table
 | `make_identifiability_tradeoffs.m` | `output/synthetic_identifiability.csv`, `input/identifiability_design.json` | `synthetic_identifiability_tradeoffs.png`, `.pdf` |
 | `make_rise_table.m` | `output/thermal_bias_table.csv` | `tables/predicted_rise_table.tex` |
 | `make_result_tables.m` | `output/thermal_bias_table.csv`, `output/thermal_bias_night_table.csv` | `tables/thermal_bias_temperature_table.tex`, `thermal_bias_rh_table.tex`, `painted_control_table.tex`, `night_table.tex` |
+| `make_interval_table.m` | `output/thermal_bias_uncertainty.csv`, `output/thermal_bias_uncertainty.json` | `tables/thermal_bias_interval_table.tex` |
 | `fig_style.m`, `export_pair.m`, `panel_title.m` | — | shared style, PDF + PNG export, panel letters |
 
 Paths in the table are relative to `analysis/`.

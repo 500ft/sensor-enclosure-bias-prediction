@@ -113,6 +113,17 @@ The assumptions are encoded in the script and tabulated in
 model is not fitted to the deployment logs. Its comparison with published
 measurements is a literature bracket, not a validation using this enclosure.
 
+Propagated intervals at the same operating points come from
+[`analysis/steady_uncertainty.py`](../analysis/steady_uncertainty.py), which
+checks its nominal values against the committed tables and writes
+`analysis/output/thermal_bias_uncertainty.csv` and `.json`; there is no figure.
+MATLAB typesets the 1000 W/m² rows as `analysis/figures/tables/thermal_bias_interval_table`.
+Reproduce into fresh paths:
+
+```bash
+python -m analysis.steady_uncertainty --csv /tmp/enclosure-intervals.csv --json /tmp/enclosure-intervals.json
+```
+
 ## Transient prediction plot
 
 The [corrected JSON](../analysis/output/thermal_transient_prediction.json) and
@@ -215,10 +226,11 @@ stay in the caption files, with every number computed from the plotted values;
 the documents under each image repeat them. No inputs, draws, exclusions,
 summaries or uncertainty interpretation changed.
 
-Five steady result tables are typeset with booktabs and siunitx.
-[`make_rise_table.m`](../analysis/matlab/make_rise_table.m) and
-[`make_result_tables.m`](../analysis/matlab/make_result_tables.m) read the
-committed CSVs and write LaTeX fragments to `analysis/figures/tables/`. Each
+Six steady result tables are typeset with booktabs and siunitx.
+[`make_rise_table.m`](../analysis/matlab/make_rise_table.m),
+[`make_result_tables.m`](../analysis/matlab/make_result_tables.m) and
+[`make_interval_table.m`](../analysis/matlab/make_interval_table.m) read the
+committed CSVs and JSON and write LaTeX fragments to `analysis/figures/tables/`. Each
 fragment is compiled to a PDF and a 300-dpi PNG. The documents show the PNG and
 keep the Markdown table under "Table as text", so the values stay searchable.
 
@@ -228,6 +240,7 @@ keep the Markdown table under "Table as text", so the values stay searchable.
 | Transient figure | MATLAB; forcing panels above one bias panel per variant on a shared UTC axis, median and band labelled once; PNG, PDF and caption |
 | Synthetic I1 figures | MATLAB; record lengths and schedules labelled on the canvas, scenario and heater time constant in panel names; PNG, PDF and caption |
 | README prediction table and steady result tables | Typeset from the committed CSVs; Markdown kept under "Table as text" |
+| Steady interval table (docs/results.md) | Typeset from the committed intervals CSV and budget JSON; Markdown kept under "Table as text" |
 | Model equations | GitHub math in the model, design, protocol and Study A documents |
 | Deployment figures and historical metrics | Original images/values retained because source exports are unavailable |
 | Overview diagram and roadmap dependency graph | Retained: conceptual dependencies, with no numerical axes to redesign |

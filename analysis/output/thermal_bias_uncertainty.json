@@ -1,0 +1,772 @@
+{
+  "status": "SIMULATION; linear propagation of declared input ranges through the steady model; no measured uncertainty",
+  "method": {
+    "module": "analysis/uncertainty.py",
+    "sensitivities": "central finite differences of the bisection solver at the nominal point, half step 0.1 u",
+    "standard_uncertainty": "(high - low) / sqrt(12), rectangular",
+    "coverage_factor": 2.0,
+    "coverage_basis": null,
+    "coverage_note": "k = 2 without a demonstrated basis; the coverage probability is unspecified (GUM G.6.6 not shown)",
+    "contrast": "V0P minus V1 with shared inputs (alpha_light, eps, h_floor, h_slope) as one node each; nonlinearity and one-sided ranges are not captured by the linear terms",
+    "nominal_check": "every nominal value equals the committed day and night tables within 5e-5 K"
+  },
+  "ranges_source": [
+    "analysis/thermal_transient.py PRIORS",
+    "analysis/output/thermal_transient_prediction.json priors",
+    "docs/PARAMETER_REGISTER.csv"
+  ],
+  "inputs": [
+    {
+      "name": "alpha_dark",
+      "register_id": "P-ALPHA-V0",
+      "steady_name": "alpha_V0",
+      "nominal": 0.9,
+      "low": 0.8,
+      "high": 0.95,
+      "u": 0.04330127018922191,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0"
+      ],
+      "note": "dark or unspecified finish; nominal 0.90",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "alpha_light",
+      "register_id": "P-ALPHA-SH",
+      "steady_name": "alpha_shield",
+      "nominal": 0.3,
+      "low": 0.2,
+      "high": 0.4,
+      "u": 0.05773502691896258,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0P",
+        "V1",
+        "V2"
+      ],
+      "note": "white or light finish; nominal 0.30",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "eps",
+      "register_id": "P-EPS",
+      "steady_name": "eps_surface",
+      "nominal": 0.9,
+      "low": 0.85,
+      "high": 0.95,
+      "u": 0.028867513459481284,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1",
+        "V2"
+      ],
+      "note": "range stated in the eps_surface note",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "solar_factor",
+      "register_id": "P-PHI",
+      "steady_name": "shield_solar_factor",
+      "nominal": 0.18,
+      "low": 0.18,
+      "high": 0.3,
+      "u": 0.034641016151377546,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "repo sensitivity range for shield shading",
+      "one_sided_from_nominal": true
+    },
+    {
+      "name": "conv_boost",
+      "register_id": "P-CBOOST",
+      "steady_name": "shield_conv_boost",
+      "nominal": 1.4,
+      "low": 1.0,
+      "high": 1.4,
+      "u": 0.11547005383792514,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V1"
+      ],
+      "note": "repo sensitivity range for the shield chimney boost",
+      "one_sided_from_nominal": true
+    },
+    {
+      "name": "preheat_calm_k",
+      "register_id": "P-PREHEAT",
+      "steady_name": "shield_air_preheat_calm",
+      "nominal": 1.2,
+      "low": 1.2,
+      "high": 2.4,
+      "u": 0.34641016151377546,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "repo sensitivity range for plate air pre-heat",
+      "one_sided_from_nominal": true
+    },
+    {
+      "name": "q_int_box_w",
+      "register_id": "P-QINT-V0",
+      "steady_name": "Q_int_V0",
+      "nominal": 0.8,
+      "low": 0.4,
+      "high": 1.6,
+      "u": 0.3464101615137755,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0",
+        "V0P"
+      ],
+      "note": "half to double the nominal 0.8 W",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "q_int_shield_w",
+      "register_id": "P-QINT-SH",
+      "steady_name": "Q_int_shielded",
+      "nominal": 0.1,
+      "low": 0.05,
+      "high": 0.2,
+      "u": 0.04330127018922194,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "half to double the nominal 0.1 W",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "f_sky_box",
+      "register_id": "P-FSKY-V0",
+      "steady_name": "f_sky_V0",
+      "nominal": 0.5,
+      "low": 0.3,
+      "high": 0.7,
+      "u": 0.11547005383792515,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0",
+        "V0P"
+      ],
+      "note": "declared; nominal 0.50",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "f_sky_shield",
+      "register_id": "P-FSKY-SH",
+      "steady_name": "f_sky_shield",
+      "nominal": 0.05,
+      "low": 0.0,
+      "high": 0.1,
+      "u": 0.02886751345948129,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V1",
+        "V2"
+      ],
+      "note": "declared; nominal 0.05",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "h_floor",
+      "register_id": "P-HFLOOR",
+      "steady_name": "h_free_floor",
+      "nominal": 5.0,
+      "low": 3.5,
+      "high": 6.5,
+      "u": 0.8660254037844387,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1"
+      ],
+      "note": "declared; nominal 5.0 W/m^2K",
+      "one_sided_from_nominal": false
+    },
+    {
+      "name": "h_slope",
+      "register_id": "P-HSLOPE",
+      "steady_name": "h_wind_slope",
+      "nominal": 4.0,
+      "low": 3.0,
+      "high": 5.0,
+      "u": 0.5773502691896258,
+      "distribution": "rectangular",
+      "applies_to": [
+        "V0",
+        "V0P",
+        "V1"
+      ],
+      "note": "declared; nominal 4.0 W/m^2K per m/s",
+      "one_sided_from_nominal": false
+    }
+  ],
+  "not_steady_inputs": [
+    {
+      "name": "wind_height_factor",
+      "note": "transient-only range; no steady-model sensitivity"
+    },
+    {
+      "name": "c_box_j_per_k",
+      "note": "transient-only range; no steady-model sensitivity"
+    },
+    {
+      "name": "c_shield_j_per_k",
+      "note": "transient-only range; no steady-model sensitivity"
+    }
+  ],
+  "held_fixed": [
+    {
+      "name": "A_proj_V0",
+      "register_id": "P-APROJ-V0",
+      "value": 0.03,
+      "u": 0.0,
+      "reason": "no documented range; lab-required geometry"
+    },
+    {
+      "name": "A_conv_V0",
+      "register_id": "P-ACONV-V0",
+      "value": 0.09,
+      "u": 0.0,
+      "reason": "no documented range; lab-required geometry"
+    },
+    {
+      "name": "A_proj_shield",
+      "register_id": "P-APROJ-SH",
+      "value": 0.012,
+      "u": 0.0,
+      "reason": "no documented range; lab-required geometry"
+    },
+    {
+      "name": "A_conv_shield",
+      "register_id": "P-ACONV-SH",
+      "value": 0.02,
+      "u": 0.0,
+      "reason": "no documented range; lab-required geometry"
+    },
+    {
+      "name": "h_fan_V2",
+      "register_id": "P-HFAN",
+      "value": 25.0,
+      "u": 0.0,
+      "reason": "no documented range"
+    },
+    {
+      "name": "preheat_wind_halflife",
+      "register_id": "P-PREHALF",
+      "value": 1.5,
+      "u": 0.0,
+      "reason": "no documented range"
+    },
+    {
+      "name": "T_sky_offset",
+      "register_id": "P-TSKY",
+      "value": 20.0,
+      "u": 0.0,
+      "reason": "operating condition of the registered tables; the register's dewpoint-dependent 4 to 34 K range is a scenario choice, not an input interval at this point"
+    },
+    {
+      "name": "T_air",
+      "register_id": "P-TAIR",
+      "value": 30.0,
+      "u": 0.0,
+      "reason": "selected operating point"
+    },
+    {
+      "name": "RH_air",
+      "register_id": "P-RHAIR",
+      "value": 50.0,
+      "u": 0.0,
+      "reason": "selected operating point"
+    }
+  ],
+  "operating_point_fixed": {
+    "G_clear_sky": "800, 1000 (day) and 0 (night) W/m^2",
+    "wind": "0, 0.5, 1, 2, 5 m/s",
+    "T_air_degc": 30.0,
+    "RH_air_pct": 50.0,
+    "T_sky_offset_k": 20.0
+  },
+  "headline_point": {
+    "g_w_m2": 1000.0,
+    "wind_m_s": 0.5,
+    "budgets": {
+      "V0": {
+        "delta_t_degc": 19.416202178690583,
+        "u_c_degc": 1.9230112875672245,
+        "sensitivity_per_unit": {
+          "alpha_dark": 24.065190430693566,
+          "eps": -13.875659443533513,
+          "q_int_box_w": 0.8021726738135369,
+          "f_sky_box": -7.434119087292074,
+          "h_floor": -1.401811535565231,
+          "h_slope": -0.7008843135789831
+        },
+        "variance_terms_k2": {
+          "alpha_dark": 1.0858751071228963,
+          "eps": 0.16044493749410058,
+          "q_int_box_w": 0.0772177198335791,
+          "f_sky_box": 0.7368816880538711,
+          "h_floor": 1.4738066859328134,
+          "h_slope": 0.16374627367369413
+        },
+        "rh_slope_pp_per_k": -0.8837139292499074
+      },
+      "V1": {
+        "delta_t_degc": 3.002509286161512,
+        "u_c_degc": 0.6988938774977578,
+        "sensitivity_per_unit": {
+          "alpha_light": 6.897557116662602,
+          "eps": -1.2283144556766563,
+          "solar_factor": 11.495928527771005,
+          "conv_boost": -0.9165389036051244,
+          "preheat_calm_k": 0.7732248233410316,
+          "q_int_shield_w": 3.193315182650964,
+          "f_sky_shield": -6.924007084855056,
+          "h_floor": -0.18331339967911903,
+          "h_slope": -0.09165159169583752
+        },
+        "variance_terms_k2": {
+          "alpha_light": 0.15858764725874308,
+          "eps": 0.0012572970016868667,
+          "solar_factor": 0.15858764725874308,
+          "conv_boost": 0.011200580824289107,
+          "preheat_calm_k": 0.07174519529169233,
+          "q_int_shield_w": 0.019119865979529676,
+          "f_sky_shield": 0.03995156175926918,
+          "h_floor": 0.02520285187643733,
+          "h_slope": 0.002800004753460172
+        },
+        "rh_slope_pp_per_k": -2.369821042051967
+      },
+      "V2": {
+        "delta_t_degc": 1.3466085004620254,
+        "u_c_degc": 0.3228603614697619,
+        "sensitivity_per_unit": {
+          "alpha_light": 3.5106892602417945,
+          "eps": -0.40577561284355346,
+          "solar_factor": 5.851148767069659,
+          "preheat_calm_k": 0.2472022302459523,
+          "q_int_shield_w": 1.625319385749556,
+          "f_sky_shield": -3.402789940402244
+        },
+        "variance_terms_k2": {
+          "alpha_light": 0.04108313027325693,
+          "eps": 0.00013721153998213446,
+          "solar_factor": 0.04108313027325695,
+          "preheat_calm_k": 0.007333073116628738,
+          "q_int_shield_w": 0.004953118323174965,
+          "f_sky_shield": 0.009649149482085591
+        },
+        "rh_slope_pp_per_k": -2.633982149742309
+      },
+      "V0P": {
+        "delta_t_degc": 4.479580179322511,
+        "u_c_degc": 1.8110906967088178,
+        "sensitivity_per_unit": {
+          "alpha_light": 25.75414707093163,
+          "eps": -6.655906161606522,
+          "q_int_box_w": 0.8584720798454266,
+          "f_sky_box": -7.955866164091849,
+          "h_floor": -0.3461181131288288,
+          "h_slope": -0.1730519051632036
+        },
+        "variance_terms_k2": {
+          "alpha_light": 2.210920304503921,
+          "eps": 0.03691757236009304,
+          "q_int_box_w": 0.08843691742489593,
+          "f_sky_box": 0.843944085612554,
+          "h_floor": 0.08984831117689555,
+          "h_slope": 0.009982320626871474
+        },
+        "rh_slope_pp_per_k": -2.1587926056234608
+      }
+    },
+    "v0p_minus_v1": {
+      "g_w_m2": 1000.0,
+      "wind_m_s": 0.5,
+      "v0p_degc": 4.479580179322511,
+      "v1_degc": 3.002509286161512,
+      "v0p_minus_v1_degc": 1.4770708931609988,
+      "u_c_degc": 1.5699869843365841,
+      "k": 2.0,
+      "low_k2_degc": -1.6629030755121694,
+      "high_k2_degc": 4.617044861834167,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        0.8573987859048753,
+        8.101761572740147
+      ],
+      "v1_interval_k2_degc": [
+        1.6047215311659966,
+        4.400297041157028
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 1.185236615678132,
+        "eps": 0.02454895977189888,
+        "solar_factor": 0.15858764725874308,
+        "conv_boost": 0.011200580824289107,
+        "preheat_calm_k": 0.07174519529169233,
+        "q_int_box_w": 0.08843691742489593,
+        "q_int_shield_w": 0.019119865979529676,
+        "f_sky_box": 0.843944085612554,
+        "f_sky_shield": 0.03995156175926918,
+        "h_floor": 0.01987903104108158,
+        "h_slope": 0.002208670344195154
+      }
+    }
+  },
+  "contrasts_day": [
+    {
+      "g_w_m2": 800.0,
+      "wind_m_s": 0.0,
+      "v0p_degc": 3.4679260361008346,
+      "v1_degc": 2.952287590596825,
+      "v0p_minus_v1_degc": 0.5156384455040097,
+      "u_c_degc": 1.6512043394418592,
+      "k": 2.0,
+      "low_k2_degc": -2.7867702333797086,
+      "high_k2_degc": 3.818047124387728,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        -0.24140263207397172,
+        7.177254704275641
+      ],
+      "v1_interval_k2_degc": [
+        1.5295361982753248,
+        4.3750389829183245
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 1.0535881879475624,
+        "eps": 0.02839004604002704,
+        "solar_factor": 0.15058226777112851,
+        "conv_boost": 0.008006959005566002,
+        "preheat_calm_k": 0.07208733403005077,
+        "q_int_box_w": 0.12504953568737465,
+        "q_int_shield_w": 0.028366645982861108,
+        "f_sky_box": 1.1933366540351888,
+        "f_sky_shield": 0.05932069844481268,
+        "h_floor": 0.007747441647054329
+      }
+    },
+    {
+      "g_w_m2": 800.0,
+      "wind_m_s": 0.5,
+      "v0p_degc": 2.928966472391039,
+      "v1_degc": 2.402484805788845,
+      "v0p_minus_v1_degc": 0.5264816666021943,
+      "u_c_degc": 1.3985817892351176,
+      "k": 2.0,
+      "low_k2_degc": -2.270681911868041,
+      "high_k2_degc": 3.3236452450724294,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        -0.20315037239320644,
+        6.061083317175285
+      ],
+      "v1_interval_k2_degc": [
+        1.2455669216478908,
+        3.559402689929799
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.771800921331905,
+        "eps": 0.019650783878865527,
+        "solar_factor": 0.10194329286812054,
+        "conv_boost": 0.007204087770787078,
+        "preheat_calm_k": 0.046057289065800866,
+        "q_int_box_w": 0.08967150773328415,
+        "q_int_shield_w": 0.019204128082814086,
+        "f_sky_box": 0.855726549704654,
+        "f_sky_shield": 0.03932289786771783,
+        "h_floor": 0.0049046065885385345,
+        "h_slope": 0.0005449562876153924
+      }
+    },
+    {
+      "g_w_m2": 800.0,
+      "wind_m_s": 1.0,
+      "v0p_degc": 2.5342849385924637,
+      "v1_degc": 1.9989885319955647,
+      "v0p_minus_v1_degc": 0.535296406596899,
+      "u_c_degc": 1.2115948952693396,
+      "k": 2.0,
+      "low_k2_degc": -1.8878933839417802,
+      "high_k2_degc": 2.9584861971355783,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        -0.17851930149235296,
+        5.24708917867728
+      ],
+      "v1_interval_k2_degc": [
+        1.0254881413867125,
+        2.972488922604417
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.5882974947651761,
+        "eps": 0.014313061775097039,
+        "solar_factor": 0.07349496585741142,
+        "conv_boost": 0.0062010683865923455,
+        "preheat_calm_k": 0.02928034092578339,
+        "q_int_box_w": 0.0673537709657701,
+        "q_int_shield_w": 0.013844968564053014,
+        "f_sky_box": 0.6427518670265852,
+        "f_sky_shield": 0.027875848427096058,
+        "h_floor": 0.00314921751871889,
+        "h_slope": 0.0013995860304386034
+      }
+    },
+    {
+      "g_w_m2": 800.0,
+      "wind_m_s": 2.0,
+      "v0p_degc": 1.9955188711173832,
+      "v1_degc": 1.4529946236871183,
+      "v0p_minus_v1_degc": 0.542524247430265,
+      "u_c_degc": 0.954572237830468,
+      "k": 2.0,
+      "low_k2_degc": -1.366620228230671,
+      "high_k2_degc": 2.451668723091201,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        -0.14697436847409406,
+        4.1380121107088605
+      ],
+      "v1_interval_k2_degc": [
+        0.7168589288293489,
+        2.189130318544888
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.37309989946322303,
+        "eps": 0.008487390474826247,
+        "solar_factor": 0.04331114395427155,
+        "conv_boost": 0.004507685674011116,
+        "preheat_calm_k": 0.011748432215317692,
+        "q_int_box_w": 0.041915635666111443,
+        "q_int_shield_w": 0.008158886551402898,
+        "f_sky_box": 0.3999963698010172,
+        "f_sky_shield": 0.0160350148676946,
+        "h_floor": 0.0014211501382866084,
+        "h_slope": 0.002526548430505093
+      }
+    },
+    {
+      "g_w_m2": 800.0,
+      "wind_m_s": 5.0,
+      "v0p_degc": 1.217487056273967,
+      "v1_degc": 0.7276231586001813,
+      "v0p_minus_v1_degc": 0.4898638976737857,
+      "u_c_degc": 0.5829787082662503,
+      "k": 2.0,
+      "low_k2_degc": -0.6760935188587149,
+      "high_k2_degc": 1.6558213142062863,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        -0.0995708284457002,
+        2.5345449409936345
+      ],
+      "v1_interval_k2_degc": [
+        0.30192369241311234,
+        1.1533226247872503
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.14296647058208292,
+        "eps": 0.0029201823755457684,
+        "solar_factor": 0.01500100851536956,
+        "conv_boost": 0.0020092282534121294,
+        "preheat_calm_k": 0.0007441093804544602,
+        "q_int_box_w": 0.01566177905712451,
+        "q_int_shield_w": 0.0028258603073185768,
+        "f_sky_box": 0.14945859567544675,
+        "f_sky_shield": 0.005383056094704698,
+        "h_floor": 0.0002389094237113115,
+        "h_slope": 0.0026549746266150277
+      }
+    },
+    {
+      "g_w_m2": 1000.0,
+      "wind_m_s": 0.0,
+      "v0p_degc": 5.296528625767678,
+      "v1_degc": 3.687809689436108,
+      "v0p_minus_v1_degc": 1.6087189363315701,
+      "u_c_degc": 1.848486418825354,
+      "k": 2.0,
+      "low_k2_degc": -2.088253901319138,
+      "high_k2_degc": 5.305691773982279,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        1.0110062451908046,
+        9.582051006344551
+      ],
+      "v1_interval_k2_degc": [
+        1.9698798516572134,
+        5.405739527215003
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 1.6068318100439591,
+        "eps": 0.03640343522191012,
+        "solar_factor": 0.23374352488383207,
+        "conv_boost": 0.012403483941447592,
+        "preheat_calm_k": 0.11213119640699842,
+        "q_int_box_w": 0.12265110533959822,
+        "q_int_shield_w": 0.02818098103069856,
+        "f_sky_box": 1.1704474987195832,
+        "f_sky_shield": 0.060440881945395306,
+        "h_floor": 0.033668123048358964
+      }
+    },
+    {
+      "g_w_m2": 1000.0,
+      "wind_m_s": 0.5,
+      "v0p_degc": 4.479580179322511,
+      "v1_degc": 3.002509286161512,
+      "v0p_minus_v1_degc": 1.4770708931609988,
+      "u_c_degc": 1.5699869843365841,
+      "k": 2.0,
+      "low_k2_degc": -1.6629030755121694,
+      "high_k2_degc": 4.617044861834167,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        0.8573987859048753,
+        8.101761572740147
+      ],
+      "v1_interval_k2_degc": [
+        1.6047215311659966,
+        4.400297041157028
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 1.185236615678132,
+        "eps": 0.02454895977189888,
+        "solar_factor": 0.15858764725874308,
+        "conv_boost": 0.011200580824289107,
+        "preheat_calm_k": 0.07174519529169233,
+        "q_int_box_w": 0.08843691742489593,
+        "q_int_shield_w": 0.019119865979529676,
+        "f_sky_box": 0.843944085612554,
+        "f_sky_shield": 0.03995156175926918,
+        "h_floor": 0.01987903104108158,
+        "h_slope": 0.002208670344195154
+      }
+    },
+    {
+      "g_w_m2": 1000.0,
+      "wind_m_s": 1.0,
+      "v0p_degc": 3.879322742577642,
+      "v1_degc": 2.4989920924417675,
+      "v0p_minus_v1_degc": 1.3803306501358747,
+      "u_c_degc": 1.3627732437699767,
+      "k": 2.0,
+      "low_k2_degc": -1.3452158374040786,
+      "high_k2_degc": 4.105877137675828,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        0.7374256998864173,
+        7.021219785268867
+      ],
+      "v1_interval_k2_degc": [
+        1.322496611000149,
+        3.6754875738833857
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.9073582900409951,
+        "eps": 0.01750032231628839,
+        "solar_factor": 0.11448004743417792,
+        "conv_boost": 0.009662016404318132,
+        "preheat_calm_k": 0.04564976857024395,
+        "q_int_box_w": 0.06665708594632992,
+        "q_int_shield_w": 0.013802006763896667,
+        "f_sky_box": 0.6361036187044741,
+        "f_sky_shield": 0.028243396371953326,
+        "h_floor": 0.01225004795241612,
+        "h_slope": 0.005444313430250456
+      }
+    },
+    {
+      "g_w_m2": 1000.0,
+      "wind_m_s": 2.0,
+      "v0p_degc": 3.0576284625567496,
+      "v1_degc": 1.8170630536042154,
+      "v0p_minus_v1_degc": 1.2405654089525342,
+      "u_c_degc": 1.076705926099694,
+      "k": 2.0,
+      "low_k2_degc": -0.9128464432468539,
+      "high_k2_degc": 3.3939772611519223,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        0.5686134892653305,
+        5.546643435848169
+      ],
+      "v1_interval_k2_degc": [
+        0.9274252111406086,
+        2.7067008960678223
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.5782841032624889,
+        "eps": 0.010040570846666708,
+        "solar_factor": 0.06755690562956047,
+        "conv_boost": 0.007039750876125516,
+        "preheat_calm_k": 0.018333168078136734,
+        "q_int_box_w": 0.04164581204123154,
+        "q_int_shield_w": 0.008144907069347986,
+        "f_sky_box": 0.3974231579715383,
+        "f_sky_shield": 0.01617334051743117,
+        "h_floor": 0.005275324065391607,
+        "h_slope": 0.009378610940280667
+      }
+    },
+    {
+      "g_w_m2": 1000.0,
+      "wind_m_s": 5.0,
+      "v0p_degc": 1.8673798604868352,
+      "v1_degc": 0.9103280189447105,
+      "v0p_minus_v1_degc": 0.9570518415421247,
+      "u_c_degc": 0.6609250649873073,
+      "k": 2.0,
+      "low_k2_degc": -0.36479828843248985,
+      "high_k2_degc": 2.2789019715167393,
+      "includes_zero": true,
+      "v0p_interval_k2_degc": [
+        0.32733006187308455,
+        3.407429659100586
+      ],
+      "v1_interval_k2_degc": [
+        0.39591410889746503,
+        1.4247419289919558
+      ],
+      "intervals_overlap": true,
+      "variance_terms_k2": {
+        "alpha_light": 0.22271330645735163,
+        "eps": 0.003266471640170202,
+        "solar_factor": 0.023427021889912643,
+        "conv_boost": 0.0031442047979308475,
+        "preheat_calm_k": 0.0011621656413282088,
+        "q_int_box_w": 0.01562415530184137,
+        "q_int_shield_w": 0.002824449505146876,
+        "f_sky_box": 0.14910034667791344,
+        "f_sky_shield": 0.005394422033182091,
+        "h_floor": 0.0008392365831986526,
+        "h_slope": 0.009326161000500297
+      }
+    }
+  ],
+  "table_file": "analysis/output/thermal_bias_uncertainty.csv"
+}

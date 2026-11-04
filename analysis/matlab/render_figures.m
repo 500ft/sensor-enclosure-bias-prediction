@@ -26,6 +26,7 @@ jobs = {
     'synthetic_identifiability_tradeoffs', @() make_identifiability_tradeoffs(root, outDir, S)
     'predicted_rise_table',               @() make_rise_table(dataDir, tableDir)
     'result_tables',                      @() make_result_tables(dataDir, tableDir)
+    'interval_table',                     @() make_interval_table(dataDir, tableDir)
     };
 failed = 0;
 fprintf('%s\n', version);

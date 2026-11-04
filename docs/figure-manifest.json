@@ -108,11 +108,13 @@
   {
    "id": "steady-result-tables",
    "evidence_type": "analytical simulation",
-   "generator": "analysis/matlab/make_rise_table.m; analysis/matlab/make_result_tables.m",
+   "generator": "analysis/matlab/make_rise_table.m; analysis/matlab/make_result_tables.m; analysis/matlab/make_interval_table.m",
    "command": "matlab -batch \"addpath('analysis/matlab'); render_figures\" && typeset each analysis/figures/tables/*.tex (see analysis/matlab/README.md)",
    "inputs": [
     "analysis/output/thermal_bias_table.csv",
-    "analysis/output/thermal_bias_night_table.csv"
+    "analysis/output/thermal_bias_night_table.csv",
+    "analysis/output/thermal_bias_uncertainty.csv",
+    "analysis/output/thermal_bias_uncertainty.json"
    ],
    "outputs": [
     "analysis/figures/tables/predicted_rise_table.tex",
@@ -129,9 +131,12 @@
     "analysis/figures/tables/painted_control_table.png",
     "analysis/figures/tables/night_table.tex",
     "analysis/figures/tables/night_table.pdf",
-    "analysis/figures/tables/night_table.png"
+    "analysis/figures/tables/night_table.png",
+    "analysis/figures/tables/thermal_bias_interval_table.tex",
+    "analysis/figures/tables/thermal_bias_interval_table.pdf",
+    "analysis/figures/tables/thermal_bias_interval_table.png"
    ],
-   "notes": "booktabs + siunitx fragments written by MATLAB from the committed CSVs, compiled to PDF and 300-dpi PNG. The Markdown tables stay in README.md and analysis/thermal_bias_results.md under 'Table as text'."
+   "notes": "booktabs + siunitx fragments written by MATLAB from the committed CSVs and JSON, compiled to PDF and 300-dpi PNG. The Markdown tables stay in README.md, analysis/thermal_bias_results.md and docs/results.md under 'Table as text'."
   }
  ]
 }
